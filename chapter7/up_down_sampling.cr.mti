@@ -1,0 +1,49 @@
+Z:/projects/modelsim/FPGA_Book_2017/chapter7/cic.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter7/cic.sv
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module Integrator
+-- Compiling module Comb
+-- Compiling module CicUpSampler
+-- Importing package Fixedpoint
+-- Compiling module CicDownSampler
+
+Top level modules:
+	CicUpSampler
+	CicDownSampler
+
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter7/intp_deci.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter7/intp_deci.sv
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module InterpDeci
+
+Top level modules:
+	InterpDeci
+
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter7/sr441to480.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter7/sr441to480.sv
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestCounter
+-- Importing package SimSrcGen
+-- Compiling module TestCntSecMinHr
+-- Compiling module CntSecMinHr
+-- Compiling module Counter
+-- Compiling module CounterMax
+-- Compiling module TestDDS
+-- Compiling module DDS
+-- Compiling module TestFir
+-- Compiling module FIR
+-- Compiling module TestSr441to480
+-- Compiling module SmpRate441to480
+
+Top level modules:
+	TestCounter
+	TestCntSecMinHr
+	CounterMax
+	TestDDS
+	TestFir
+	TestSr441to480
+
+} {} {}}

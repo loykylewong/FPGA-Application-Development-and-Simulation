@@ -1,0 +1,12 @@
+Z:/projects/modelsim/FPGA_Book_2017/chapter7/dds.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter7/dds.sv
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling module TestDDS
+-- Importing package SimSrcGen
+-- Compiling module DDS
+
+Top level modules:
+	TestDDS
+
+} {} {}}

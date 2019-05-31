@@ -1,0 +1,64 @@
+# Current time Fri Apr 14 16:24:55 2017
+# ModelSim PE Student Edition Stack Trace
+# Program = vsim
+# Id = "10.4a"
+# Version = "2015.03"
+# Date = "Apr  7 2015"
+# Platform = win32pe
+# Signature = ac8c563de6ee885313f1754f0d1a83f5
+# --> START OF USERCODE
+# 0    0x738fb6df: 'memset + 0x5f' in 'c:\windows\winsxs\x86_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.9247_none_5090cb78bcba4a35\msvcr90.dll'
+# <-- END OF USERCODE
+# 1    0x006df66a: '<unknown (@0x6df66a)>'
+# 2    0x00510505: '<unknown (@0x510505)>'
+# 3    0x00f69a7d: '<unknown (@0xf69a7d)>'
+# 4    0x004011c5: '<unknown (@0x4011c5)>'
+# 5    0x0051d50d: '<unknown (@0x51d50d)>'
+# 6    0x00521936: '<unknown (@0x521936)>'
+# 7    0x00521a09: '<unknown (@0x521a09)>'
+# 8    0x00521a28: '<unknown (@0x521a28)>'
+# 9    0x007274d3: '<unknown (@0x7274d3)>'
+# 10   0x0081c9dd: '<unknown (@0x81c9dd)>'
+# 11   0x774a04a8: 'LdrSetAppCompatDllRedirectionCallback + 0x1d288' in 'c:\windows\system32\ntdll.dll'
+# 12   0x7745f1ba: 'RtlUnwind + 0x1ba' in 'c:\windows\system32\ntdll.dll'
+# 13   0x774708ef: 'KiUserExceptionDispatcher + 0xf' in 'c:\windows\system32\ntdll.dll'
+# 14   0x006df66a: '<unknown (@0x6df66a)>'
+# 15   0x004e8c06: '<unknown (@0x4e8c06)>'
+# 16   0xff0c4c4c: '<unknown (@0xff0c4c4c)>'
+# 17   0x0040105c: '<unknown (@0x40105c)>'
+# 18   0x00443d64: '<unknown (@0x443d64)>'
+# End of Stack Trace
+
+
+# Current time Fri Apr 14 16:48:20 2017
+# ModelSim PE Student Edition Stack Trace
+# Program = vsim
+# Id = "10.4a"
+# Version = "2015.03"
+# Date = "Apr  7 2015"
+# Platform = win32pe
+# Signature = ac8c563de6ee885313f1754f0d1a83f5
+# --> START OF USERCODE
+# 0    0x738fb6df: 'memset + 0x5f' in 'c:\windows\winsxs\x86_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.9247_none_5090cb78bcba4a35\msvcr90.dll'
+# <-- END OF USERCODE
+# 1    0x006df66a: '<unknown (@0x6df66a)>'
+# 2    0x00510505: '<unknown (@0x510505)>'
+# 3    0x00f69a7d: '<unknown (@0xf69a7d)>'
+# 4    0x004011c5: '<unknown (@0x4011c5)>'
+# 5    0x0051d50d: '<unknown (@0x51d50d)>'
+# 6    0x00521936: '<unknown (@0x521936)>'
+# 7    0x00521a09: '<unknown (@0x521a09)>'
+# 8    0x00521a28: '<unknown (@0x521a28)>'
+# 9    0x007274d3: '<unknown (@0x7274d3)>'
+# 10   0x0081c9dd: '<unknown (@0x81c9dd)>'
+# 11   0x774a04a8: 'LdrSetAppCompatDllRedirectionCallback + 0x1d288' in 'c:\windows\system32\ntdll.dll'
+# 12   0x7745f1ba: 'RtlUnwind + 0x1ba' in 'c:\windows\system32\ntdll.dll'
+# 13   0x774708ef: 'KiUserExceptionDispatcher + 0xf' in 'c:\windows\system32\ntdll.dll'
+# 14   0x006df66a: '<unknown (@0x6df66a)>'
+# 15   0x004e8c06: '<unknown (@0x4e8c06)>'
+# 16   0xff0c0fda: '<unknown (@0xff0c0fda)>'
+# 17   0x0040105c: '<unknown (@0x40105c)>'
+# 18   0x00443d64: '<unknown (@0x443d64)>'
+# End of Stack Trace
+
+

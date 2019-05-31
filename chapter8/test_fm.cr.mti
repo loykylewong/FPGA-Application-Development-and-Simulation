@@ -1,0 +1,34 @@
+Z:/projects/modelsim/FPGA_Book_2017/chapter8/fm.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter8/fm.sv
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestCounter
+-- Importing package SimSrcGen
+-- Compiling module TestCntSecMinHr
+-- Compiling module CntSecMinHr
+-- Compiling module Counter
+-- Compiling module CounterMax
+-- Compiling module TestDDS
+-- Compiling module DDS
+-- Compiling module TestFir
+-- Compiling module FIR
+-- Compiling module TestAM
+-- Compiling module AMModulator
+-- Importing package Fixedpoint
+-- Compiling module AMEnvDemod
+-- Compiling module AMCohDemod
+-- Compiling module TestFM
+-- Compiling module FMModulator
+-- Compiling module WBFMDemod
+
+Top level modules:
+	TestCounter
+	TestCntSecMinHr
+	CounterMax
+	TestDDS
+	TestFir
+	TestAM
+	TestFM
+
+} {} {}}

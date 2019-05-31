@@ -1,0 +1,65 @@
+Z:/projects/modelsim/FPGA_Book_2017/chapter8/man_coding.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter8/man_coding.sv
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module ManchesterEncoder
+-- Compiling module HystComp
+-- Compiling module DiffManDecoder
+
+Top level modules:
+	ManchesterEncoder
+	HystComp
+	DiffManDecoder
+
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter8/test_baseband.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter8/test_baseband.sv
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestCounter
+-- Importing package SimSrcGen
+-- Compiling module TestCntSecMinHr
+-- Compiling module CntSecMinHr
+-- Compiling module Counter
+-- Compiling module CounterMax
+-- Compiling module TestDDS
+-- Compiling module DDS
+-- Compiling module TestFir
+-- Compiling module FIR
+-- Compiling module TestBasebandSys
+
+Top level modules:
+	TestCounter
+	TestCntSecMinHr
+	CounterMax
+	TestDDS
+	TestFir
+	TestBasebandSys
+
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter8/lfsr.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter8/lfsr.sv
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module LFSR
+
+Top level modules:
+	LFSR
+
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter8/crc.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter8/crc.sv
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestCounter
+-- Importing package SimSrcGen
+-- Compiling module TestCntSecMinHr
+-- Compiling module CntSecMinHr
+-- Compiling module Counter
+-- Compiling module CounterMax
+-- Compiling module CRCGenerator
+-- Compiling module CRCChecker
+
+Top level modules:
+	TestCounter
+	TestCntSecMinHr
+	CounterMax
+	CRCGenerator
+	CRCChecker
+
+} {} {}}

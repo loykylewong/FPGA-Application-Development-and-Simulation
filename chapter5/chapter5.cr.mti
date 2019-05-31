@@ -1,0 +1,130 @@
+Z:/projects/modelsim/FPGA_Book_2017/chapter5/iic_master_slave_test.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter5/iic_master_slave_test.sv
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling module TestMem
+-- Importing package SimSrcGen
+-- Compiling module SpRamRf
+-- Compiling module SpRamWf
+-- Compiling module SdpRamRf
+-- Compiling module DpRam
+-- Compiling module SdcRam
+-- Compiling module DcRam
+-- Compiling module SpRamRfSine
+-- Compiling module TestScFifo
+-- Compiling module ScFifo1
+-- Compiling module ScFifo2
+-- Compiling module TestIicMasterSlave
+
+Top level modules:
+	TestMem
+	SpRamWf
+	DpRam
+	SdcRam
+	DcRam
+	TestScFifo
+	ScFifo1
+	TestIicMasterSlave
+
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter5/iic_slave.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter5/iic_slave.sv
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling module TestEdge2En
+-- Importing package SimSrcGen
+-- Compiling module Rising2En
+-- Compiling module Falling2En
+-- Compiling module Edge2En
+-- Compiling module IicSlave
+
+Top level modules:
+	TestEdge2En
+	Falling2En
+	IicSlave
+
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter5/uart.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter5/uart.sv
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling module TestCounter
+-- Importing package SimSrcGen
+-- Compiling module TestCntSecMinHr
+-- Compiling module CntSecMinHr
+-- Compiling module Counter
+-- Compiling module CounterMax
+-- Compiling module TestEdge2En
+-- Compiling module Rising2En
+-- Compiling module Falling2En
+-- Compiling module Edge2En
+-- Compiling module TestMem
+-- Compiling module SpRamRf
+-- Compiling module SpRamWf
+-- Compiling module SdpRamRf
+-- Compiling module DpRam
+-- Compiling module SdcRam
+-- Compiling module DcRam
+-- Compiling module SpRamRfSine
+-- Compiling module TestScFifo
+-- Compiling module ScFifo1
+-- Compiling module ScFifo2
+-- Compiling module TestUart
+-- Compiling module UartTx
+-- Compiling module UartRx
+
+Top level modules:
+	TestCounter
+	TestCntSecMinHr
+	CounterMax
+	TestEdge2En
+	Edge2En
+	TestMem
+	SpRamRf
+	SpRamWf
+	DpRam
+	SdcRam
+	DcRam
+	TestScFifo
+	ScFifo1
+	TestUart
+
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter5/spi.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter5/spi.sv
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling module TestCounter
+-- Importing package SimSrcGen
+-- Compiling module TestCntSecMinHr
+-- Compiling module CntSecMinHr
+-- Compiling module Counter
+-- Compiling module CounterMax
+-- Compiling module TestSpi
+-- Compiling module SpiMaster
+-- Compiling module SpiSlave
+
+Top level modules:
+	TestCounter
+	TestCntSecMinHr
+	TestSpi
+
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter5/iic_master.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter5/iic_master.sv
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling module TestEdge2En
+-- Importing package SimSrcGen
+-- Compiling module Rising2En
+-- Compiling module Falling2En
+-- Compiling module Edge2En
+-- Compiling interface IicBus
+-- Compiling module IicMaster
+-- Compiling module IicMasterRecvShifter
+-- Compiling module IicMasterBitEngine
+-- Compiling module IicMasterByteEngine
+
+Top level modules:
+	TestEdge2En
+	Falling2En
+	Edge2En
+	IicMaster
+
+} {} {}}

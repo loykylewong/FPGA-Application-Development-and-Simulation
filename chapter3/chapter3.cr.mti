@@ -1,0 +1,28 @@
+Z:/projects/modelsim/FPGA_Book_2017/chapter3/ch3.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter3/ch3.sv
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling package simSrcGen
+-- Compiling module test_ch3
+-- Compiling module code3_3
+-- Compiling module code3_4
+-- Compiling module code3_5
+-- Compiling module code3_6_7
+-- Compiling module code3_8
+-- Compiling module code3_9
+-- Importing package simSrcGen
+-- Compiling module code3_10
+-- Compiling module bin2gray
+-- Compiling package Q15Types
+-- Compiling module code3_11
+-- Importing package Q15Types
+
+Top level modules:
+	test_ch3
+	code3_3
+	code3_4
+	code3_5
+	code3_6_7
+	code3_8
+	code3_9
+	code3_10
+
+} {} {}}

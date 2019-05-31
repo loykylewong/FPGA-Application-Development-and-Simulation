@@ -1,0 +1,11 @@
+
+module DDS #(
+    parameter PW = 32, DW = 10, AW = 13
+)(
+    input wire clk, rst, en,
+    input wire signed [PW - 1 : 0] freq, phase,
+    output logic signed [DW - 1 : 0] out
+);
+    logic signed [DW-1 : 0] sine[2**AW];
+    
+endmodule

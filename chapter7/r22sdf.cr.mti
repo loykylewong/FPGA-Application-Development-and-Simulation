@@ -1,0 +1,23 @@
+Z:/projects/modelsim/FPGA_Book_2017/chapter7/r22sdf.sv {2 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter7/r22sdf.sv
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module DelayChainMem
+-- Compiling module TestDelayChainMem
+-- Importing package SimSrcGen
+-- Compiling module TestR22Sdf
+-- Importing package R22SdfDefines
+-- Compiling package R22SdfDefines
+-- Compiling module Bf2I
+-- Compiling module Bf2II
+-- Compiling module R22SdfCoefRom
+-- Compiling module R22Sdf
+** Warning: Z:/projects/modelsim/FPGA_Book_2017/chapter7/r22sdf.sv(155): (vlog-2583) [SVCHK] - Some checking for conflicts with always_comb and always_latch variables not yet supported. Run vopt to provide additional design-level checks.
+
+
+Top level modules:
+	TestDelayChainMem
+	TestR22Sdf
+
+} {} {}}

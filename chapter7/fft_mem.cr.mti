@@ -1,0 +1,33 @@
+Z:/projects/modelsim/FPGA_Book_2017/chapter7/mm_fft.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter7/mm_fft.sv
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestMem
+-- Importing package SimSrcGen
+-- Compiling module SpRamRf
+-- Compiling module SpRamWf
+-- Compiling module SdpRamRf
+-- Compiling module DpRam
+-- Compiling module SdcRam
+-- Compiling module DcRam
+-- Compiling module SpRamRfSine
+-- Compiling interface PicoMmIf
+-- Compiling module PicoMmInterconnector1to3
+-- Compiling module PicoMmIntercon
+-- Compiling module TestMmFFT
+-- Compiling module FFTCoefRom
+-- Compiling module MmFFT
+
+Top level modules:
+	TestMem
+	SpRamWf
+	SdpRamRf
+	DpRam
+	SdcRam
+	DcRam
+	PicoMmInterconnector1to3
+	PicoMmIntercon
+	TestMmFFT
+
+} {} {}}

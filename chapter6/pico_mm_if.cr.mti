@@ -1,0 +1,55 @@
+Z:/projects/modelsim/FPGA_Book_2017/chapter6/periph_pwm.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter6/periph_pwm.sv
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module Pwm2
+-- Compiling module PeriphPwm
+-- Compiling module PeriphPwm2
+
+Top level modules:
+	PeriphPwm
+	PeriphPwm2
+
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter6/periph_spi.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter6/periph_spi.sv
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling module TestCounter
+-- Importing package SimSrcGen
+-- Compiling module TestCntSecMinHr
+-- Compiling module CntSecMinHr
+-- Compiling module Counter
+-- Compiling module CounterMax
+-- Compiling module TestSpi
+-- Compiling module SpiMaster
+-- Compiling module SpiSlave
+-- Compiling module TestMem
+-- Compiling module SpRamRf
+-- Compiling module SpRamWf
+-- Compiling module SdpRamRf
+-- Compiling module DpRam
+-- Compiling module SdcRam
+-- Compiling module DcRam
+-- Compiling module SpRamRfSine
+-- Compiling module TestScFifo
+-- Compiling module ScFifo1
+-- Compiling module ScFifo2
+-- Compiling module PeriphSpiMaster
+-- Compiling module PeriphSpiMaster2
+-- Compiling module PeriphSpiMaster3
+
+Top level modules:
+	TestCounter
+	TestCntSecMinHr
+	TestSpi
+	TestMem
+	SpRamRf
+	SpRamWf
+	DpRam
+	SdcRam
+	DcRam
+	TestScFifo
+	ScFifo1
+	PeriphSpiMaster
+	PeriphSpiMaster2
+	PeriphSpiMaster3
+
+} {} {}}

@@ -1,0 +1,50 @@
+Z:/projects/modelsim/FPGA_Book_2017/chapter7/slow_div.sv {1 {vlog -work work -vopt -sv Z:/projects/modelsim/FPGA_Book_2017/chapter7/slow_div.sv
+Model Technology ModelSim SE-64 vlog 10.1c Compiler 2012.07 Jul 27 2012
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling module TestCounter
+-- Importing package SimSrcGen
+-- Compiling module TestCntSecMinHr
+-- Compiling module CntSecMinHr
+-- Compiling module Counter
+-- Compiling module CounterMax
+-- Compiling module TestSlowDiv
+-- Compiling module SlowDiv
+
+Top level modules:
+	TestCounter
+	TestCntSecMinHr
+	CounterMax
+	TestSlowDiv
+
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter7/slow_mult.sv {1 {vlog -work work -vopt -sv Z:/projects/modelsim/FPGA_Book_2017/chapter7/slow_mult.sv
+Model Technology ModelSim SE-64 vlog 10.1c Compiler 2012.07 Jul 27 2012
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling module TestCounter
+-- Importing package SimSrcGen
+-- Compiling module TestCntSecMinHr
+-- Compiling module CntSecMinHr
+-- Compiling module Counter
+-- Compiling module CounterMax
+-- Compiling module TestSlowMult
+-- Compiling module SlowMult
+
+Top level modules:
+	TestCounter
+	TestCntSecMinHr
+	CounterMax
+	TestSlowMult
+
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter7/slow_sqrt.sv {1 {vlog -work work -vopt -sv Z:/projects/modelsim/FPGA_Book_2017/chapter7/slow_sqrt.sv
+Model Technology ModelSim SE-64 vlog 10.1c Compiler 2012.07 Jul 27 2012
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling module TestSlowSqrt
+-- Importing package SimSrcGen
+-- Compiling module SlowSqrt
+
+Top level modules:
+	TestSlowSqrt
+
+} {} {}}

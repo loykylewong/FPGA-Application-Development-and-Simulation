@@ -1,0 +1,99 @@
+Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4s_fifo.sv {1 {vlog -work work -vopt -sv Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4s_fifo.sv
+Model Technology ModelSim SE-64 vlog 10.1c Compiler 2012.07 Jul 27 2012
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling module TestMem
+-- Importing package SimSrcGen
+-- Compiling module SpRamRf
+-- Compiling module SpRamWf
+-- Compiling module SdpRamRf
+-- Compiling module DpRam
+-- Compiling module SdcRam
+-- Compiling module DcRam
+-- Compiling module SpRamRfSine
+-- Compiling module TestScFifo
+-- Compiling module ScFifo1
+-- Compiling module ScFifo2
+-- Compiling module TestAxi4StreamFifo
+-- Compiling interface Axi4StreamIf
+-- Compiling module Axi4sFifo
+
+Top level modules:
+	TestMem
+	SpRamRf
+	SpRamWf
+	DpRam
+	SdcRam
+	DcRam
+	TestScFifo
+	ScFifo1
+	TestAxi4StreamFifo
+
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4full.sv {1 {vlog -work work -vopt -sv Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4full.sv
+Model Technology ModelSim SE-64 vlog 10.1c Compiler 2012.07 Jul 27 2012
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling module TestBurstAddrGen
+-- Importing package SimSrcGen
+-- Compiling module Axi4BurstAddrGen
+
+Top level modules:
+	TestBurstAddrGen
+
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4lite_if.sv {1 {vlog -work work -vopt -sv Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4lite_if.sv
+Model Technology ModelSim SE-64 vlog 10.1c Compiler 2012.07 Jul 27 2012
+-- Compiling interface Axi4LiteIf
+
+Top level modules:
+	--none--
+
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4lite_slave.sv {1 {vlog -work work -vopt -sv Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4lite_slave.sv
+Model Technology ModelSim SE-64 vlog 10.1c Compiler 2012.07 Jul 27 2012
+-- Compiling module Axi4LiteSlave
+
+Top level modules:
+	Axi4LiteSlave
+
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter6/test_axi4lite.sv {1 {vlog -work work -vopt -sv Z:/projects/modelsim/FPGA_Book_2017/chapter6/test_axi4lite.sv
+Model Technology ModelSim SE-64 vlog 10.1c Compiler 2012.07 Jul 27 2012
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling module TestMem
+-- Importing package SimSrcGen
+-- Compiling module SpRamRf
+-- Compiling module SpRamWf
+-- Compiling module SdpRamRf
+-- Compiling module DpRam
+-- Compiling module SdcRam
+-- Compiling module DcRam
+-- Compiling module SpRamRfSine
+-- Compiling module TestAxi4Lite
+
+Top level modules:
+	TestMem
+	SpRamRf
+	SpRamWf
+	SdpRamRf
+	DpRam
+	SdcRam
+	DcRam
+	TestAxi4Lite
+
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4lite_master.sv {1 {vlog -work work -vopt -sv Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4lite_master.sv
+Model Technology ModelSim SE-64 vlog 10.1c Compiler 2012.07 Jul 27 2012
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling module TestCounter
+-- Importing package SimSrcGen
+-- Compiling module TestCntSecMinHr
+-- Compiling module CntSecMinHr
+-- Compiling module Counter
+-- Compiling module CounterMax
+-- Compiling module Axi4LiteMasterEg
+
+Top level modules:
+	TestCounter
+	TestCntSecMinHr
+	Axi4LiteMasterEg
+
+} {} {}}

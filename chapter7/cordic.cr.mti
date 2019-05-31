@@ -1,0 +1,15 @@
+Z:/projects/modelsim/FPGA_Book_2017/chapter7/cordic.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter7/cordic.sv
+Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestCordic
+-- Importing package SimSrcGen
+-- Compiling module CordicStage
+-- Compiling module Cordic
+-- Importing package Fixedpoint
+
+Top level modules:
+	TestCordic
+
+} {} {}}

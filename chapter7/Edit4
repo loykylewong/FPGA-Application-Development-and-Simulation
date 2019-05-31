@@ -1,0 +1,17 @@
+force -freeze {sim:/TestIir/theIir1/genblk1[0]/theIir/n0}  200 0
+force -freeze {sim:/TestIir/theIir1/genblk1[0]/theIir/d1} -30a 0
+
+force -freeze {sim:/TestIir/theIir1/genblk1[1]/theIir/n0}  200 0
+force -freeze {sim:/TestIir/theIir1/genblk1[1]/theIir/d1} -355 0
+
+force -freeze {sim:/TestIir/theIir1/genblk1[2]/theIir/n0}  200 0
+force -freeze {sim:/TestIir/theIir1/genblk1[2]/theIir/d1} -324 0
+
+force -freeze {sim:/TestIir/theIir2/genblk1[0]/theIir/n0}  200 0
+force -freeze {sim:/TestIir/theIir2/genblk1[0]/theIir/d1} -30a 0
+
+force -freeze {sim:/TestIir/theIir2/genblk1[1]/theIir/n0}  200 0
+force -freeze {sim:/TestIir/theIir2/genblk1[1]/theIir/d1} -355 0
+
+force -freeze {sim:/TestIir/theIir2/genblk1[2]/theIir/n0}  200 0
+force -freeze {sim:/TestIir/theIir2/genblk1[2]/theIir/d1} -324 0

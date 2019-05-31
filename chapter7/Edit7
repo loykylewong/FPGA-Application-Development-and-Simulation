@@ -1,0 +1,11 @@
+force -freeze {sim:/TestPID/theLCFilter/genblk1[0]/theIir/n0}    800000000 0
+force -freeze {sim:/TestPID/theLCFilter/genblk1[0]/theIir/d1} fff15c28f5c3 0
+
+
+
+force -freeze {sim:/TestPID/theLCFilter/genblk1[0]/theIir/n0} 0 0
+force -freeze {sim:/TestPID/theLCFilter/genblk1[0]/theIir/d1} ffffffffff00054695ad 0
+
+
+force -freeze {sim:/TestPID/theLCFilter/genblk1[0]/theIir/n0} 0 0
+force -freeze {sim:/TestPID/theLCFilter/genblk1[0]/theIir/d1} ffffffffff00054695ad 0

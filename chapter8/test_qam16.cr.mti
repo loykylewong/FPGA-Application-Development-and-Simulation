@@ -1,0 +1,35 @@
+Z:/projects/modelsim/FPGA_Book_2017/chapter8/qam.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter8/qam.sv
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestCounter
+-- Importing package SimSrcGen
+-- Compiling module TestCntSecMinHr
+-- Compiling module CntSecMinHr
+-- Compiling module Counter
+-- Compiling module CounterMax
+-- Compiling module TestDelayChain
+-- Compiling module DelayChain
+-- Compiling module TestDDS
+-- Compiling module DDS
+-- Compiling module OrthDDS
+-- Compiling module TestFir
+-- Compiling module FIR
+-- Compiling module InterpDeci
+-- Compiling module TestQAM16
+-- Compiling module QAMModulator
+-- Compiling module QAMDemod
+-- Compiling module PeakHolder
+-- Compiling module QAM16SyncJudge
+
+Top level modules:
+	TestCounter
+	TestCntSecMinHr
+	CounterMax
+	TestDelayChain
+	TestDDS
+	TestFir
+	TestQAM16
+
+} {} {}}
