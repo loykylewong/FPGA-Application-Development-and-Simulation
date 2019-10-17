@@ -91,7 +91,7 @@ module CicUpSampler #( parameter W = 10, R = 4, M = 1, N = 2 )(
     localparam FINALW = StgWidth(2*N);
     localparam real FINAL_GAIN = Gain(2*N);
     // Q1.(FINALW-1)
-    wire signed [FINALW-1:0] attn = (1.0 / FINAL_GAIN * 2**(FINALW-1));
+    wire signed [FINALW-1:0] attn = (1.0 / FINAL_GAIN * 2.0**(FINALW-1));
     `DEF_FP_MUL(mul, FINALW-W+1, W-1, 1, FINALW-1, W-1);
     always_ff@(posedge clk) begin 
         if(rst) out <= '0;
@@ -125,7 +125,7 @@ module CicDownSampler #( parameter W = 10, R = 4, M = 1, N = 2 )(
         end
     endgenerate
     // Q1.(DW-1)
-    wire signed [DW-1:0] attn = (1.0 / GAIN * 2**(DW-1));
+    wire signed [DW-1:0] attn = (1.0 / GAIN * 2.0**(DW-1));
     `DEF_FP_MUL(mul, DW-W+1, W-1, 1, DW-1, W-1);
     always_ff@(posedge clk) begin
         if(rst) out <= '0;
