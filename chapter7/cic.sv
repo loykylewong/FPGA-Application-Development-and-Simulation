@@ -105,8 +105,8 @@ module CicDownSampler #( parameter W = 10, R = 4, M = 1, N = 2 )(
     output logic signed [W-1:0] out
 );
     import Fixedpoint::*;
-    localparam real GAIN = (R * M)**(N);
-    localparam DW = W + $ceil($ln(GAIN)/$ln(2));
+    localparam real GAIN = (real'(R) * M)**(N);
+    localparam DW = W + $ceil($ln(GAIN)/$ln(2)); // change to "DW = W + $clog2((longint'(R) * M)**(N))" if your vivado, quartus or something else does not support $ceil or $ln.
     logic signed [DW-1:0] intgs_data[N+1];
     assign intgs_data[0] = in;
     generate
