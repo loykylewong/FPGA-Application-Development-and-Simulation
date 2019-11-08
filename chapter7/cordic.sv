@@ -87,7 +87,7 @@ module Cordic #( parameter DW = 10, AW = DW, ITER = DW )(
 //            yout <= (22'sd1 * y[ITER] * lam) >>> 10;
 //            xout <= (22'(x[ITER]) * 22'(lam)) >>> 10;
 //            yout <= (22'(y[ITER]) * 22'(lam)) >>> 10;
-            arem <= a[ITER];
+            arem <= a[ITER] >>> 1;
         end
     end
 endmodule

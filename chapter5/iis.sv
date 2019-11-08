@@ -3,6 +3,7 @@
 
 `include "../common.sv"
 `include "../chapter4/counter.sv"
+`include "../chapter4/edge2en.sv"
 `default_nettype none
 `timescale 1ns/10ps
 
