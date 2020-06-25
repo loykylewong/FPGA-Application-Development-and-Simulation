@@ -69,6 +69,11 @@ let max(x, y) = x > y? x : y;
     let name(x, y) = \
     (   ((i0)+(i1)+(f0)+(f1))'(x) * ((i0)+(i1)+(f0)+(f1))'(y) \
     ) >>> ((f0)+(f1)-(fr));
+// // if you need DEF_FP_MUL and your compiler doesn't support "let":
+// `define DEF_FP_MUL(name, i0, f0, i1, f1, fr) \
+//     function automatic signed [(i0)+(i1)+(fr)-1:0] name(input signed [(i0)+(f0)-1:0] x, input signed [(i1)+(f1)-1:0] y); \
+//         name = (((i0)+(i1)+(f0)+(f1))'(x) * ((i0)+(i1)+(f0)+(f1))'(y)) >>> ((f0)+(f1)-(fr)); \
+//     endfunction
     
 `define DEF_CPLX_CALC(typename, addname, subname, mulname, i, f) \
     typedef struct { \
