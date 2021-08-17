@@ -39,6 +39,22 @@ module SpRamRf #(
     end
 endmodule
 
+module SpRamRa #(   // asynchronous read
+    parameter DW = 8, WORDS = 256
+)(
+    input wire clk,
+    input wire [$clog2(WORDS) - 1 : 0] addr,
+    input wire we,
+    input wire [DW - 1 : 0] din,
+    output logic [DW - 1 : 0] qout
+);
+    logic [DW - 1 : 0] ram[WORDS];
+    always_ff@(posedge clk) begin
+        if(we) ram[addr] <= din;
+    end
+    assign qout = ram[addr];
+endmodule
+
 module SpRamWf #(
     parameter DW = 8, WORDS = 256
 )(
@@ -77,6 +93,25 @@ module SdpRamRf #(
     always_ff@(posedge clk) begin
         qout_b <= ram[addr_b];
     end
+endmodule
+
+module SdpRamRa #(
+    parameter DW = 8, WORDS = 256
+)(
+    input wire clk,
+    input wire [$clog2(WORDS) - 1 : 0] addr_a,
+    input wire wr_a,
+    input wire [DW - 1 : 0] din_a,
+    input wire [$clog2(WORDS) - 1 : 0] addr_b,
+    output logic [DW - 1 : 0] qout_b
+);
+    logic [DW - 1 : 0] ram[WORDS];
+    always_ff@(posedge clk) begin
+        if(wr_a) begin
+            ram[addr_a] <= din_a;
+        end
+    end
+    assign qout_b = ram[addr_b];
 endmodule
 
 module DpRam #(

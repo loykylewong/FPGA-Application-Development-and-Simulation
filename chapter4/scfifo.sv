@@ -112,4 +112,33 @@ module ScFifo2 #(
 	assign dout = (rd_dly)? qout_b : qout_b_reg;
 endmodule
 
+module ScFifoSA #(	// output show-ahead(altera's term) or FWFT(xilinx's term)
+	parameter DW = 8,
+	parameter AW = 10
+)(
+	input wire clk,
+	input wire [DW - 1 : 0] din,
+	input wire write,
+	output logic [DW - 1 : 0] dout,
+	input wire read,
+	output logic [AW - 1 : 0] wr_cnt = '0, rd_cnt = '0,
+    output logic [AW - 1 : 0] data_cnt,
+	output logic full, empty
+);
+	localparam CAPACITY = 2**AW - 1;
+	always_ff@(posedge clk) begin
+		if(write) wr_cnt <= wr_cnt + 1'b1;
+	end
+	always_ff@(posedge clk) begin
+		if(read) rd_cnt <= rd_cnt + 1'b1;
+	end
+	assign data_cnt = wr_cnt - rd_cnt;
+	assign full = data_cnt == CAPACITY;
+	assign empty = data_cnt == 0;
+	SdpRamRa #(.DW(DW), .WORDS(2**AW)) theRam(
+        .clk(clk), .addr_a(wr_cnt), .wr_a(write),
+        .din_a(din), .addr_b(rd_cnt), .qout_b(dout)
+	);
+endmodule
+
 `endif

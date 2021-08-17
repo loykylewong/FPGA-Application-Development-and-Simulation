@@ -37,6 +37,44 @@ module DelayChainMem #(
     endgenerate
 endmodule
 
+// improved output behavior (just like scfifo2)
+module DelayChainMem2 #(
+    parameter DW  = 8,
+    parameter LEN = 32
+)(
+    input  wire clk, en,
+    input  wire  [DW - 1 : 0] din,
+    output logic [DW - 1 : 0] dout
+);
+    generate
+        if(LEN == 0) begin
+            assign dout = din;
+        end
+        else if(LEN == 1) begin
+            always_ff@(posedge clk) begin
+                if(en) dout <= din;
+            end
+        end
+        else begin
+            logic en_dly;
+            logic [DW-1:0] ram_out, ram_out_dly = '0;
+            assign dout = en_dly ? ram_out : ram_out_dly;
+            logic [$clog2(LEN) - 1 : 0] addr = '0;
+            SpRamRf #(DW, LEN) theRam(
+                .clk(clk), .addr(addr), .we(en), .din(din), .qout(ram_out)
+            );
+            always_ff@(posedge clk) begin
+                if(en) begin
+                    if(addr < LEN - 2) addr <= addr + 1'b1;
+                    else addr <= '0;
+                end
+                if(en_dly) ram_out_dly <= ram_out;
+                en_dly <= en;
+            end
+        end
+    endgenerate
+endmodule
+
 module TestDelayChainMem;
     import SimSrcGen::*;
     logic [7:0] a, y;
