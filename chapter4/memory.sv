@@ -12,12 +12,12 @@ module TestMem;
     logic [7:0] a = 0, d = 0, q;
     logic we = 0;
     initial begin
-        #10 {we, a, d} = {1, 8'h01, 8'h10};
-        #10 {we, a, d} = {1, 8'h03, 8'h30};
-        #10 {we, a, d} = {1, 8'h06, 8'h60};
-        #10 {we, a, d} = {1, 8'h0a, 8'ha0};
-        #10 {we, a, d} = {1, 8'h0f, 8'hf0};
-        #10 {we, a, d} = {0, 8'h00, 8'h00};
+        #10 {we, a, d} = {1'b1, 8'h01, 8'h10};
+        #10 {we, a, d} = {1'b1, 8'h03, 8'h30};
+        #10 {we, a, d} = {1'b1, 8'h06, 8'h60};
+        #10 {we, a, d} = {1'b1, 8'h0a, 8'ha0};
+        #10 {we, a, d} = {1'b1, 8'h0f, 8'hf0};
+        #10 {we, a, d} = {1'b0, 8'h00, 8'h00};
         forever #10 a++;
     end
     SpRamRfSine theMem(clk, a, we, d, q);
@@ -32,7 +32,7 @@ module SpRamRf #(
     input wire [DW - 1 : 0] din,
     output logic [DW - 1 : 0] qout
 );
-    logic [DW - 1 : 0] ram[WORDS];
+    logic [DW - 1 : 0] ram[WORDS] = '{WORDS{DW'(0)}};
     always_ff@(posedge clk) begin
         if(we) ram[addr] <= din;
         qout <= ram[addr];
@@ -214,4 +214,5 @@ module SpRamRfSine #(
     end
 endmodule
 
+`default_nettype wire
 `endif

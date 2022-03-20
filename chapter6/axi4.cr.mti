@@ -1,13 +1,15 @@
-Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4s_fifo.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4s_fifo.sv
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4s_fifo.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4s_fifo.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling package SimSrcGen
 -- Compiling package CombFunctions
 -- Compiling package Fixedpoint
 -- Compiling module TestMem
 -- Importing package SimSrcGen
 -- Compiling module SpRamRf
+-- Compiling module SpRamRa
 -- Compiling module SpRamWf
 -- Compiling module SdpRamRf
+-- Compiling module SdpRamRa
 -- Compiling module DpRam
 -- Compiling module SdcRam
 -- Compiling module DcRam
@@ -15,13 +17,16 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 -- Compiling module TestScFifo
 -- Compiling module ScFifo1
 -- Compiling module ScFifo2
+-- Compiling module ScFifoSA
 -- Compiling module TestAxi4StreamFifo
 -- Compiling interface Axi4StreamIf
 -- Compiling module Axi4sFifo
+-- Compiling module Axi4sFifo2
 
 Top level modules:
 	TestMem
 	SpRamRf
+	SpRamRa
 	SpRamWf
 	DpRam
 	SdcRam
@@ -29,9 +34,10 @@ Top level modules:
 	TestScFifo
 	ScFifo1
 	TestAxi4StreamFifo
+	Axi4sFifo2
 
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4full.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4full.sv
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4full.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4full.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling package SimSrcGen
 -- Compiling package CombFunctions
 -- Compiling package Fixedpoint
@@ -42,22 +48,22 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 Top level modules:
 	TestBurstAddrGen
 
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4lite_if.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4lite_if.sv
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4lite_if.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4lite_if.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling interface Axi4LiteIf
 
 Top level modules:
 	--none--
 
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4lite_slave.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4lite_slave.sv
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4lite_slave.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4lite_slave.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling module Axi4LiteSlave
 
 Top level modules:
 	Axi4LiteSlave
 
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4lite_master.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4lite_master.sv
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4lite_master.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter6/axi4lite_master.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling package SimSrcGen
 -- Compiling package CombFunctions
 -- Compiling package Fixedpoint
@@ -74,16 +80,18 @@ Top level modules:
 	TestCntSecMinHr
 	Axi4LiteMasterEg
 
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter6/test_axi4lite.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter6/test_axi4lite.sv
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter6/test_axi4lite.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter6/test_axi4lite.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling package SimSrcGen
 -- Compiling package CombFunctions
 -- Compiling package Fixedpoint
 -- Compiling module TestMem
 -- Importing package SimSrcGen
 -- Compiling module SpRamRf
+-- Compiling module SpRamRa
 -- Compiling module SpRamWf
 -- Compiling module SdpRamRf
+-- Compiling module SdpRamRa
 -- Compiling module DpRam
 -- Compiling module SdcRam
 -- Compiling module DcRam
@@ -93,8 +101,10 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 Top level modules:
 	TestMem
 	SpRamRf
+	SpRamRa
 	SpRamWf
 	SdpRamRf
+	SdpRamRa
 	DpRam
 	SdcRam
 	DcRam

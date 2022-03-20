@@ -43,13 +43,14 @@ module TestAxi4StreamFifo;
 endmodule
 
 interface Axi4StreamIf #(
-    parameter IDW = 8, DESTW = 4, USERW = 8
+    parameter DW_BYTES = 4, IDW = 8, DESTW = 4, USERW = 8
 )(
     input wire clk, reset_n
 );
-    logic [31:0] tdata;
+    localparam DW = DW_BYTES * 8;
+    logic [DW - 1 : 0] tdata;
     logic tvalid = '0, tready, tlast;
-    logic [3:0] tstrb, tkeep;
+    logic [DW_BYTES - 1 : 0] tstrb, tkeep;
     logic [IDW - 1 : 0] tid;
     logic [DESTW - 1 : 0] tdest;
     logic [USERW - 1 : 0] tuser;
@@ -63,7 +64,7 @@ interface Axi4StreamIf #(
                 tstrb, tkeep, tid, tdest, tuser,
         output  tready
     );
-    task static Put(logic [31:0] data, logic last);
+    task static Put(logic [DW - 1 : 0] data, logic last);
     begin
         tdata <= data; tlast <= last;
         tvalid <= '1;
@@ -98,6 +99,20 @@ module Axi4sFifo (
         else if(rd) src.tvalid <= '1;
         else if(src.tready) src.tvalid <= 0;
     end
+endmodule
+
+module Axi4sFifo2 ( // use show-ahead fifo, simple but maybe lower fmax
+    Axi4StreamIf.sink snk,
+    Axi4StreamIf.source src
+);
+    logic full, empty;
+    always_comb snk.tready = ~full;
+    always_comb src.tvalid = ~empty;
+    wire wr = snk.tready & snk.tvalid;
+    wire rd = src.tvalid & src.tready;
+    ScFifoSA #(33, 3) theFifo(
+        snk.clk, {snk.tdata, snk.tlast}, wr, {src.tdata, src.tlast}, rd,
+        , , , full, empty);
 endmodule
 
 `endif

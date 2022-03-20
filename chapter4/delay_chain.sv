@@ -28,6 +28,14 @@ module DelayChain #(
         if(LEN == 0) begin
             assign out = in;
         end
+        else if(LEN == 1) begin
+            logic [DW - 1 : 0] dly;
+            always_ff@(posedge clk) begin
+                if(rst) dly = '0;
+                else if(en) dly <= in;
+            end
+            assign out = dly;
+        end
         else begin
             logic [DW - 1 : 0] dly[0 : LEN - 1];
             always_ff@(posedge clk) begin

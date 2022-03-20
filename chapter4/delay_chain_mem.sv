@@ -1,15 +1,17 @@
 `ifndef __DELAY_CHAIN_MEM_SV__
 `define __DELAY_CHAIN_MEM_SV__
 
+`include "../common.sv"
+`include "./memory.sv"
+
 `timescale 1ns/1ps
 `default_nettype none
-`include "../common.sv"
 
-module DelayChainMem #(
+module DelayChainMem #(     // add rst in 20220315
     parameter DW = 8,
     parameter LEN = 32
 )(
-    input wire clk, en,
+    input wire clk, rst, en,
     input wire [DW - 1 : 0] din,
     output logic [DW - 1 : 0] dout
 );
@@ -19,7 +21,8 @@ module DelayChainMem #(
         end
         else if(LEN == 1) begin
             always_ff@(posedge clk) begin
-                if(en) dout <= din;
+                if(rst)     dout <= '0;
+                else if(en) dout <= din;
             end
         end
         else begin
@@ -28,7 +31,8 @@ module DelayChainMem #(
                 .clk(clk), .addr(addr), .we(en), .din(din), .qout(dout)
             );
             always_ff@(posedge clk) begin
-                if(en) begin
+                if(rst) addr <= '0;
+                else if(en) begin
                     if(addr < LEN - 2) addr <= addr + 1'b1;
                     else addr <= '0;
                 end
@@ -38,11 +42,11 @@ module DelayChainMem #(
 endmodule
 
 // improved output behavior (just like scfifo2)
-module DelayChainMem2 #(
+module DelayChainMem2 #(     // add rst in 20220315
     parameter DW  = 8,
     parameter LEN = 32
 )(
-    input  wire clk, en,
+    input  wire clk, rst, en,
     input  wire  [DW - 1 : 0] din,
     output logic [DW - 1 : 0] dout
 );
@@ -52,7 +56,8 @@ module DelayChainMem2 #(
         end
         else if(LEN == 1) begin
             always_ff@(posedge clk) begin
-                if(en) dout <= din;
+                if(rst)     dout <= '0;
+                else if(en) dout <= din;
             end
         end
         else begin
@@ -64,12 +69,19 @@ module DelayChainMem2 #(
                 .clk(clk), .addr(addr), .we(en), .din(din), .qout(ram_out)
             );
             always_ff@(posedge clk) begin
-                if(en) begin
+                if(rst) addr <= '0;
+                else if(en) begin
                     if(addr < LEN - 2) addr <= addr + 1'b1;
                     else addr <= '0;
                 end
-                if(en_dly) ram_out_dly <= ram_out;
-                en_dly <= en;
+            end
+            always_ff@(posedge clk) begin
+                if(rst)         ram_out_dly <= '0;
+                else if(en_dly) ram_out_dly <= ram_out;
+            end
+            always_ff@(posedge clk) begin
+                if(rst) en_dly <= 1'b0; 
+                else    en_dly <= en;
             end
         end
     endgenerate
@@ -86,7 +98,7 @@ module TestDelayChainMem;
         #20 en = '1;
     end
     always #10 a = $random();
-    DelayChainMem #(8, 0) dc(clk, en, a, y);
+    DelayChainMem #(8, 0) dc(clk, 1'b0, en, a, y);
 endmodule
 
 `endif

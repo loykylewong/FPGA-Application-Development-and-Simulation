@@ -250,6 +250,16 @@ logic [3:0] e = a[1][2][3][4+:4];//4'hf;
 initial begin
     a[0][0][3:2] = a[1][0][1:0]; //a[0][0]=32'h55662233
 end
+
+logic rd[16], rc[16];
+logic [15:0] va;
+logic an;
+initial begin
+	{>>{rd}} = 16'b1 << 1;
+	va = {>>{rd}};
+	rc = rd;
+	an = |({>>{rd}} & {>>{rc}});
+end
 endmodule
 
 module code2_27;

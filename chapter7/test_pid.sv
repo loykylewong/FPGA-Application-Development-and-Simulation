@@ -64,7 +64,7 @@ module SimpleInverterCtrl(
     wire signed [11:0] v_err = sin_volt - volt_fb; //Q5.7
     wire signed [47:0] pid_in = v_err <<< 17;      //Q5.7->Q24.24
     logic signed [47:0] pid_out;
-    Pid #( .W(48), .FW(24), .P(39), .I(2.35e5), .D(1.1e-3),
+    Pid2 #( .W(36), .FW(24), .P(39), .I(2.35e5/100e3), .D(1.1e-3),
         .N(1.64e5), .TS(1/100e3), .LIMIT(1000) )
     thePid ( clk, rst, en_100k, pid_in, pid_out );
     wire signed [23:0] pid_out_int = pid_out[47:24];

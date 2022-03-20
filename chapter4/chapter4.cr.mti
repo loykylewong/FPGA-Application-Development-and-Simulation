@@ -1,5 +1,5 @@
-Z:/projects/modelsim/FPGA_Book_2017/chapter4/mux.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/mux.sv
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+Z:/projects/modelsim/FPGA_Book_2017/chapter4/mux.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/mux.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling package SimSrcGen
 -- Compiling package CombFunctions
 -- Compiling package Fixedpoint
@@ -9,8 +9,8 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 Top level modules:
 	TestMux
 
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/quadrature_inc_enc.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/quadrature_inc_enc.sv
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/quadrature_inc_enc.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/quadrature_inc_enc.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling package SimSrcGen
 -- Compiling package CombFunctions
 -- Compiling package Fixedpoint
@@ -21,8 +21,8 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 Top level modules:
 	TestQuadEncIf
 
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/cc_event_handshake.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/cc_event_handshake.sv
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/cc_event_handshake.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/cc_event_handshake.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling package SimSrcGen
 -- Compiling package CombFunctions
 -- Compiling package Fixedpoint
@@ -33,8 +33,8 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 Top level modules:
 	TestCCEvent
 
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/delay_chain_mem.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/delay_chain_mem.sv
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/delay_chain_mem.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/delay_chain_mem.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling package SimSrcGen
 -- Compiling package CombFunctions
 -- Compiling package Fixedpoint
@@ -45,8 +45,8 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 Top level modules:
 	TestDelayChainMem
 
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/accumulator.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/accumulator.sv
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/accumulator.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/accumulator.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling package SimSrcGen
 -- Compiling package CombFunctions
 -- Compiling package Fixedpoint
@@ -58,8 +58,42 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 Top level modules:
 	TestAccu
 
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/delay_chain.sv {1 {vlog -work work -sv -stats=none {Z:\projects\modelsim\FPGA_Book_2017\chapter4\delay_chain.sv}
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/memory.sv {2 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/memory.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestMem
+-- Importing package SimSrcGen
+** Warning: (vlog-2121) Z:/projects/modelsim/FPGA_Book_2017/chapter4/memory.sv(15): Illegal concatenation of an unsized constant. Will treat it as a 32-bit value.
+** Warning: (vlog-2121) Z:/projects/modelsim/FPGA_Book_2017/chapter4/memory.sv(16): Illegal concatenation of an unsized constant. Will treat it as a 32-bit value.
+** Warning: (vlog-2121) Z:/projects/modelsim/FPGA_Book_2017/chapter4/memory.sv(17): Illegal concatenation of an unsized constant. Will treat it as a 32-bit value.
+** Warning: (vlog-2121) Z:/projects/modelsim/FPGA_Book_2017/chapter4/memory.sv(18): Illegal concatenation of an unsized constant. Will treat it as a 32-bit value.
+** Warning: (vlog-2121) Z:/projects/modelsim/FPGA_Book_2017/chapter4/memory.sv(19): Illegal concatenation of an unsized constant. Will treat it as a 32-bit value.
+** Warning: (vlog-2121) Z:/projects/modelsim/FPGA_Book_2017/chapter4/memory.sv(20): Illegal concatenation of an unsized constant. Will treat it as a 32-bit value.
+-- Compiling module SpRamRf
+-- Compiling module SpRamRa
+-- Compiling module SpRamWf
+-- Compiling module SdpRamRf
+-- Compiling module SdpRamRa
+-- Compiling module DpRam
+-- Compiling module SdcRam
+-- Compiling module DcRam
+-- Compiling module SpRamRfSine
+
+Top level modules:
+	TestMem
+	SpRamRf
+	SpRamRa
+	SpRamWf
+	SdpRamRf
+	SdpRamRa
+	DpRam
+	SdcRam
+	DcRam
+
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/delay_chain.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/delay_chain.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling package SimSrcGen
 -- Compiling package CombFunctions
 -- Compiling package Fixedpoint
@@ -70,32 +104,8 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 Top level modules:
 	TestDelayChain
 
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/memory.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/memory.sv
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
--- Compiling package SimSrcGen
--- Compiling package CombFunctions
--- Compiling package Fixedpoint
--- Compiling module TestMem
--- Importing package SimSrcGen
--- Compiling module SpRamRf
--- Compiling module SpRamWf
--- Compiling module SdpRamRf
--- Compiling module DpRam
--- Compiling module SdcRam
--- Compiling module DcRam
--- Compiling module SpRamRfSine
-
-Top level modules:
-	TestMem
-	SpRamRf
-	SpRamWf
-	SdpRamRf
-	DpRam
-	SdcRam
-	DcRam
-
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/stop_watch_fsm.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/stop_watch_fsm.sv
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/stop_watch_fsm.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/stop_watch_fsm.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling package SimSrcGen
 -- Compiling package CombFunctions
 -- Compiling package Fixedpoint
@@ -106,16 +116,24 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 Top level modules:
 	TestStopWatchFsm
 
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/scfifo.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/scfifo.sv
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/scfifo.sv {2 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/scfifo.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling package SimSrcGen
 -- Compiling package CombFunctions
 -- Compiling package Fixedpoint
 -- Compiling module TestMem
 -- Importing package SimSrcGen
+** Warning: (vlog-2121) ../chapter4/memory.sv(15): Illegal concatenation of an unsized constant. Will treat it as a 32-bit value.
+** Warning: (vlog-2121) ../chapter4/memory.sv(16): Illegal concatenation of an unsized constant. Will treat it as a 32-bit value.
+** Warning: (vlog-2121) ../chapter4/memory.sv(17): Illegal concatenation of an unsized constant. Will treat it as a 32-bit value.
+** Warning: (vlog-2121) ../chapter4/memory.sv(18): Illegal concatenation of an unsized constant. Will treat it as a 32-bit value.
+** Warning: (vlog-2121) ../chapter4/memory.sv(19): Illegal concatenation of an unsized constant. Will treat it as a 32-bit value.
+** Warning: (vlog-2121) ../chapter4/memory.sv(20): Illegal concatenation of an unsized constant. Will treat it as a 32-bit value.
 -- Compiling module SpRamRf
+-- Compiling module SpRamRa
 -- Compiling module SpRamWf
 -- Compiling module SdpRamRf
+-- Compiling module SdpRamRa
 -- Compiling module DpRam
 -- Compiling module SdcRam
 -- Compiling module DcRam
@@ -123,19 +141,22 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 -- Compiling module TestScFifo
 -- Compiling module ScFifo1
 -- Compiling module ScFifo2
+-- Compiling module ScFifoSA
 
 Top level modules:
 	TestMem
 	SpRamRf
+	SpRamRa
 	SpRamWf
 	DpRam
 	SdcRam
 	DcRam
 	TestScFifo
 	ScFifo1
+	ScFifoSA
 
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/edge2en.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/edge2en.sv
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/edge2en.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/edge2en.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling package SimSrcGen
 -- Compiling package CombFunctions
 -- Compiling package Fixedpoint
@@ -150,8 +171,8 @@ Top level modules:
 	Falling2En
 	Edge2En
 
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/digital_led.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/digital_led.sv
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/digital_led.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/digital_led.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling module Bin2Bcd
 -- Compiling module DigitalLedSeg
 
@@ -159,20 +180,20 @@ Top level modules:
 	Bin2Bcd
 	DigitalLedSeg
 
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/shiftreg.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/shiftreg.sv
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/cross_cd_cnt_state.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/cross_cd_cnt_state.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling package SimSrcGen
 -- Compiling package CombFunctions
 -- Compiling package Fixedpoint
--- Compiling module TestShiftReg
--- Compiling module ShiftReg
+-- Compiling module TestCCCnt
+-- Importing package SimSrcGen
+-- Compiling module CrossClkCnt
 
 Top level modules:
-	TestShiftReg
-	ShiftReg
+	TestCCCnt
 
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/pwm.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/pwm.sv
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/pwm.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/pwm.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling package SimSrcGen
 -- Compiling package CombFunctions
 -- Compiling package Fixedpoint
@@ -187,20 +208,20 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 Top level modules:
 	TestPwm
 
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/cross_cd_cnt_state.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/cross_cd_cnt_state.sv
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/shiftreg.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/shiftreg.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling package SimSrcGen
 -- Compiling package CombFunctions
 -- Compiling package Fixedpoint
--- Compiling module TestCCCnt
--- Importing package SimSrcGen
--- Compiling module CrossClkCnt
+-- Compiling module TestShiftReg
+-- Compiling module ShiftReg
 
 Top level modules:
-	TestCCCnt
+	TestShiftReg
+	ShiftReg
 
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/digital_osc_trigger.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/digital_osc_trigger.sv
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/digital_osc_trigger.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/digital_osc_trigger.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling package SimSrcGen
 -- Compiling package CombFunctions
 -- Compiling package Fixedpoint
@@ -212,8 +233,8 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 Top level modules:
 	TestOscopeTrigSmp
 
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/decoder.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/decoder.sv
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/decoder.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/decoder.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling package SimSrcGen
 -- Compiling package CombFunctions
 -- Compiling package Fixedpoint
@@ -224,20 +245,8 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 Top level modules:
 	TestDecoder
 
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/pulse_widen.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/pulse_widen.sv
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
--- Compiling package SimSrcGen
--- Compiling package CombFunctions
--- Compiling package Fixedpoint
--- Compiling module TestPulseWiden
--- Importing package SimSrcGen
--- Compiling module PulseWiden
-
-Top level modules:
-	TestPulseWiden
-
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/key_process.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/key_process.sv
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/key_process.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/key_process.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling package SimSrcGen
 -- Compiling package CombFunctions
 -- Compiling package Fixedpoint
@@ -248,8 +257,33 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 Top level modules:
 	TestKeyProcess
 
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/counter.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/counter.sv
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/pulse_widen.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/pulse_widen.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestPulseWiden
+-- Importing package SimSrcGen
+-- Compiling module PulseWiden
+
+Top level modules:
+	TestPulseWiden
+
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/encoder.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/encoder.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestEncoder
+-- Importing package CombFunctions
+-- Compiling module Encoder
+
+Top level modules:
+	TestEncoder
+	Encoder
+
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/counter.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/counter.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling package SimSrcGen
 -- Compiling package CombFunctions
 -- Compiling package Fixedpoint
@@ -264,18 +298,5 @@ Top level modules:
 	TestCounter
 	TestCntSecMinHr
 	CounterMax
-
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/encoder.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/encoder.sv
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
--- Compiling package SimSrcGen
--- Compiling package CombFunctions
--- Compiling package Fixedpoint
--- Compiling module TestEncoder
--- Importing package CombFunctions
--- Compiling module Encoder
-
-Top level modules:
-	TestEncoder
-	Encoder
 
 } {} {}}

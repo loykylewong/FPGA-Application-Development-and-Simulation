@@ -42,14 +42,14 @@ module TestScFifo;
 		@(posedge clk) rd = 1'b0;
 		#10 $stop();
 	end
-	ScFifo2 #(8, 3) theFifo(clk, din, wr & ~fu, dout, rd & ~em, wc, rc, dc, fu, em);
+	ScFifo2 #(8, 3) theFifo(clk, 1'b0, din, wr & ~fu, dout, rd & ~em, wc, rc, dc, fu, em);
 endmodule
 
-module ScFifo1 #(
+module ScFifo1 #(		// add rst in 20220315
 	parameter DW = 8,
 	parameter AW = 10
 )(
-	input wire clk,
+	input wire clk, rst,
 	input wire [DW - 1 : 0] din,
 	input wire write,
 	output logic [DW - 1 : 0] dout,
@@ -60,10 +60,12 @@ module ScFifo1 #(
 );
 	localparam CAPACITY = 2**AW - 1;
 	always_ff@(posedge clk) begin
-		if(write) wr_cnt <= wr_cnt + 1'b1;
+		if(rst)        wr_cnt <= '0;
+		else if(write) wr_cnt <= wr_cnt + 1'b1;
 	end
 	always_ff@(posedge clk) begin
-		if(read) rd_cnt <= rd_cnt + 1'b1;
+		if(rst)       rd_cnt <= '0;
+		else if(read) rd_cnt <= rd_cnt + 1'b1;
 	end
 	assign data_cnt = wr_cnt - rd_cnt;
 	assign full = data_cnt == CAPACITY;
@@ -74,11 +76,11 @@ module ScFifo1 #(
 	);
 endmodule
 
-module ScFifo2 #(
+module ScFifo2 #(		// add rst in 20220315
 	parameter DW = 8,
 	parameter AW = 10
 )(
-	input wire clk,
+	input wire clk, rst,
 	input wire [DW - 1 : 0] din,
 	input wire write,
 	output logic [DW - 1 : 0] dout,
@@ -89,21 +91,25 @@ module ScFifo2 #(
 );
 	localparam CAPACITY = 2**AW - 1;
 	always_ff@(posedge clk) begin
-		if(write) wr_cnt <= wr_cnt + 1'b1;
+		if(rst)        wr_cnt <= 1'b0;
+		else if(write) wr_cnt <= wr_cnt + 1'b1;
 	end
 	always_ff@(posedge clk) begin
-		if(read) rd_cnt <= rd_cnt + 1'b1;
+		if(rst)       rd_cnt <= 1'b0;
+		else if(read) rd_cnt <= rd_cnt + 1'b1;
 	end
 	assign data_cnt = wr_cnt - rd_cnt;
 	assign full = data_cnt == CAPACITY;
 	assign empty = data_cnt == 0;
 	logic rd_dly;
 	always_ff@(posedge clk) begin
-		rd_dly <= read;
+		if(rst) rd_dly <= 1'b0;
+		else    rd_dly <= read;
 	end
 	logic [DW - 1 : 0] qout_b, qout_b_reg = '0;
 	always_ff@(posedge clk) begin
-		if(rd_dly) qout_b_reg <= qout_b;
+		if(rst)         qout_b_reg <= '0;
+		else if(rd_dly) qout_b_reg <= qout_b;
 	end
 	SdpRamRf #(.DW(DW), .WORDS(2**AW)) theRam(
         .clk(clk), .addr_a(wr_cnt), .wr_a(write),
@@ -112,11 +118,11 @@ module ScFifo2 #(
 	assign dout = (rd_dly)? qout_b : qout_b_reg;
 endmodule
 
-module ScFifoSA #(	// output show-ahead(altera's term) or FWFT(xilinx's term)
+module ScFifoSA #(	// output show-ahead(altera's term) or FWFT(xilinx's term)  // add rst in 20220315
 	parameter DW = 8,
 	parameter AW = 10
 )(
-	input wire clk,
+	input wire clk, rst,
 	input wire [DW - 1 : 0] din,
 	input wire write,
 	output logic [DW - 1 : 0] dout,
@@ -127,10 +133,12 @@ module ScFifoSA #(	// output show-ahead(altera's term) or FWFT(xilinx's term)
 );
 	localparam CAPACITY = 2**AW - 1;
 	always_ff@(posedge clk) begin
-		if(write) wr_cnt <= wr_cnt + 1'b1;
+		if(rst)        wr_cnt <= '0;
+		else if(write) wr_cnt <= wr_cnt + 1'b1;
 	end
 	always_ff@(posedge clk) begin
-		if(read) rd_cnt <= rd_cnt + 1'b1;
+		if(rst)       rd_cnt <= '0;
+		else if(read) rd_cnt <= rd_cnt + 1'b1;
 	end
 	assign data_cnt = wr_cnt - rd_cnt;
 	assign full = data_cnt == CAPACITY;

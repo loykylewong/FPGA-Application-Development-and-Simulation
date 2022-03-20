@@ -1,5 +1,24 @@
-Z:/projects/modelsim/FPGA_Book_2017/chapter2/sim_chapter2.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter2/sim_chapter2.sv
+Z:/projects/modelsim/FPGA_Book_2017/chapter2/testintfcmp.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter2/testintfcmp.sv
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module mem
+-- Compiling module mem_tester
+-- Compiling module testintfcmp
+
+Top level modules:
+	testintfcmp
+
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter2/testintf.sv {1 {vlog -work work -sv -cover sbceft3 -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter2/testintf.sv
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling interface membus
+-- Compiling module mem
+-- Compiling module mem_tester
+-- Compiling module testintf
+
+Top level modules:
+	testintf
+
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter2/sim_chapter2.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter2/sim_chapter2.sv
+Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
 -- Compiling module test_chapter2
 -- Compiling module code2_9
 -- Compiling module code2_10
@@ -94,25 +113,6 @@ Top level modules:
 	code2_998
 	code2_999
 	code2_996
-
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter2/testintfcmp.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter2/testintfcmp.sv
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
--- Compiling module mem
--- Compiling module mem_tester
--- Compiling module testintfcmp
-
-Top level modules:
-	testintfcmp
-
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter2/testintf.sv {1 {vlog -work work -sv -cover sbceft3 -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter2/testintf.sv
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
--- Compiling interface membus
--- Compiling module mem
--- Compiling module mem_tester
--- Compiling module testintf
-
-Top level modules:
-	testintf
 
 } {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter2/testgen.sv {1 {vlog -work work -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter2/testgen.sv
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015

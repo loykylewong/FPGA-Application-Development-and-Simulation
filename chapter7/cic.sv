@@ -22,27 +22,27 @@ module Comb #( parameter W = 10, M = 1 )(
     output logic signed [W-1:0] out
 );
     logic signed [W-1:0] dly[M];    // imp z^-M
-//    generate
-//        if(M > 1) begin
+   generate
+       if(M > 1) begin
             always_ff@(posedge clk) begin
                 if(rst) dly <= '{M{'0}};
                 else if(en) dly <= {in, dly[0:M-2]};
             end
-//        end
-//        else begin
-//            always_ff@(posedge clk) begin
-//                if(rst) dly <= '{M{'0}};
-//                else if(en) dly[0] <= in;
-//            end
-//        end
-//    endgenerate
+       end
+       else begin
+           always_ff@(posedge clk) begin
+               if(rst) dly <= '{M{'0}};
+               else if(en) dly[0] <= in;
+           end
+       end
+   endgenerate
     always_ff@(posedge clk) begin
         if(rst) out <= '0;
         else if(en) out <= in - dly[M-1];
     end
 endmodule
 
-module CicUpSampler #( parameter W = 10, R = 4, M = 1, N = 2 )(
+module CicUpSampler #( parameter integer W = 10, R = 4, M = 1, N = 2 )(
     input wire clk, rst, eni, eno,
     input wire signed [W-1:0] in,
     output logic signed [W-1:0] out
@@ -91,7 +91,7 @@ module CicUpSampler #( parameter W = 10, R = 4, M = 1, N = 2 )(
     localparam FINALW = StgWidth(2*N);
     localparam real FINAL_GAIN = Gain(2*N);
     // Q1.(FINALW-1)
-    wire signed [FINALW-1:0] attn = (1.0 / FINAL_GAIN * 2.0**(FINALW-1));
+    wire signed [FINALW-1:0] attn = (1.0 / FINAL_GAIN * 2**(FINALW-1));
     `DEF_FP_MUL(mul, FINALW-W+1, W-1, 1, FINALW-1, W-1);
     always_ff@(posedge clk) begin 
         if(rst) out <= '0;
@@ -99,14 +99,14 @@ module CicUpSampler #( parameter W = 10, R = 4, M = 1, N = 2 )(
     end
 endmodule
 
-module CicDownSampler #( parameter W = 10, R = 4, M = 1, N = 2 )(
+module CicDownSampler #( parameter integer W = 10, R = 4, M = 1, N = 2 )(
     input wire clk, rst, eni, eno,
     input wire signed [W-1:0] in,
     output logic signed [W-1:0] out
 );
     import Fixedpoint::*;
     localparam real GAIN = (real'(R) * M)**(N);
-    localparam integer DW = W + $ceil($ln(GAIN)/$ln(2)); // change to "DW = W + $clog2((longint'(R) * M)**(N))" if your vivado, quartus or something else does not support $ceil or $ln.
+    localparam ineger DW = W + $ceil($ln(GAIN)/$ln(2));
     logic signed [DW-1:0] intgs_data[N+1];
     assign intgs_data[0] = in;
     generate

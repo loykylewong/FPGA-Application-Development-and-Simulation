@@ -816,7 +816,7 @@ Resolution = ns
 UserTimeUnit = default
 
 ; Default run length
-RunLength = 1 ns
+RunLength = 500 us
 
 ; Maximum iterations that can be run without advancing simulation time
 IterationLimit = 10000000
@@ -2036,10 +2036,10 @@ Project_DefaultLib = work
 Project_SortMethod = unused
 Project_Files_Count = 1
 Project_File_0 = Z:/projects/modelsim/FPGA_Book_2017/chapter7/iir.sv
-Project_File_P_0 = cover_toggle 0 vlog_protect 0 file_type systemverilog group_id 0 cover_exttoggle 0 cover_nofec 0 cover_cond 0 vlog_1995compat SV vlog_nodebug 0 vlog_noload 0 cover_branch 0 folder {Top Level} last_compile 1497413558 cover_fsm 0 cover_excludedefault 0 vlog_enable0In 0 vlog_disableopt 0 cover_covercells 0 voptflow 1 cover_optlevel 3 vlog_showsource 0 vlog_hazard 0 toggle - vlog_0InOptions {} ood 0 cover_noshort 0 vlog_upper 0 compile_to work vlog_options {} compile_order 0 cover_expr 0 dont_compile 0 cover_stmt 0
+Project_File_P_0 = cover_toggle 0 vlog_protect 0 file_type systemverilog group_id 0 cover_exttoggle 0 cover_nofec 0 cover_cond 0 vlog_1995compat SV vlog_nodebug 0 folder {Top Level} last_compile 1554899506 cover_fsm 0 cover_branch 0 vlog_noload 0 vlog_enable0In 0 cover_excludedefault 0 vlog_disableopt 0 cover_covercells 0 vlog_hazard 0 vlog_showsource 0 cover_optlevel 3 voptflow 1 ood 0 vlog_0InOptions {} toggle - vlog_options {} compile_to work vlog_upper 0 cover_noshort 0 compile_order 0 dont_compile 0 cover_expr 0 cover_stmt 0
 Project_Sim_Count = 1
 Project_Sim_0 = sim_iir
-Project_Sim_P_0 = -L {} -Lf {} -sdf {} selected_du {} additional_dus TestIir folder {Top Level} ok 1 -t default timing default +plusarg {} -nofileshare 0 -sdfnowarn 0 OtherArgs {} -sdfnoerror 0 -std_input {} -hazards 0 -noglitch 0 -absentisempty 0 +no_pulse_msg 0 +pulse_r {} -multisource_delay {} -vital2.2b 0 +notimingchecks 0 +pulse_e {} -std_output {} vopt_env 1 is_vopt_flow 0 Generics {}
+Project_Sim_P_0 = -L {} -Lf {} -sdf {} selected_du {} additional_dus TestIir folder {Top Level} ok 1 -t default timing default +plusarg {} -nofileshare 0 -sdfnowarn 0 OtherArgs {} -sdfnoerror 0 -std_input {} -hazards 0 -noglitch 0 -absentisempty 0 +no_pulse_msg 0 +pulse_r {} -multisource_delay {} -vital2.2b 0 +notimingchecks 0 +pulse_e {} -std_output {} vopt_env 1 is_vopt_flow 0 is_vopt_opt_used 2 Generics {}
 Project_Folder_Count = 0
 Echo_Compile_Output = 0
 Save_Compile_Report = 1

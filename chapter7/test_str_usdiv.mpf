@@ -1,4 +1,8 @@
-; Copyright 1991-2012 Mentor Graphics Corporation
+; vsim modelsim.ini file, version 10.4
+[Version]
+INIVersion = "10.6e"
+
+; Copyright 1991-2018 Mentor Graphics Corporation
 ;
 ; All Rights Reserved.
 ;
@@ -48,17 +52,51 @@ synopsys = $MODEL_TECH/../synopsys
 modelsim_lib = $MODEL_TECH/../modelsim_lib
 sv_std = $MODEL_TECH/../sv_std
 mtiAvm = $MODEL_TECH/../avm
+mtiRnm = $MODEL_TECH/../rnm
 mtiOvm = $MODEL_TECH/../ovm-2.1.2
-mtiUvm = $MODEL_TECH/../uvm-1.1b
+mtiUvm = $MODEL_TECH/../uvm-1.1d
 mtiUPF = $MODEL_TECH/../upf_lib
 mtiPA  = $MODEL_TECH/../pa_lib
 floatfixlib = $MODEL_TECH/../floatfixlib
 mc2_lib = $MODEL_TECH/../mc2_lib
+osvvm = $MODEL_TECH/../osvvm
+
+; added mapping for ADMS
+mgc_ams = $MODEL_TECH/../mgc_ams
+ieee_env = $MODEL_TECH/../ieee_env
+
 ;vhdl_psl_checkers = $MODEL_TECH/../vhdl_psl_checkers       // Source files only for this release
 ;verilog_psl_checkers = $MODEL_TECH/../verilog_psl_checkers // Source files only for this release
 ;mvc_lib = $MODEL_TECH/../mvc_lib
+infact = $MODEL_TECH/../infact
+vhdlopt_lib = $MODEL_TECH/../vhdlopt_lib
+
+; Automatically perform logical->physical mapping for physical libraries that
+; appear in -L/-Lf options with filesystem path delimiters (e.g. '.' or '/').
+; The tail of the filesystem path name is chosen as the logical library name.
+; For example, in the command "vopt -L ./path/to/lib1 -o opttop top",
+; vopt automatically performs the mapping "lib1 -> ./path/to/lib1".
+; See the User Manual for more details.
+;
+; AutoLibMapping = 0
 
 work = work
+[DefineOptionset]
+; Define optionset entries for the various compilers, vmake, and vsim.
+; These option sets can be used with the "-optionset <optionsetname>" syntax.
+; i.e.
+;  vlog -optionset COMPILEDEBUG top.sv
+;  vsim -optionset UVMDEBUG my_top
+;
+; Following are some useful examples.
+
+; define a vsim optionset for uvm debugging
+UVMDEBUG = -uvmcontrol=all -msgmode both -displaymsgmode both -classdebug -onfinish stop
+
+; define a vopt optionset for debugging
+VOPTDEBUG = +acc -debugdb
+
+
 [vcom]
 ; VHDL93 variable selects language version as the default. 
 ; Default is VHDL-2002.
@@ -66,6 +104,8 @@ work = work
 ; Value of 1 or 1993 for VHDL-1993.
 ; Default or value of 2 or 2002 for VHDL-2002.
 ; Value of 3 or 2008 for VHDL-2008
+; Value of 4 or ams99 for VHDL-AMS-1999
+; Value of 5 or ams07 for VHDL-AMS-2007
 VHDL93 = 2002
 
 ; Ignore VHDL-2008 declaration of REAL_VECTOR in package STANDARD. Default is off.
@@ -91,6 +131,11 @@ VHDL93 = 2002
 
 ; Turn off optimization for IEEE std_logic_1164 package. Default is on.
 ; Optimize_1164 = 0
+
+; Enable compiler statistics. Specify one or more arguments: 
+;                   [all,none,time,cmd,msg,perf,verbose,list]
+; Add '-' to disable specific statistics. Default is [time,cmd,msg].
+; Stats = time,cmd,msg
 
 ; Turn on resolving of ambiguous function overloading in favor of the
 ; "explicit" function declaration (not the one automatically created by
@@ -168,14 +213,6 @@ Explicit = 1
 ; scalar objects defined with subtypes.
 ; NoRangeCheck = 1
 
-; Run the 0-in compiler on the VHDL source files
-; Default is off.
-; ZeroIn = 1
-
-; Set the options to be passed to the 0-in compiler.
-; Default is "".
-; ZeroInOptions = ""
-
 ; Set the prefix to be honored for synthesis/coverage pragma recognition.
 ; Default is "".
 ; AddPragmaPrefix = ""
@@ -210,14 +247,26 @@ Explicit = 1
 ; convert them to '1' and '0'. Default is to not convert.
 ; CoverRespectHandL = 0
 
-; Increase or decrease the maximum number of rows allowed in a FEC table, implementing
-; a condition coverage or expression coverage expression, by changing FecEffort.
-; Higher FecEffort leads to a longer compile time, but more expressions covered.
-; This is a number from 1 to 3, with the following meanings (the default is 1):
-;    3 -- High FecEffort, Allows large expressions to be covered, will cause longer compile time. 
-;    2 -- Medium FecEffort, Allows more number of inputs per expression than Low FecEffort to be covered. 
-;    1 -- Low FecEffort, Covers only small expressions or conditions and skips larger ones. 
-; FecEffort = 2
+; Increase or decrease the maximum number of rows allowed in a UDP table
+; implementing a VHDL condition coverage or expression coverage expression.
+; More rows leads to a longer compile time, but more expressions covered.
+; CoverMaxUDPRows = 192
+
+; Increase or decrease the maximum number of input patterns that are present
+; in FEC table. This leads to a longer compile time with more expressions
+; covered with FEC metric.
+; CoverMaxFECRows = 192
+
+; Increase or decrease the limit on the size of expressions and conditions
+; considered for expression and condition coverages. Higher FecUdpEffort leads 
+; to higher compile, optimize and simulation time, but more expressions and 
+; conditions are considered for coverage in the design. FecUdpEffort can
+; be set to a number ranging from 1 (low) to 3 (high), defined as:
+;   1 - (low) Only small expressions and conditions considered for coverage.
+;   2 - (medium) Bigger expressions and conditions considered for coverage.
+;   3 - (high) Very large expressions and conditions considered for coverage.
+; The default setting is 1 (low).
+; FecUdpEffort = 1
 
 ; Enable or disable Focused Expression Coverage analysis for conditions and
 ; expressions. Focused Expression Coverage data is provided by default when
@@ -229,6 +278,16 @@ Explicit = 1
 ; coverage is active.
 ; CoverUDP = 1
 
+; Enable or disable Rapid Expression Coverage mode for conditions and expressions.
+; Disabling this would convert non-masking conditions in FEC tables to matching
+; input patterns. 
+; CoverREC = 1
+
+; Enable or disable bit-blasting multi-bit operands of reduction prefix expressions
+; for expression/condition coverage.
+; NOTE: Enabling this may have a negative impact on simulation performance.
+; CoverExpandReductionPrefix = 0
+
 ; Enable or disable short circuit evaluation of conditions and expressions when
 ; condition or expression coverage is active. Short circuit evaluation is enabled
 ; by default.
@@ -237,6 +296,15 @@ Explicit = 1
 ; Enable code coverage reporting of code that has been optimized away.
 ; The default is not to report.
 ; CoverReportCancelled = 1
+
+; Enable deglitching of code coverage in combinatorial, non-clocked, processes.
+; Default is no deglitching.
+; CoverDeglitchOn = 1
+
+; Control the code coverage deglitching period. A period of 0, eliminates delta
+; cycle glitches. The value of CoverDeglitchPeriod needs to be either be 0 or a
+; time string that includes time units. Examples: 0 or 10.0ps or "10.0 ps".
+; CoverDeglitchPeriod = 0
 
 ; Use this directory for compiler temporary files instead of "work/_temp"
 ; CompilerTempDir = /tmp
@@ -300,6 +368,16 @@ Explicit = 1
 ; initialization, unless overridden here.
 ; InitOutCompositeParam = 0
 
+; Generate symbols debugging database in only some special cases to save on
+; the number of files in the library. For other design-units, this database is
+; generated on-demand in vsim. 
+; Default is to to generate debugging database for all design-units.
+; SmartDbgSym = 1
+
+; Enable or disable automatic creation of missing libraries.
+; Default is 1 (enabled)  
+; CreateLib = 1
+
 [vlog]
 ; Turn off inclusion of debugging info within design units.
 ; Default is to include debugging info.
@@ -342,21 +420,18 @@ Explicit = 1
 ; Enable parsing of embedded PSL assertions. Default is enabled.
 ; EmbeddedPsl = 0
 
+; Enable compiler statistics. Specify one or more arguments: 
+;                   [all,none,time,cmd,msg,perf,verbose,list,kb]
+; Add '-' to disable specific statistics. Default is [time,cmd,msg].
+; Stats = time,cmd,msg
+
 ; Set the threshold for automatically identifying sparse Verilog memories.
-; A memory with depth equal to or more than the sparse memory threshold gets
-; marked as sparse automatically, unless specified otherwise in source code
-; or by +nosparse commandline option of vlog or vopt.
-; The default is 1M.  (i.e. memories with depth equal
-; to or greater than 1M are marked as sparse)
+; A memory with total size in bytes equal to or more than the sparse memory
+; threshold gets marked as sparse automatically, unless specified otherwise
+; in source code or by the +nosparse commandline option of vlog or vopt.
+; The default is 1M.  (i.e. memories with total size equal
+; to or greater than 1Mb are marked as sparse)
 ; SparseMemThreshold = 1048576 
-
-; Run the 0-in compiler on the Verilog source files
-; Default is off.
-; ZeroIn = 1
-
-; Set the options to be passed to the 0-in compiler.
-; Default is "".
-; ZeroInOptions = ""
 
 ; Set the prefix to be honored for synthesis and coverage pragma recognition.
 ; Default is "".
@@ -378,14 +453,26 @@ Explicit = 1
 ; Default is to not automatically exclude defaults.
 ; CoverExcludeDefault = 1
 
-; Increase or decrease the maximum number of rows allowed in a FEC table, implementing
-; a condition coverage or expression coverage expression, by changing FecEffort.
-; Higher FecEffort leads to a longer compile time, but more expressions covered.
-; This is a number from 1 to 3, with the following meanings (the default is 1):
-;    3 -- High FecEffort, Allows large expressions to be covered, will cause longer compile time. 
-;    2 -- Medium FecEffort, Allows more number of inputs per expression than Low FecEffort to be covered. 
-;    1 -- Low FecEffort, Covers only small expressions or conditions and skips larger ones. 
-; FecEffort = 2
+; Increase or decrease the maximum number of rows allowed in a UDP table
+; implementing a VHDL condition coverage or expression coverage expression.
+; More rows leads to a longer compile time, but more expressions covered.
+; CoverMaxUDPRows = 192
+
+; Increase or decrease the maximum number of input patterns that are present
+; in FEC table. This leads to a longer compile time with more expressions
+; covered with FEC metric.
+; CoverMaxFECRows = 192
+
+; Increase or decrease the limit on the size of expressions and conditions
+; considered for expression and condition coverages. Higher FecUdpEffort leads 
+; to higher compile, optimize and simulation time, but more expressions and 
+; conditions are considered for coverage in the design. FecUdpEffort can
+; be set to a number ranging from 1 (low) to 3 (high), defined as:
+;   1 - (low) Only small expressions and conditions considered for coverage.
+;   2 - (medium) Bigger expressions and conditions considered for coverage.
+;   3 - (high) Very large expressions and conditions considered for coverage.
+; The default setting is 1 (low).
+; FecUdpEffort = 1
 
 ; Enable or disable Focused Expression Coverage analysis for conditions and
 ; expressions. Focused Expression Coverage data is provided by default when
@@ -397,11 +484,29 @@ Explicit = 1
 ; coverage is active.
 ; CoverUDP = 1
 
+; Enable or disable Rapid Expression Coverage mode for conditions and expressions.
+; Disabling this would convert non-masking conditions in FEC tables to matching
+; input patterns. 
+; CoverREC = 1
+
+; Enable or disable bit-blasting multi-bit operands of reduction prefix expressions
+; for expression/condition coverage.
+; NOTE: Enabling this may have a negative impact on simulation performance.
+; CoverExpandReductionPrefix = 0
+
 ; Enable or disable short circuit evaluation of conditions and expressions when
 ; condition or expression coverage is active. Short circuit evaluation is enabled
 ; by default.
 ; CoverShortCircuit = 0
 
+; Enable deglitching of code coverage in combinatorial, non-clocked, processes.
+; Default is no deglitching.
+; CoverDeglitchOn = 1
+
+; Control the code coverage deglitching period. A period of 0, eliminates delta
+; cycle glitches. The value of CoverDeglitchPeriod needs to be either be 0 or a
+; time string that includes time units. Examples: 0 or 10.0ps or "10.0 ps".
+; CoverDeglitchPeriod = 0
 
 ; Turn on code coverage in VLOG `celldefine modules, modules containing
 ; specify blocks, and modules included using vlog -v and -y. Default is off.
@@ -466,12 +571,6 @@ Explicit = 1
 ; modelsim.ini variable "SVCovergroupStrobe" in the [vsim] section.
 ; SVCovergroupStrobeDefault = 0
 
-; Specify the override for the default value of "merge_instances" option for
-; the Covergroup Type. This is a compile time option which forces 
-; "merge_instances" to a user specified default value and supersedes 
-; SystemVerilog specified default value of '0'(zero).
-; SVCovergroupMergeInstancesDefault = 0
-
 ; Specify the override for the default value of "per_instance" option for the
 ; Covergroup variables. This is a compile time option which forces "per_instance"
 ; to a user specified default value and supersedes SystemVerilog specified
@@ -489,7 +588,7 @@ Explicit = 1
 ; packages.  The behavior is identical to using the "-L" switch.
 ; 
 ; LibrarySearchPath = <path/lib> [<path/lib> ...]
-LibrarySearchPath = mtiAvm mtiOvm mtiUvm mtiUPF
+LibrarySearchPath = mtiAvm mtiRnm mtiOvm mtiUvm mtiUPF infact
 
 ; The behavior is identical to the "-mixedansiports" switch.  Default is off.
 ; MixedAnsiPorts = 1
@@ -518,7 +617,7 @@ LibrarySearchPath = mtiAvm mtiOvm mtiUvm mtiUPF
 ; List of file suffixes which will be read as SystemVerilog.  White space
 ; in extensions can be specified with a back-slash: "\ ".  Back-slashes
 ; can be specified with two consecutive back-slashes: "\\";
-; SVFileExtensions = sv svp svh
+; SvFileSuffixes = sv svp svh
 
 ; This setting is the same as the vlog -sv command line switch.
 ; Enables SystemVerilog features and keywords when true (1).
@@ -550,9 +649,24 @@ LibrarySearchPath = mtiAvm mtiOvm mtiUvm mtiUPF
 ; WrealType = 1
 
 ; Controls SystemVerilog Language Extensions.  These options enable
-; some non-LRM compliant behavior.  Valid extensions are "feci",
-; "pae", "uslt" and "spsl".
-; SVExtensions = uslt,spsl
+; some non-LRM compliant behavior.
+; SvExtensions = [+|-]<extension>[,[+|-]<extension>*]
+
+; Generate symbols debugging database in only some special cases to save on
+; the number of files in the library. For other design-units, this database is
+; generated on-demand in vsim. 
+; Default is to to generate debugging database for all design-units.
+; SmartDbgSym = 1
+
+; Controls how $unit library entries are named.  Valid options are:
+; "file" (generate name based on the first file on the command line)
+; "du" (generate name based on first design unit following an item
+; found in $unit scope)
+; CUAutoName = file
+
+; Enable or disable automatic creation of missing libraries.
+; Default is 1 (enabled)  
+; CreateLib = 1
 
 [sccom]
 ; Enable use of SCV include files and library.  Default is off.
@@ -565,6 +679,10 @@ LibrarySearchPath = mtiAvm mtiOvm mtiUvm mtiUPF
 ; The path should point directly at a compiler executable.
 ; CppPath = /usr/bin/g++
 
+; Specify the compiler version from the list of support GNU compilers.
+; examples 4.3.3, 4.5.0
+; CppInstall = 4.5.0
+
 ; Enable verbose messages from sccom.  Default is off.
 ; SccomVerbose = 1
 
@@ -574,6 +692,21 @@ LibrarySearchPath = mtiAvm mtiOvm mtiUvm mtiUPF
 ; Enable use of SC_MS include files and library.  Default is off.
 ; UseScMs = 1
 
+; Use SystemC-2.2 instead of the default SystemC-2.3. Default is off.
+; Sc22Mode = 1
+
+; Enable compiler statistics. Specify one or more arguments: 
+;                   [all,none,time,cmd,msg,perf,verbose,list,kb]
+; Add '-' to disable specific statistics. Default is [time,cmd,msg].
+; Stats = time,cmd,msg
+
+; Enable or disable automatic creation of missing libraries.
+; Default is 1 (enabled)  
+; CreateLib = 1
+
+; Enable use of UVMC library.  Default is off.
+; UseUvmc = 1
+
 [vopt]
 ; Turn on code coverage in vopt.  Default is off. 
 ; Coverage = sbceft
@@ -582,18 +715,54 @@ LibrarySearchPath = mtiAvm mtiOvm mtiUvm mtiUPF
 ; code coverage is on.  Refer to the comment for this in the [vlog] area. 
 ; CoverOpt = 3
 
-; Increase or decrease the maximum number of rows allowed in a FEC table, implementing
-; a condition coverage or expression coverage expression, by changing FecEffort.
-; Higher FecEffort leads to a longer compile time, but more expressions covered.
-; This is a number from 1 to 3, with the following meanings (the default is 1):
-;    3 -- High FecEffort, Allows large expressions to be covered, will cause longer compile time. 
-;    2 -- Medium FecEffort, Allows more number of inputs per expression than Low FecEffort to be covered. 
-;    1 -- Low FecEffort, Covers only small expressions or conditions and skips larger ones. 
-; FecEffort = 2
+; Controls set of CoverConstructs that are being considered for Coverage 
+; Collection.
+; Some of Valid options are: default,set1,set2
+; Covermode = default
+
+; Controls set of HDL cover constructs that would be considered(or not considered)
+; for Coverage Collection. (Default corresponds to covermode default). 
+; Some of Valid options are: "ca", "citf", "cifl", "tcint", "fsmqs".
+; Coverconstruct = noca,nocitf,nofsmtf,nofsmds,noctes,nocicl,nocprc,nocfl,nofsmup,nocifl,nocpm,notcint,nocpkg,nocsva
+
+; Increase or decrease the maximum number of rows allowed in a UDP table
+; implementing a VHDL condition coverage or expression coverage expression.
+; More rows leads to a longer compile time, but more expressions covered.
+; CoverMaxUDPRows = 192
+
+; Increase or decrease the maximum number of input patterns that are present
+; in FEC table. This leads to a longer compile time with more expressions
+; covered with FEC metric.
+; CoverMaxFECRows = 192
+
+; Increase or decrease the limit on the size of expressions and conditions
+; considered for expression and condition coverages. Higher FecUdpEffort leads 
+; to higher compile, optimize and simulation time, but more expressions and 
+; conditions are considered for coverage in the design. FecUdpEffort can
+; be set to a number ranging from 1 (low) to 3 (high), defined as:
+;   1 - (low) Only small expressions and conditions considered for coverage.
+;   2 - (medium) Bigger expressions and conditions considered for coverage.
+;   3 - (high) Very large expressions and conditions considered for coverage.
+; The default setting is 1 (low).
+; FecUdpEffort = 1
 
 ; Enable code coverage reporting of code that has been optimized away.
 ; The default is not to report.
 ; CoverReportCancelled = 1
+
+; Enable deglitching of code coverage in combinatorial, non-clocked, processes.
+; Default is no deglitching.
+; CoverDeglitchOn = 1
+
+; Enable compiler statistics. Specify one or more arguments: 
+;                   [all,none,time,cmd,msg,perf,verbose,list,kb]
+; Add '-' to disable specific statistics. Default is [time,cmd,msg].
+; Stats = time,cmd,msg
+
+; Control the code coverage deglitching period. A period of 0, eliminates delta
+; cycle glitches. The value of CoverDeglitchPeriod needs to be either be 0 or a
+; time string that includes time units. Examples: 0 or 10.0ps or "10.0 ps".
+; CoverDeglitchPeriod = 0
 
 ; Do not show immediate assertions with constant expressions in 
 ; GUI/reports/UCDB etc. By default immediate assertions with constant 
@@ -617,9 +786,27 @@ LibrarySearchPath = mtiAvm mtiOvm mtiUvm mtiUPF
 ; ParallelJobs = 0 
 
 ; Controls SystemVerilog Language Extensions.  These options enable
-; some non-LRM compliant behavior.  Valid extensions are "feci",
-; "pae", "uslt" and "spsl".
-; SVExtensions = uslt,spsl
+; some non-LRM compliant behavior.
+; SvExtensions = [+|-]<extension>[,[+|-]<extension>*]
+
+; Load the specified shared objects with the RTLD_GLOBAL flag.
+; This gives global visibility to all symbols in the shared objects,
+; meaning that subsequently loaded shared objects can bind to symbols
+; in the global shared objects.  The list of shared objects should
+; be whitespace delimited.  This option is not supported on the
+; Windows or AIX platforms.
+; GlobalSharedObjectList = example1.so example2.so example3.so
+
+; Disable SystemVerilog elaboration system task messages
+; IgnoreSVAInfo = 1 
+; IgnoreSVAWarning = 1
+; IgnoreSVAError = 1
+; IgnoreSVAFatal = 1
+
+; Enable or disable automatic creation of missing libraries.
+; Default is 1 (enabled)  
+; CreateLib = 1
+
 
 [vsim]
 ; vopt flow
@@ -647,10 +834,17 @@ Resolution = ns
 UserTimeUnit = default
 
 ; Default run length
-RunLength = 30 ms
+RunLength = 100 ps
 
 ; Maximum iterations that can be run without advancing simulation time
-IterationLimit = 5000
+IterationLimit = 10000000
+
+; Specify libraries to be searched for precompiled modules
+; LibrarySearchPath = <path/lib> [<path/lib> ...]
+
+; Set XPROP assertion fail limit. Default is 5.
+; Any positive integer, -1 for infinity.
+; XpropAssertionLimit = 5
 
 ; Control PSL and Verilog Assume directives during simulation
 ; Set SimulateAssumeDirectives = 0 to disable assume being simulated as asserts
@@ -672,39 +866,52 @@ IterationLimit = 5000
 ; Set SimulateImmedAsserts = 1 to enable simulation of immediate asserts
 ; SimulateImmedAsserts = 1 
 
+; License feature mappings for Verilog and VHDL
+; qhsimvh       Single language VHDL license
+; qhsimvl       Single language Verilog license
+; msimhdlsim    Language neutral license for either Verilog or VHDL
+; msimhdlmix    Second language only, language neutral license for either 
+;               Verilog or VHDL
+;
 ; Directives to license manager can be set either as single value or as
 ; space separated multi-values:
-; vhdl          Immediately reserve a VHDL license
-; vlog          Immediately reserve a Verilog license
-; plus          Immediately reserve a VHDL and Verilog license
+; vhdl          Immediately checkout and hold a VHDL license (i.e., one of
+;               qhsimvh, msimhdlsim, or msimhdlmix)
+; vlog          Immediately checkout and hold a Verilog license (i.e., one of
+;               qhsimvl, msimhdlsim, or msimhdlmix)
+; plus          Immediately checkout and hold a VHDL license and a Verilog license
 ; noqueue       Do not wait in the license queue when a license is not available
 ; viewsim       Try for viewer license but accept simulator license(s) instead
 ;               of queuing for viewer license (PE ONLY)
-; noviewer	Disable checkout of msimviewer and vsim-viewer license 
-;		features (PE ONLY)
-; noslvhdl	Disable checkout of qhsimvh and vsim license features
-; noslvlog	Disable checkout of qhsimvl and vsimvlog license features
-; nomix		Disable checkout of msimhdlmix and hdlmix license features
-; nolnl		Disable checkout of msimhdlsim and hdlsim license features
-; mixedonly	Disable checkout of qhsimvh,qhsimvl,vsim,vsimvlog license 
-;		features
-; lnlonly	Disable checkout of qhsimvh,qhsimvl,vsim,vsimvlog,msimhdlmix,
-;		hdlmix license features
-; Single value:
+; noviewer      Disable checkout of msimviewer license feature (PE ONLY)
+; noslvhdl      Disable checkout of qhsimvh license feature
+; noslvlog      Disable checkout of qhsimvl license feature
+; nomix         Disable checkout of msimhdlmix license feature
+; nolnl         Disable checkout of msimhdlsim license feature
+; mixedonly     Disable checkout of qhsimvh and qhsimvl license features
+; lnlonly       Disable checkout of qhsimvh,qhsimvl, and msimhdlmix license features
+;
+; Examples (remove ";" comment character to activate licensing directives):
+; Single directive:
 ; License = plus
-; Multi-value:
+; Multi-directive (Note: space delimited directives):
 ; License = noqueue plus
 
-; Severity level of a VHDL assertion message or of a SystemVerilog immediate assertion
+; Severity level of a VHDL assertion message or of a SystemVerilog severity system task
 ; which will cause a running simulation to stop.
-; VHDL assertions and SystemVerilog immediate assertions that occur with the
+; VHDL assertions and SystemVerilog severity system task that occur with the
 ; given severity or higher will cause a running simulation to stop.
 ; This value is ignored during elaboration.
 ; 0 = Note  1 = Warning  2 = Error  3 = Failure  4 = Fatal
 BreakOnAssertion = 3
 
+; Severity level of a tool message which will cause a running simulation to 
+; stop. This value is ignored during elaboration. Default is to not break.
+; 0 = Note  1 = Warning  2 = Error  3 = Fatal
+;BreakOnMessage = 2
+
 ; The class debug feature enables more visibility and tracking of class instances
-; during simulation.  By default this feature is 0 (disabled).  To enable this 
+; during simulation.  By default this feature is disabled (0).  To enable this 
 ; feature set ClassDebug to 1.
 ; ClassDebug = 1
 
@@ -762,9 +969,13 @@ ShowFunctions = 1
 
 ; Default radix for all windows and commands.
 ; Radix may be one of: symbolic, ascii, binary, octal, decimal, hex, unsigned
-; Flags may be one of: enumnumeric, showbase
-DefaultRadix = symbolic
-;DefaultRadixFlags = showbase
+; Flags may be one of: enumnumeric, showbase, wreal
+DefaultRadix = hexadecimal
+DefaultRadixFlags = showbase
+; Set to 1 for make the signal_force VHDL and Verilog functions use the 
+; default radix when processing the force value. Prior to 10.2 signal_force
+; used the default radix, now it always uses symbolic unless value explicitly indicates base
+;SignalForceFunctionUseDefaultRadix = 0
 
 ; VSIM Startup command
 ; Startup = do startup.do
@@ -775,8 +986,28 @@ DefaultRadix = symbolic
 ; To explicitly disable auto save:
 ; ShutdownFile = --disable-auto-save
 
-; File for saving command transcript
+; Run simulator in batch mode as if -batch were specified on the command line if none of -c, -gui, or -i specified.
+; Simulator runs in interactive mode as if -i were specified if this option is 0. Default is 0.
+; BatchMode = 1
+
+; File for saving command transcript when -batch option used
+; This option is ignored when -c, -gui, or -i options are used or if BatchMode above is zero
+; default is unset so command transcript only goes to stdout for better performance
+; BatchTranscriptFile = transcript
+
+; File for saving command transcript, this option is ignored when -batch option is used
 TranscriptFile = transcript
+
+; Transcript file long line wrapping mode(s)
+;   mode == 0 :: no wrapping, line recorded as is
+;   mode == 1 :: wrap at first whitespace after WSColumn
+;                or at Column.
+;   mode == 2 :: wrap as above, but add continuation 
+;                character ('\') at end of each wrapped line
+;
+; WrapMode = 0
+; WrapColumn = 30000
+; WrapWSColumn = 27000
 
 ; File for saving command history
 ; CommandHistory = cmdhist.log
@@ -837,6 +1068,10 @@ DatasetSeparator = :
 ; the default is to update and propagate in the same iteration.
 ; ForceSigNextIter = 1
 
+; Enable simulation statistics. Specify one or more arguments: 
+;                   [all,none,time,cmd,msg,perf,verbose,list,kb,eor]
+; Add '-' to disable specific statistics. Default is [time,cmd,msg].
+; Stats = time,cmd,msg
 
 ; If zero, open files when elaborated; otherwise, open files on
 ; first read or write.  Default is 0.
@@ -851,6 +1086,13 @@ UnbufferedOutput = 0
 ; setting for max file descriptors.
 ;   0 = unlimited
 ConcurrentFileLimit = 40
+
+; If nonzero, close files as soon as there is either an explicit call to
+; file_close, or when the file variable's scope is closed. When zero, a
+; file opened in append mode is not closed in case it is immediately
+; reopened in append mode; otherwise, the file will be closed at the
+; point it is reopened.
+; AppendClose = 1
 
 ; Control the number of hierarchical regions displayed as
 ; part of a signal name shown in the Wave window.
@@ -870,17 +1112,17 @@ ConcurrentFileLimit = 40
 ; and numeric_bit packages.
 ; NumericStdNoWarnings = 1
 
-; Use old-style (pre-6.6) VHDL FOR generate statement iteration names
+; Use old-style (pre-6.6) VHDL FOR GENERATE statement iteration names
 ; in the design hierarchy.
 ; This style is controlled by the value of the GenerateFormat
 ; value described next.  Default is to use new-style names, which
 ; comprise the generate statement label, '(', the value of the generate
 ; parameter, and a closing ')'.
-; Uncomment this to use old-style names.
+; Set this to 1 to use old-style names.
 ; OldVhdlForGenNames = 1
 
 ; Control the format of the old-style VHDL FOR generate statement region
-; name for each iteration.  Do not quote it.
+; name for each iteration.  Do not quote the value.
 ; The format string here must contain the conversion codes %s and %d,
 ; in that order, and no other conversion codes.  The %s represents
 ; the generate statement label; the %d represents the generate parameter value
@@ -892,10 +1134,27 @@ ConcurrentFileLimit = 40
 ; lookup can function properly.  The default is %s__%d.
 ; GenerateFormat = %s__%d
 
-; Enable changes in VHDL elaboration to allow for Variable Logging
-; This trades off simulation performance for the ability to log variables
-; efficiently.  By default this is disable for maximum simulation performance
+; Enable more efficient logging of VHDL Variables.
+; Logging VHDL variables without this enabled, while possible, is very
+; inefficient.  Enabling this will provide a more efficient logging methodology
+; at the expense of more memory usage.  By default this feature is disabled (0).
+; To enabled this feature, set this variable to 1.
 ; VhdlVariableLogging = 1
+
+; Enable logging of VHDL access type variables and their designated objects.
+; This setting will allow both variables of an access type ("access variables")
+; and their designated objects ("access objects") to be logged.  Logging a
+; variable of an access type will automatically also cause the designated
+; object(s) of that variable to be logged as the simulation progresses.
+; Further, enabling this allows access objects to be logged by name.  By default
+; this feature is disabled (0).  To enable this feature, set this variable to 1.
+; Enabling this will automatically enable the VhdlVariableLogging feature also.
+; AccessObjDebug = 1
+
+; Make each VHDL package in a PDU has its own separate copy of the package instead
+; of sharing the package between PDUs. The default is to share packages.
+; To ensure that each PDU has its own set of packages, set this variable to 1.
+; VhdlSeparatePduPackage = 1
 
 ; Specify whether checkpoint files should be compressed.
 ; The default is 1 (compressed).
@@ -905,6 +1164,10 @@ ConcurrentFileLimit = 40
 ; Use custom gcc compiler located at this path rather than the default path.
 ; The path should point directly at a compiler executable.
 ; DpiCppPath = <your-gcc-installation>/bin/gcc
+;
+; Specify the compiler version from the list of support GNU compilers.
+; examples 4.5.0, 4.7.4
+; DpiCppInstall = 4.7.4
 
 ; Specify whether to enable SystemVerilog DPI "out-of-the-blue" calls.
 ; The term "out-of-the-blue" refers to SystemVerilog export function calls
@@ -964,11 +1227,10 @@ ConcurrentFileLimit = 40
 
 
 ; Specify default UVM-aware debug options if the vsim -uvmcontrol switch is not used.
-; Valid options include: all, none, verbose, disable, struct, msglog, trlog, certe.
+; Valid options include: all, none, verbose, disable, struct, reseed, msglog, trlog, certe.
 ; Options can be enabled by just adding the name, or disabled by prefixing the option with a "-".
 ; The list of options must be delimited by commas, without spaces or tabs.
-; The default is UVMControl = struct
-
+;
 ; Some examples
 ; To turn on all available UVM-aware debug features:
 ; UVMControl = all
@@ -979,6 +1241,26 @@ ConcurrentFileLimit = 40
 ; To completely disable all UVM-aware debug functionality:
 ; UVMControl = disable
 
+; Specify the WildcardFilter setting.
+; A space separated list of object types to be excluded when performing
+; wildcard matches with log, wave, etc commands.  The default value for this variable is:
+;   "Variable Constant Generic Parameter SpecParam Memory Assertion Cover Endpoint ScVariable CellInternal ImmediateAssert VHDLFile"
+; See "Using the WildcardFilter Preference Variable" in the documentation for
+; details on how to use this variable and for descriptions of the filter types.
+WildcardFilter = Variable Constant Generic Parameter SpecParam Memory Assertion Cover Endpoint ScVariable CellInternal ImmediateAssert VHDLFile
+
+; Specify the WildcardSizeThreshold setting.
+; This integer setting specifies the size at which objects will be excluded when 
+; performing wildcard matches with log, wave, etc commands.  Objects of size equal
+; to or greater than the WildcardSizeThreshold will be filtered out from the wildcard
+; matches.  The size is a simple calculation of number of bits or items in the object.  
+; The default value is 8k (8192).  Setting this value to 0 will disable the checking 
+; of object size against this threshold and allow all objects of any size to be logged.
+WildcardSizeThreshold = 8192
+
+; Specify whether warning messages are output when objects are filtered out due to the
+; WildcardSizeThreshold.  The default is 0 (no messages generated).
+WildcardSizeThresholdVerbose = 0
 
 ; Turn on (1) or off (0) WLF file compression.
 ; The default is 1 (compress WLF file).
@@ -1023,22 +1305,23 @@ ConcurrentFileLimit = 40
 ; The default is 1, lock the WLF file.
 ; WLFFileLock = 0
 
-; Specify the update interval for the WLF file.  
-; Value is the number of seconds between updated.  After at least the
-; interval number of seconds, the wlf file is flushed, ensuring that the data
-; is correct when viewed from a separate live viewer.  Setting to 0 means no
-; updating.  Default is 10 seconds, which has a tiny performance impact
+; Specify the update interval for the WLF file in live simulation.
+; The interval is given in seconds.
+; The value is the smallest interval between WLF file updates.  The WLF file
+; will be flushed (updated) after (at least) the interval has elapsed, ensuring
+; that the data is correct when viewed from a separate viewer.
+; A value of 0 means that no updating will occur.
+; The default value is 10 seconds.
 ; WLFUpdateInterval = 10
 
-; Specify the WLF reader cache size limit for each open WLF file.  
-; The size is giving in megabytes.  A value of 0 turns off the
-; WLF cache. 
-; WLFSimCacheSize allows a different cache size to be set for 
-; simulation WLF file independent of post-simulation WLF file 
-; viewing.  If WLFSimCacheSize is not set it defaults to the
-; WLFCacheSize setting.
-; The default WLFCacheSize setting is enabled to 2000M per open WLF file on most 
-; platforms; on Windows, the setting is 1000M to help avoid filling process memory.
+; Specify the WLF cache size limit for WLF files.
+; The value is given in megabytes.  A value of 0 turns off the cache.
+; On non-Windows platforms the default WLFCacheSize setting is 2000 (megabytes).
+; On Windows, the default value is 1000 (megabytes) to help to avoid filling
+; process memory.
+; WLFSimCacheSize allows a different cache size to be set for a live simulation
+; WLF file, independent of post-simulation WLF file viewing.  If WLFSimCacheSize
+; is not set, it defaults to the WLFCacheSize value.
 ; WLFCacheSize = 2000
 ; WLFSimCacheSize = 500
 
@@ -1051,21 +1334,21 @@ ConcurrentFileLimit = 40
 ; The default is 1.
 ; WLFCollapseMode = 0
 
-; Specify whether WLF file logging can use threads on multi-processor machines
-; if 0, no threads will be used, if 1, threads will be used if the system has
-; more than one processor
+; Specify whether WLF file logging can use threads on multi-processor machines.
+; If 0, no threads will be used; if 1, threads will be used if the system has
+; more than one processor.
 ; WLFUseThreads = 1
 
-; Specify the relative size of logged objects that will trigger "large object"
-; messages at log/wave/list time.  This size value is an approximation of
-; the number of bytes needed to store the value of the object before compression
-; and optimization.
-; The default LargeObjectSize size is 500k
+; Specify the size of objects that will trigger "large object" messages
+; at log/wave/list time.  The size calculation of the object is the same as that
+; used by the WildcardSizeThreshold. The default LargeObjectSize size is 500,000.
+; Setting LargeObjectSize to 0 will disable these messages.
 ; LargeObjectSize = 500000
 
-; Specify whether to output "large object" warning messages.
-; The default is 0 which means the warning messages will come out.
-; LargeObjectSilent = 0
+; Specify the depth of stack frames returned by $stacktrace([level]).
+; This depth will be picked up when the optional 'level' argument
+; is not specified or its value is not a positive integer. 
+; StackTraceDepth = 100
 
 ; Turn on/off undebuggable SystemC type warnings. Default is on.
 ; ShowUndebuggableScTypeWarning = 0
@@ -1096,6 +1379,13 @@ ScTimeUnit = ns
 ; to succesfully execute the longest function call chain of sc_main().
 ScMainStackSize = 10 Mb
 
+; Set SystemC thread stack size. The stack size is set as an integer
+; number followed by the unit which can be Kb(Kilo-byte), Mb(Mega-byte) or
+; Gb(Giga-byte). The stack size for sc_thread depends
+; on the amount of data on the sc_thread stack and the memory required
+; to succesfully execute the thread.
+; ScStackSize = 1 Mb
+
 ; Turn on/off execution of remainder of sc_main upon quitting the current
 ; simulation session. If the cumulative length of sc_main() in terms of 
 ; simulation time units is less than the length of the current simulation
@@ -1107,6 +1397,12 @@ ScMainStackSize = 10 Mb
 ; to crash if the code in sc_main is dependent on some simulation state.
 ; Default is on.
 ScMainFinishOnQuit = 1
+
+; Enable calling of the DPI export taks/functions from the
+; SystemC start_of_simulation() callback.
+; The default is off.
+; EnableDpiSosCb = 1
+
 
 ; Set the SCV relationship name that will be used to identify phase
 ; relations.  If the name given to a transactor relation matches this
@@ -1135,14 +1431,11 @@ OnFinish = ask
 ; instead of the reactive region where they are normally printed.
 ; OnFinishPendingAssert = 1;
 
-; Print "simstats" result
+; Print "simstats" result. Default is 0.
 ; 0 == do not print simstats
 ; 1 == print at end of simulation
-; 2 == print at end of run
-; 3 == print at end of run and end of simulation
-; default == 0
+; 2 == print at end of each run command and end of simulation
 ; PrintSimStats = 1
-
 
 ; Assertion File - alternate file for storing VHDL/PSL/Verilog assertion messages
 ; AssertFile = assert.log
@@ -1260,7 +1553,11 @@ OnFinish = ask
 ; Turn on/off code coverage
 ; CodeCoverage = 0
 
-; Count all code coverage condition and expression truth table rows that match.
+; This option applies to condition and expression coverage UDP tables. It
+; has no effect unless UDP is enabled for coverage with vcom/vlog/vopt -coverudp.
+; If this option is used and a match occurs in more than one row in the UDP table,
+; none of the counts for all matching rows is incremented. By default, counts are
+; incremented for all matching rows.
 ; CoverCountAll = 1
 
 ; Turn off automatic inclusion of VHDL integers in toggle coverage. Default
@@ -1302,6 +1599,10 @@ OnFinish = ask
 ; toggle coverage. Default is 0.
 ; ToggleVlogEnumBits = 0
 
+; Turn off automatic inclusion of VHDL records in toggle coverage.
+; Default is to include them.
+; ToggleVHDLRecords = 0
+
 ; Limit the widths of registers automatically tracked for toggle coverage. Default is 128.
 ; For unlimited width, set to 0.
 ; ToggleWidthLimit = 128
@@ -1320,6 +1621,23 @@ OnFinish = ask
 
 ; Enable toggle statistics collection only for ports. Default is 0.
 ; TogglePortsOnly = 1
+
+; Limit the counts that are tracked for Focussed Expression Coverage. When a bin has
+; reached this count, further tracking of the input patterns linked to it is ignored.
+; Default is 1. For unlimited counts, set to 0.
+; NOTE: Changing this value from its default value may affect simulation performance.
+; FecCountLimit = 1
+
+; Limit the counts that are tracked for UDP Coverage. When a bin has
+; reached this count, further tracking of the input patterns linked to it is ignored.
+; Default is 1. For unlimited counts, set to 0.
+; NOTE: Changing this value from its default value may affect simulation performance.
+; UdpCountLimit = 1
+
+; Control toggle coverage deglitching period. A period of 0, eliminates delta
+; cycle glitches. This is the default. The value of ToggleDeglitchPeriod needs to be either 
+; 0 or a time string that includes time units. Examples: 0 or 10.0ps or "10.0 ps".
+; ToggleDeglitchPeriod = 10.0ps
 
 ; Turn on/off all PSL/SVA cover directive enables.  Default is on.
 ; CoverEnable = 0
@@ -1396,15 +1714,16 @@ OnFinish = ask
 ; drives compliance with the clarified behavior in the IEEE 1800-2009 standard.
 ; SVCovergroup63Compatibility = 0
 
-; Enforce the 6.5 default behavior of covergroup get_coverage() builtin 
-; functions, GUI, and report. This setting changes the default values of
-; type_option.merge_instances to ensure the 6.5 default behavior if explicit
-; assignments are not made on type_option.merge_instances by the user.
+; Enforce the default behavior of covergroup get_coverage() builtin function, GUI
+; and report. This variable sets the default value of type_option.merge_instances.
 ; There are two vsim command line options, -cvgmergeinstances and 
 ; -nocvgmergeinstances to override this setting from vsim command line.
-; The default value of this variable from release 6.6 onwards is 0. This default
-; drives compliance with the clarified behavior in the IEEE 1800-2009 standard.
-; SvCovergroupMergeInstancesDefault = 1
+; The default value of this variable, -1 (don't care), allows the tool to determine
+; the effective value, based on factors related to capacity and optimization. 
+; The type_option.merge_instances appears in the GUI and coverage reports as either 
+; auto(1) or auto(0), depending on whether the effective value was determined to 
+; be a 1 or a 0.
+; SVCovergroupMergeInstancesDefault = -1
 
 ; Enable or disable generation of more detailed information about the sampling
 ; of covergroup, cross, and coverpoints. It provides the details of the number
@@ -1417,15 +1736,15 @@ OnFinish = ask
 ; all Covergroups.
 ; MaxSVCoverpointBinsDesign = 2147483648 
 
-; Specify maximum number of Coverpoint bins in any instance of a Covergroup
-; MaxSVCoverpointBinsInst = 2147483648
+; Specify maximum number of Coverpoint bins in any instance of a Covergroup, default is 2^10 bins
+; MaxSVCoverpointBinsInst = 1048576
 
 ; Specify the maximum number of Cross bins in whole design for
 ; all Covergroups.
 ; MaxSVCrossBinsDesign = 2147483648 
 
-; Specify maximum number of Cross bins in any instance of a Covergroup
-; MaxSVCrossBinsInst = 2147483648
+; Specify maximum number of Cross bins in any instance of a Covergroup, default is 2^16 bins
+; MaxSVCrossBinsInst = 67108864
 
 ; Specify whether vsim will collect the coverage data of zero-weight coverage items or not.
 ; By default, this variable is set 0, in which case option.no_collect setting will take effect.
@@ -1460,13 +1779,25 @@ OnFinish = ask
 ; Windows or AIX platforms.
 ; GlobalSharedObjectList = example1.so example2.so example3.so
 
-; Run the 0in tools from within the simulator. 
-; Default is off.
-; ZeroIn = 1
+; Generate the stub definitions for the undefined symbols in the shared libraries being
+; loaded in the simulation. When this flow is turned on, the undefined symbols will not
+; prevent vsim from loading. Calling undefined symbols at runtime will cause fatal error.
+; The valid arguments are: on, off, verbose. 
+;     on : turn on the automatic generation of stub definitions.
+;     off: turn off the flow. The undefined symbols will trigger an immediate load failure.
+;     verbose: Turn on the flow and report the undefined symbols for each shared library.
+; NOTE: This variable can be overriden with vsim switch "-undefsyms".
+; The default is on.
+;
+; UndefSyms = off
 
-; Set the options to be passed to the 0in runtime tool.
-; Default value set to "".
-; ZeroInOptions = ""
+; Enable the support for checkpointing foreign C++ libraries.
+; The valid arguments are: 1 and 0. 
+;     1 : turn on the support
+;     0 : turn off the support (default)
+; This option is not supported on the Windows platforms.
+;
+; AllowCheckpointCpp = 1
 
 ; Initial seed for the random number generator of the root thread (SystemVerilog).
 ; NOTE: This variable can be overridden with the vsim "-sv_seed" command line switch.
@@ -1489,30 +1820,68 @@ OnFinish = ask
 ; The default value is "auto".
 ; SolveEngine = auto
 
-; Specify if the solver should attempt to ignore overflow/underflow semantics
-; for arithmetic constraints (multiply, addition, subtraction) in order to
-; improve performance. The "solveignoreoverflow" attribute can be specified on
-; a per-call basis to randomize() to override this setting.
-; The default value is 0 (overflow/underflow is not ignored). Set to 1 to
-; ignore overflow/underflow.
-; SolveIgnoreOverflow = 0
-
 ; Specifies the maximum size that a dynamic array may be resized to by the
 ; solver. If the solver attempts to resize a dynamic array to a size greater
 ; than the specified limit, the solver will abort with an error.
-; The default value is 2000. A value of 0 indicates no limit.
-; SolveArrayResizeMax = 2000
+; The default value is 10000. A value of 0 indicates no limit.
+; SolveArrayResizeMax = 10000
 
-; Error message severity when randomize() failure is detected (SystemVerilog).
+; Error message severity when normal randomize() and randomize(null) failures are detected.
+; Integer value up to two digits are allowed with each digit having the following legal values: 
 ; 0 = No error  1 = Warning  2 = Error  3 = Failure  4 = Fatal
+;
+; 1) When a value with two digits is used, the digit at tenth place (leftmost digit) represents
+;    the severtity setting for normal randomize() calls. The digit at ones place (rightmost digit)
+;    represents the setting for randomize(null) calls.
+;
+; 2) When a single digit value is used, the setting is applied to both normal randomize() call 
+;    and randomize(null) call.
+;
+; Example: -solvefailseverity=40 means:
+;   fatal error for failed normal randomize() calls and NO error for failed randomize(null) calls.
+;
 ; The default is 0 (no error).
 ; SolveFailSeverity = 0
 
+; Error message severity for suppressible errors that are detected in a
+; solve/before constraint.
+; NOTE: This variable can be overridden with the vsim "-solvebeforeerrorseverity"
+; command line switch.
+; 0 = No error  1 = Warning  2 = Error  3 = Failure  4 = Fatal
+; The default is 3 (failure).
+; SolveBeforeErrorSeverity = 3
+
+; Error message severity for suppressible errors that are related to
+; solve engine capacity limits
+; NOTE: This variable can be overridden with the vsim "-solveengineerrorseverity"
+; command line switch.
+; 0 = No error  1 = Warning  2 = Error  3 = Failure  4 = Fatal
+; The default is 3 (failure).
+; SolveEngineErrorSeverity = 3
+
 ; Enable/disable debug information for randomize() failures.
-; NOTE: This variable can be overridden with the vsim "-solvefaildbug" command
+; NOTE: This variable can be overridden with the vsim "-solvefaildebug" command
 ; line switch.
-; The default is 0 (disabled). Set to 1 to enable.
+; The default is 0 (disabled). Set to 1 to enable basic debug (with no
+; performance penalty). Set to 2 for enhanced debug (will result in slower
+; runtime performance).
 ; SolveFailDebug = 0
+
+; Upon encountering a randomize() failure, generate a simplified testcase that
+; will reproduce the failure. Optionally output the testcase to a file.
+; Testcases for 'no-solution' failures will only be produced if SolveFailDebug
+; is enabled (see above).
+; NOTE: This variable can be overridden with the vsim "-solvefailtestcase"
+; command line switch.
+; The default is OFF (do not generate a testcase). To enable testcase
+; generation, uncomment this variable. To redirect testcase generation to a
+; file, specify the name of the output file.
+; SolveFailTestcase = 
+
+; Specify solver timeout threshold (in seconds). randomize() will fail if the
+; CPU time required to evaluate any randset exceeds the specified timeout.
+; The default value is 500. A value of 0 will disable timeout failures. 
+; SolveTimeout = 500
 
 ; Specify the maximum size of the solution graph generated by the BDD solver.
 ; This value can be used to force the BDD solver to abort the evaluation of a
@@ -1527,89 +1896,6 @@ OnFinish = ask
 ; be evaluated in finite time. This value is specified in 10000s of evaluations.
 ; The default value is 10000. A value of 0 indicates no limit.
 ; SolveGraphMaxEval = 10000
-
-; Specify the maximum number of tests that the ACT solver may evaluate before
-; abandoning an attempt to solve a particular constraint scenario.
-; The default value is 2000000.  A value of 0 indicates no limit.
-; SolveACTMaxTests = 2000000
-
-; Specify the maximum number of operations that the ACT solver may perform 
-; before abandoning an attempt to solve a particular constraint scenario.  The 
-; value is specified in 1000000s of operations.
-; The default value is 10000. A value of 0 indicates no limit.
-; SolveACTMaxOps = 10000
-
-; Specify the number of times the ACT solver will retry to evaluate a constraint
-; scenario that fails due to the SolveACTMaxTests threshold.
-; The default value is 0 (no retry).
-; SolveACTRetryCount = 0
-
-; SolveSpeculateLevel controls whether or not the solver performs speculation
-; during the evaluation of a constraint scenario.
-; Speculation is an attempt to partition complex constraint scenarios by
-; choosing a 'speculation' subset of the variables and constraints.  This 
-; 'speculation' set is solved independently of the remaining constraints. 
-; The solver then attempts to solve the remaining variables and constraints
-; (the 'dependent' set).  If this attempt fails, the solver backs up and
-; re-solves the 'speculation' set, then retries the 'dependent' set.
-; Valid values are:
-;    0 - no speculation
-;    1 - enable speculation that maintains LRM specified distribution
-;    2 - enable other speculation - may yield non-LRM distribution 
-; Currently, distribution constraints and solve-before constraints are 
-; used in selecting the 'speculation' sets for speculation level 1. Non-LRM 
-; compliant speculation includes random variables in condition expressions.
-; The default value is 0.
-; SolveSpeculateLevel = 0
-
-; By default, when speculation is enabled, the solver first tries to solve a
-; constraint scenario *without* speculation. If the solver fails to evaluate
-; the constraint scenario (due to time/memory limits) then the solver will
-; re-evaluate the constraint scenario with speculation. If SolveSpeculateFirst
-; is set to 1, the solver will skip the initial non-speculative attempt to
-; evaluate the constraint scenario. (Only applies when SolveSpeculateLevel is
-; non-zero)
-; The default value is 0.
-; SolveSpeculateFirst = 0
-
-; Specify the maximum bit width of a variable in a conditional expression that
-; may be considered as the basis for "conditional" speculation. (Only applies
-; when SolveSpeculateLevel=2)
-; The default value is 6.
-; SolveSpeculateMaxCondWidth = 6
-
-; Specify the maximum number of attempts to solve a speculative set of random
-; variables and constraints. Exceeding this limit will cause the solver to
-; abandon the current speculative set. (Only applies when SolveSpeculateLevel
-; is non-zero)
-; The default value is 100. 
-; SolveSpeculateMaxIterations = 100
-
-; Specifies whether to attempt speculation on solve-before constraints or
-; distribution constraints first. A value of 0 specifies that solve-before
-; constraints are attempted first as the basis for speculative randomization.
-; A value of 1 specifies that distribution constraints are attempted first
-; as the basis for speculative randomization.
-; The default value is 0.
-; SolveSpeculateDistFirst = 0
-
-; If the non-speculative BDD solver fails to evaluate a constraint scenario
-; (due to time/memory limits) then the solver can be instructed to automatically
-; re-evaluate the constraint scenario with the ACT solver engine. Set
-; SolveACTbeforeSpeculate to 1 to enable this feature.
-; The default value is 0 (do not re-evaluate with the ACT solver).
-; SolveACTbeforeSpeculate = 0
-
-; Use SolveFlags to specify options that will guide the behavior of the
-; constraint solver. These options may improve the performance of the
-; constraint solver for some testcases, and decrease the performance of the
-; constraint solver for others.
-; Valid flags are:
-;    i = disable bit interleaving for >, >=, <, <= constraints (BDD engine)
-;    n = disable bit interleaving for all constraints (BDD engine)
-;    r = reverse bit interleaving (BDD engine)
-; The default value is "" (no options).
-; SolveFlags =
 
 ; Specify random sequence compatiblity with a prior letter release. This 
 ; option is used to get the same random sequences during simulation as
@@ -1631,12 +1917,26 @@ OnFinish = ask
 ; deprecated behavior.  The default value is 0.
 ; DeprecatedEnvironmentVariableExpansion = 0
 
+; Specify the memory threshold for the System Verilog garbage collector.
+; The value is the number of megabytes of class objects that must accumulate
+; before the garbage collector is run.
+; The GCThreshold setting is used when class debug mode is disabled to allow
+; less frequent garbage collection and better simulation performance.
+; The GCThresholdClassDebug setting is used when class debug mode is enabled
+; to allow for more frequent garbage collection.
+; GCThreshold = 100
+; GCThresholdClassDebug = 5
+
 ; Turn on/off collapsing of bus ports in VCD dumpports output
 DumpportsCollapse = 1
 
 ; Location of Multi-Level Verification Component (MVC) installation. 
 ; The default location is the product installation directory.
 MvcHome = $MODEL_TECH/..
+
+; Location of InFact installation. The default is $MODEL_TECH/../../infact
+;
+; InFactHome = $MODEL_TECH/../../infact
 
 ; Initialize SystemVerilog enums using the base type's default value
 ; instead of the leftmost value.
@@ -1645,10 +1945,58 @@ MvcHome = $MODEL_TECH/..
 ; Suppress file type registration.  
 ; SuppressFileTypeReg = 1
 
-; Controls SystemVerilog Language Extensions.  These options enable
-; some non-LRM compliant behavior.  Valid extensions are "feci",
-; "pae", "uslt" and "spsl".
-; SVExtensions = uslt,spsl
+; Enable/disable non-LRM compliant SystemVerilog language extensions.
+; Valid extensions are:
+;   altdpiheader - Alternative style function signature generated in DPI header",
+;   cfce         - generate an error if $cast fails as a function
+;   cfmt         - C like formatting for specifiers with '#' prefix ('%#x', '%#h')
+;   dfsp         - sets default format specifier as %p, if no format specifier is given for unpacked array in $display and related systasks
+;   expdfmt      - enable format string extensions for $display/$sformatf
+;   extscan      - support values greater than 32 bit for string builtin methods (atohex, atobin, atooct, atoi)
+;   fmtcap       - prints capital hex digits with %X/%H in display calls
+;   iddp         - ignore DPI disable protocol check
+;   lfmt         - zero-pad data if '0' prefixes width in format specifier (e.g. "%04h")
+;   noexptc      - ignore DPI export type name overloading check
+;   realrand     - support randomize() with real variables and constraints (Default)
+;   thrdrngshfl  - use the thread RNG for array.shuffle
+; SvExtensions = [+|-]<extension>[,[+|-]<extension>*]
+
+; Enable/disable non-LRM compliant SystemVerilog constrained-random language extensions.
+; Valid extensions are:
+;   arraymode    - consider rand_mode of unpacked array field independently from its elements
+;   deepcheck    - allow randomize(null) to recursively consider constraints from member rand class handles  
+;   funcback     - enable function backtracking (ACT only)
+;   nodist       - interpret 'dist' constraint as 'inside' (ACT only)
+;   noorder      - ignore solve/before ordering constraints (ACT only)
+;   promotedist  - promote priority of 'dist' constraint if LHS has no solve/before
+;   randindex    - allow random index in constraint (Default)
+;   randstruct   - consider all fields of unpacked structs as 'rand'
+;   skew         - skew randomize results (ACT only)
+;   strictstab   - strict random stability
+; SvRandExtensions = [+|-]<extension>[,[+|-]<extension>*]
+
+; Controls the formatting of '%p' and '%P' conversion specification, used in $display
+; and similar system tasks.
+; 1. SVPrettyPrintFlags=I<n><S|T> use <n> spaces(S) or tabs(T) per indentation level. 
+;    The 'I' flag when present causes relevant data types to be expanded and indented into
+;    a more readable format.
+;    (e.g. SVPrettyPrintFlags=I4S will cause 4 spaces to be used per indentation level).
+; 2. SVPrettyPrintFlags=L<numLines> limits the output to <numLines> lines.
+;    (e.g. SVPrettyPrintFlags=L20 will limit the output to 20 lines).
+; 3. SVPrettyPrintFlags=C<numChars> limits the output to <numChars> characters.
+;    (e.g. SVPrettyPrintFlags=C256 will limit the output to 256 characters).
+; 4. SVPrettyPrintFlags=F<numFields> limits the output to <numFields> of relevant datatypes
+;    (e.g. SVPrettyPrintFlags=F4 will limit the output to 4 fields of a structure).
+; 5. SVPrettyPrintFlags=E<numElements> limits the output to <numElements> of relevant datatypes
+;    (e.g. SVPrettyPrintFlags=E50 will limit the output to 50 elements of an array).
+; 6. SVPrettyPrintFlags=D<depth> suppresses the output of sub-elements below <depth>.
+;    (e.g. SVPrettyPrintFlags=D5 will suppresses the output of sub elements below a depth of 5).
+; 7. SVPrettyPrintFlags=R<specifier> shows the output of specifier %p as per the specifed radix.
+;    It changes the output in $display and similar systasks. It does not affect formatted output functions ($displayh etc)).
+;    (e.g. SVPrettyPrintFlags=Rb will show the output of %p specifier in binary format.
+; 8. Items 1-7 above can be combined as a comma separated list.
+;    (e.g. SVPrettyPrintFlags=I4S,L20,C256,F4,E50,D5,Rb)
+; SVPrettyPrintFlags=I4S
 
 [lmc]
 ; The simulator's interface to Logic Modeling's SmartModel SWIFT software
@@ -1694,8 +2042,8 @@ suppress = 8780 ;an explanation can be had by running: verror 8780
 ;   warning = 3033
 ;   error = 3010,3016
 ;   fatal = 3016,3033
-;   suppress = 3009,3016,3043
-;   suppress = 3009,CNNODP,3043,TFMPC
+;   suppress = 3009,3016,3601
+;   suppress = 3009,CNNODP,3601,TFMPC
 ;   suppress = 8683,8684
 ; The command verror <msg number> can be used to get the complete
 ; description of a message.
@@ -1725,6 +2073,32 @@ suppress = 8780 ;an explanation can be had by running: verror 8780
 ;    wlf   {wlf file only}
 ;    both  {transcript and wlf file}
 ; msgmode = tran
+
+; Controls number of displays of a particluar message
+; default value is 5
+; MsgLimitCount = 5
+
+[utils]
+; Default Library Type (while creating a library with "vlib")
+;  0 - legacy library using subdirectories for design units
+;  2 - flat library
+; DefaultLibType = 2
+
+; Flat Library Page Size (while creating a library with "vlib")
+; Set the size in bytes for flat library file pages.  Libraries containing
+; very large files may benefit from a larger value.
+; FlatLibPageSize = 8192
+
+; Flat Library Page Cleanup Percentage (while creating a library with "vlib")
+; Set the percentage of total pages deleted before library cleanup can occur.
+; This setting is applied together with FlatLibPageDeleteThreshold.
+; FlatLibPageDeletePercentage = 50
+
+; Flat Library Page Cleanup Threshold (while creating a library with "vlib")
+; Set the number of pages deleted before library cleanup can occur.
+; This setting is applied together with FlatLibPageDeletePercentage.
+; FlatLibPageDeleteThreshold = 1000
+
 [Project]
 ; Warning -- Do not edit the project properties directly.
 ;            Property names are dynamic in nature and property
@@ -1734,16 +2108,12 @@ suppress = 8780 ;an explanation can be had by running: verror 8780
 Project_Version = 6
 Project_DefaultLib = work
 Project_SortMethod = unused
-Project_Files_Count = 3
-Project_File_0 = Z:/projects/modelsim/FPGA_Book_2017/chapter7/pid2.sv
-Project_File_P_0 = cover_toggle 0 vlog_protect 0 file_type systemverilog group_id 0 cover_exttoggle 0 cover_nofec 0 cover_cond 0 vlog_1995compat SV vlog_nodebug 0 folder {Top Level} last_compile 1610722139 cover_fsm 0 cover_branch 0 vlog_noload 0 vlog_enable0In 0 cover_excludedefault 0 vlog_disableopt 0 cover_covercells 0 vlog_hazard 0 vlog_showsource 0 cover_optlevel 3 voptflow 1 ood 0 vlog_0InOptions {} toggle - vlog_options {} compile_to work vlog_upper 0 cover_noshort 0 compile_order 2 dont_compile 0 cover_expr 0 cover_stmt 0
-Project_File_1 = Z:/projects/modelsim/FPGA_Book_2017/chapter7/test_pid.sv
-Project_File_P_1 = cover_toggle 0 vlog_protect 0 file_type systemverilog group_id 0 cover_exttoggle 0 cover_nofec 0 cover_cond 0 vlog_1995compat SV vlog_nodebug 0 cover_fsm 0 last_compile 1610723793 vlog_noload 0 cover_branch 0 folder {Top Level} vlog_enable0In 0 cover_excludedefault 0 vlog_disableopt 0 cover_covercells 0 vlog_hazard 0 vlog_showsource 0 cover_optlevel 3 voptflow 1 ood 0 vlog_0InOptions {} toggle - vlog_options {} compile_to work vlog_upper 0 cover_noshort 0 compile_order 1 dont_compile 0 cover_expr 0 cover_stmt 0
-Project_File_2 = Z:/projects/modelsim/FPGA_Book_2017/chapter7/pid.sv
-Project_File_P_2 = cover_toggle 0 vlog_protect 0 file_type systemverilog group_id 0 cover_exttoggle 0 cover_nofec 0 cover_cond 0 vlog_1995compat SV vlog_nodebug 0 vlog_noload 0 cover_branch 0 folder {Top Level} last_compile 1610721117 cover_fsm 0 cover_excludedefault 0 vlog_enable0In 0 vlog_disableopt 0 cover_covercells 0 voptflow 1 cover_optlevel 3 vlog_showsource 0 vlog_hazard 0 toggle - vlog_0InOptions {} ood 0 cover_noshort 0 vlog_upper 0 compile_to work vlog_options {} compile_order 0 cover_expr 0 dont_compile 0 cover_stmt 0
+Project_Files_Count = 1
+Project_File_0 = Z:/projects/modelsim/FPGA_Book_2017/chapter7/div_str.sv
+Project_File_P_0 = cover_toggle 0 vlog_protect 0 file_type systemverilog group_id 0 cover_exttoggle 0 cover_nofec 0 cover_cond 0 vlog_1995compat SV vlog_nodebug 0 folder {Top Level} last_compile 1629702509 cover_fsm 0 cover_branch 0 vlog_noload 0 vlog_enable0In 0 cover_excludedefault 0 vlog_disableopt 0 cover_covercells 0 vlog_hazard 0 vlog_showsource 0 cover_optlevel 3 voptflow 1 ood 1 vlog_0InOptions {} toggle - vlog_options {} compile_to work vlog_upper 0 cover_noshort 0 compile_order 0 dont_compile 0 cover_expr 0 cover_stmt 0
 Project_Sim_Count = 1
-Project_Sim_0 = sim_pid
-Project_Sim_P_0 = timing default is_vopt_opt_used 2 -t default -sdfnoerror 0 -nofileshare 0 +no_pulse_msg 0 -Lf {} Generics {} +notimingchecks 0 ok 1 folder {Top Level} +pulse_e {} additional_dus TestPID -assertfile {} -std_output {} -L {} -nopsl 0 -nosva 0 +pulse_r {} -absentisempty 0 -assertcover 0 -multisource_delay {} OtherArgs {} -vital2.2b 0 is_vopt_flow 0 -memprof 0 -noglitch 0 -0in_options {} selected_du {} -sdf {} -hazards 0 -0in 0 vopt_env 1 -coverage 0 +plusarg {} -assertdebug 0 -wlf {} -sdfnowarn 0 -std_input {}
+Project_Sim_0 = sim_str_usdiv
+Project_Sim_P_0 = -L {} -Lf {} -sdf {} selected_du {} additional_dus test_str_usdiv folder {Top Level} ok 1 -t default is_vopt_flow 0 timing default +plusarg {} -nofileshare 0 -sdfnowarn 0 -wlf {} OtherArgs {} -coverage 0 -sdfnoerror 0 -std_input {} -hazards 0 -noglitch 0 -absentisempty 0 +no_pulse_msg 0 -sc22 0 +pulse_r {} -assertfile {} -multisource_delay {} -vital2.2b 0 +notimingchecks 0 +pulse_e {} -std_output {} vopt_env 1 is_vopt_opt_used 2 Generics {}
 Project_Folder_Count = 0
 Echo_Compile_Output = 0
 Save_Compile_Report = 1
