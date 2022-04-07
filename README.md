@@ -67,7 +67,7 @@ If you need to open a mpf project to reproduce the simulation process, you have 
 
 这些章节的依赖关系如下图所示。
 
-![chpater_relations](foreword.svg)
+<img src="foreword.svg" alt="chapter_relations" style="zoom:100%;" />
  
 本书侧重Verilog在FPGA中的应用基础，对于特定FPGA芯片、特定开发工具、特定外部连接和具体系统案例，请关注即将出版的此书的另外两篇。
 
