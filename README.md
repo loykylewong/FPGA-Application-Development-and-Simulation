@@ -66,6 +66,7 @@ If you need to open a mpf project to reproduce the simulation process, you have 
 第八章介绍Verilog在数字通信中的基本应用，主要介绍了基带编解码、各类基础调制解的实现。
 
 这些章节的依赖关系如下图所示。
+
 ![chpater_relations](foreword.svg)
  
 本书侧重Verilog在FPGA中的应用基础，对于特定FPGA芯片、特定开发工具、特定外部连接和具体系统案例，请关注即将出版的此书的另外两篇。
