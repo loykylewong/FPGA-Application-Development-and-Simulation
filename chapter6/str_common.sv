@@ -169,6 +169,46 @@ module str_pipestg #(
     endgenerate
 endmodule
 
+module str_fifo #(
+    parameter int DW = 8,
+    parameter int AW = 8
+)(
+    input  wire           clk      ,
+    input  wire           rst      ,
+    input  wire  [DW-1:0] in_data  ,
+    input  wire           in_last  ,
+    input  wire           in_valid ,
+    output logic          in_ready ,
+    output logic [DW-1:0] out_data ,
+    output logic          out_last ,
+    output logic          out_valid,
+    input  wire           out_ready 
+);
+    logic full, empty;
+    always_comb in_ready = ~full;
+    wire wr = in_ready & in_valid;
+    wire rd = ~empty & (~out_valid | out_valid & out_ready);
+    ScFifo2 #(.DW(DW+1), .AW(AW))
+    theFifo(
+        .clk     (clk                 ), 
+        .rst     (rst                 ),
+        .din     ({ in_last,  in_data}), 
+        .write   (wr                  ),
+        .dout    ({out_last, out_data}),
+        .read    (rd                  ),
+        .wr_cnt  (                    ),
+        .rd_cnt  (                    ),
+        .data_cnt(                    ),
+        .full    (full                ),
+        .empty   (empty               )
+    );
+    always_ff@(posedge clk) begin
+        if(rst)            out_valid <= 1'b0;
+        else if(rd)        out_valid <= 1'b1;
+        else if(out_ready) out_valid <= 1'b0;
+    end
+endmodule
+
 // replicate data to multiple streams, each have their own
 // handshake signals. mean to use in circumstances that downsteams
 // latencies are not/hard to predetermined.

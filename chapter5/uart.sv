@@ -15,10 +15,10 @@ module TestUart;
     logic rx_fifo_write, rx_fifo_read = '0;
     logic [3:0] rx_fifo_dc;
     ScFifo2 #(8, 4) theTxFifo(
-        clk, tx_fifo_din, tx_fifo_write, tx_fifo_dout, tx_fifo_read,
+        clk, rst, tx_fifo_din, tx_fifo_write, tx_fifo_dout, tx_fifo_read,
          , , , , tx_fifo_empty);
     ScFifo2 #(9, 4) theRxFifo(
-        clk, rx_fifo_din, rx_fifo_write, rx_fifo_dout, rx_fifo_read,
+        clk, rst, rx_fifo_din, rx_fifo_write, rx_fifo_dout, rx_fifo_read,
          , , rx_fifo_dc, , );
     logic start, uart, tx_busy, rx_busy, par_err;
     assign tx_fifo_read = ~tx_fifo_empty & ~tx_busy & ~start;

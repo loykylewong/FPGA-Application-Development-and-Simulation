@@ -21,10 +21,10 @@ module TestIicMasterSlave;
     logic [8:0] dfifo_din, dfifo_dout;
     logic [5:0] dfifo_dc;
     ScFifo2 #(10, 6) theCmdFifo(
-        clk, cfifo_din, cfifo_write, cfifo_dout, cfifo_read,
+        clk, rst, cfifo_din, cfifo_write, cfifo_dout, cfifo_read,
          , , , , cfifo_empty);
     ScFifo2 #(9, 6) theDataFifo(
-        clk, {dfifo_din[0], dfifo_din[8:1]}, dfifo_write, dfifo_dout, dfifo_read,
+        clk, rst, {dfifo_din[0], dfifo_din[8:1]}, dfifo_write, dfifo_dout, dfifo_read,
          , , dfifo_dc, , );
     IicBus miic();
     assign scl = miic.scl_t ? 'z : miic.scl_o;

@@ -23,9 +23,9 @@ module PeriphSpiMaster(
         txf_read, txf_dout, rxf_write, rxf_din,
         busy, sclk0, sclk1, mosi, mosi_tri, miso, ss_n);
     ScFifo2 #(8, 8) tx_fifo(
-        clk, txf_din, txf_write, txf_dout, txf_read, , , , , );
+        clk, rst, txf_din, txf_write, txf_dout, txf_read, , , , , );
     ScFifo2 #(8, 8) rx_fifo(
-        clk, rxf_din, rxf_write, rxf_dout, rxf_read, , , , , ); 
+        clk, rst, rxf_din, rxf_write, rxf_dout, rxf_read, , , , , ); 
     // write addr 0
     assign txf_write = write & (addr == 0);
     assign txf_din = wrdata[7:0];
@@ -63,9 +63,9 @@ module PeriphSpiMaster2(
         txf_read, txf_dout, rxf_write, rxf_din,
         busy, sclk0, sclk1, mosi, mosi_tri, miso, ss_n);
     ScFifo2 #(8, 8) tx_fifo(
-        clk, txf_din, txf_write, txf_dout, txf_read, , , txf_dc, , );
+        clk, rst, txf_din, txf_write, txf_dout, txf_read, , , txf_dc, , );
     ScFifo2 #(8, 8) rx_fifo(
-        clk, rxf_din, rxf_write, rxf_dout, rxf_read, , , rxf_dc, , ); 
+        clk, rst, rxf_din, rxf_write, rxf_dout, rxf_read, , , rxf_dc, , ); 
     // write addr 0
     assign txf_write = write & (addr == 0);
     assign txf_din = wrdata[7:0];
@@ -106,9 +106,9 @@ module PeriphSpiMaster3(
         txf_read, txf_dout, rxf_write, rxf_din,
         busy, sclk0, sclk1, mosi, mosi_tri, miso, ss_n);
     ScFifo2 #(8, 8) tx_fifo(
-        s.clk, txf_din, txf_write, txf_dout, txf_read, , , txf_dc, , );
+        s.clk, s.rst, txf_din, txf_write, txf_dout, txf_read, , , txf_dc, , );
     ScFifo2 #(8, 8) rx_fifo(
-        s.clk, rxf_din, rxf_write, rxf_dout, rxf_read, , , rxf_dc, , ); 
+        s.clk, s.rst, rxf_din, rxf_write, rxf_dout, rxf_read, , , rxf_dc, , ); 
     // write addr 0
     assign txf_write = s.write & (addr == 0);
     assign txf_din = s.wrdata[7:0];

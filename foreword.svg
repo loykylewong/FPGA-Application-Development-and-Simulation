@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- 由 Microsoft Visio, SVG Export 生成 foreword.svg 页-1 -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events"
+		xmlns:v="http://schemas.microsoft.com/visio/2003/SVGExtensions/" width="3.86868in" height="2.05766in"
+		viewBox="0 0 278.545 148.152" xml:space="preserve" color-interpolation-filters="sRGB" class="st9">
+	<v:documentProperties v:langID="2052" v:viewMarkup="false"/>
+
+	<style type="text/css">
+	<![CDATA[
+		.st1 {fill:none;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.75}
+		.st2 {fill:#000000;font-family:宋体;font-size:0.666664em}
+		.st3 {font-size:1em}
+		.st4 {font-family:Palatino Linotype;font-size:1em}
+		.st5 {marker-end:url(#mrkr5-38);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.5}
+		.st6 {fill:#000000;fill-opacity:1;stroke:#000000;stroke-opacity:1;stroke-width:0.16556291390728}
+		.st7 {marker-end:url(#mrkr5-49);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.5}
+		.st8 {marker-end:url(#mrkr5-49);stroke:#000000;stroke-dasharray:1.5,1.5;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.5}
+		.st9 {fill:none;fill-rule:evenodd;font-size:12px;overflow:visible;stroke-linecap:square;stroke-miterlimit:3}
+	]]>
+	</style>
+
+	<defs id="Markers">
+		<g id="lend5">
+			<path d="M 2 1 L 0 0 L 1.98117 -0.993387 C 1.67173 -0.364515 1.67301 0.372641 1.98465 1.00043 " style="stroke:none"/>
+		</g>
+		<marker id="mrkr5-38" class="st6" v:arrowType="5" v:arrowSize="2" v:setback="9.85" refX="-9.85" orient="auto"
+				markerUnits="strokeWidth" overflow="visible">
+			<use xlink:href="#lend5" transform="scale(-6.04,-6.04) "/>
+		</marker>
+		<marker id="mrkr5-49" class="st6" v:arrowType="5" v:arrowSize="2" v:setback="10.57" refX="-10.57" orient="auto"
+				markerUnits="strokeWidth" overflow="visible">
+			<use xlink:href="#lend5" transform="scale(-6.04,-6.04) "/>
+		</marker>
+	</defs>
+	<g v:mID="0" v:index="1" v:groupContext="foregroundPage">
+		<title>页-1</title>
+		<v:pageProperties v:drawingScale="0.0393701" v:pageScale="0.0393701" v:drawingUnits="24" v:shadowOffsetX="8.50394"
+				v:shadowOffsetY="-8.50394"/>
+		<v:layer v:name="连接线" v:index="0"/>
+		<g id="shape1-1" v:mID="1" v:groupContext="shape" transform="translate(45.7293,-0.375)">
+			<title>Rect Block.853</title>
+			<desc>第一章 数字电路基础</desc>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="31.1811" cy="131.144" width="62.37" height="34.0157"/>
+			<rect x="0" y="114.136" width="62.3622" height="34.0157" class="st1"/>
+			<text x="19.18" y="128.41" class="st2" v:langID="2052"><v:paragraph v:horizAlign="1"/><v:tabList/>第一章<v:newlineChar/><tspan
+						x="7.18" dy="1.367em" class="st3">数字电路基础</tspan></text>		</g>
+		<g id="shape2-5" v:mID="2" v:groupContext="shape" transform="translate(130.769,-0.375)">
+			<title>Rect Block.854</title>
+			<desc>第二章 SystemVerilog</desc>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="31.1811" cy="131.144" width="62.37" height="34.0157"/>
+			<rect x="0" y="114.136" width="62.3622" height="34.0157" class="st1"/>
+			<text x="19.18" y="129.08" class="st2" v:langID="2052"><v:paragraph v:horizAlign="1"/><v:tabList/>第二章<v:newlineChar/><tspan
+						x="5.29" dy="1.242em" class="st4">SystemVerilog</tspan></text>		</g>
+		<g id="shape3-9" v:mID="3" v:groupContext="shape" transform="translate(215.808,-0.375)">
+			<title>Rect Block.855</title>
+			<desc>第三章 ModelSim</desc>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="31.1811" cy="131.144" width="62.37" height="34.0157"/>
+			<rect x="0" y="114.136" width="62.3622" height="34.0157" class="st1"/>
+			<text x="19.18" y="129.08" class="st2" v:langID="2052"><v:paragraph v:horizAlign="1"/><v:tabList/>第三章<v:newlineChar/><tspan
+						x="12.9" dy="1.242em" class="st4">ModelSim</tspan></text>		</g>
+		<g id="shape4-13" v:mID="4" v:groupContext="shape" transform="translate(88.249,-57.0679)">
+			<title>Rect Block.856</title>
+			<desc>第四章 基本应用</desc>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="31.1811" cy="131.144" width="62.37" height="34.0157"/>
+			<rect x="0" y="114.136" width="62.3622" height="34.0157" class="st1"/>
+			<text x="19.18" y="128.41" class="st2" v:langID="2052"><v:paragraph v:horizAlign="1"/><v:tabList/>第四章<v:newlineChar/><tspan
+						x="15.18" dy="1.367em" class="st3">基本应用</tspan></text>		</g>
+		<g id="shape5-17" v:mID="5" v:groupContext="shape" transform="translate(0.375,-57.0679)">
+			<title>Rect Block.857</title>
+			<desc>第五章 IO与外部总线</desc>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="31.1811" cy="131.144" width="62.37" height="34.0157"/>
+			<rect x="0" y="114.136" width="62.3622" height="34.0157" class="st1"/>
+			<text x="19.18" y="128.41" class="st2" v:langID="2052"><v:paragraph v:horizAlign="1"/><v:tabList/>第五章<v:newlineChar/><tspan
+						x="6.69" dy="1.367em" class="st4">IO</tspan>与外部总线</text>		</g>
+		<g id="shape6-21" v:mID="6" v:groupContext="shape" transform="translate(173.288,-57.0679)">
+			<title>Rect Block.858</title>
+			<desc>第六章 SoC内部互连</desc>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="31.1811" cy="131.144" width="62.37" height="34.0157"/>
+			<rect x="0" y="114.136" width="62.3622" height="34.0157" class="st1"/>
+			<text x="19.18" y="128.41" class="st2" v:langID="2052"><v:paragraph v:horizAlign="1"/><v:tabList/>第六章<v:newlineChar/><tspan
+						x="8.06" dy="1.367em" class="st4">SoC</tspan>内部互连</text>		</g>
+		<g id="shape7-25" v:mID="7" v:groupContext="shape" transform="translate(45.7293,-113.761)">
+			<title>Rect Block.859</title>
+			<desc>第七章 数字信号处理</desc>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="31.1811" cy="131.144" width="62.37" height="34.0157"/>
+			<rect x="0" y="114.136" width="62.3622" height="34.0157" class="st1"/>
+			<text x="19.18" y="128.41" class="st2" v:langID="2052"><v:paragraph v:horizAlign="1"/><v:tabList/>第七章<v:newlineChar/><tspan
+						x="7.18" dy="1.367em" class="st3">数字信号处理</tspan></text>		</g>
+		<g id="shape8-29" v:mID="8" v:groupContext="shape" transform="translate(130.769,-113.761)">
+			<title>Rect Block.860</title>
+			<desc>第八章 数字通信</desc>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="31.1811" cy="131.144" width="62.37" height="34.0157"/>
+			<rect x="0" y="114.136" width="62.3622" height="34.0157" class="st1"/>
+			<text x="19.18" y="128.41" class="st2" v:langID="2052"><v:paragraph v:horizAlign="1"/><v:tabList/>第八章<v:newlineChar/><tspan
+						x="15.18" dy="1.367em" class="st3">数字通信</tspan></text>		</g>
+		<g id="shape9-33" v:mID="9" v:groupContext="shape" v:layerMember="0" transform="translate(76.9104,-34.3907)">
+			<title>动态连接线.861</title>
+			<path d="M0 148.15 C-0 138.77 15.53 137.15 20.89 130.45 L21.01 130.11" class="st5"/>
+		</g>
+		<g id="shape10-39" v:mID="10" v:groupContext="shape" v:layerMember="0" transform="translate(161.95,-34.3907)">
+			<title>动态连接线.862</title>
+			<path d="M0 148.15 C-0 138.77 -15.53 137.15 -20.89 130.45 L-21.01 130.11" class="st5"/>
+		</g>
+		<g id="shape11-44" v:mID="11" v:groupContext="shape" v:layerMember="0" transform="translate(193.131,-10.2962)">
+			<title>动态连接线.864</title>
+			<path d="M0 141.06 C4.22 141.06 11.57 141.06 17.39 141.06" class="st7"/>
+		</g>
+		<g id="shape12-50" v:mID="12" v:groupContext="shape" v:layerMember="0" transform="translate(239.903,-34.3907)">
+			<title>动态连接线.865</title>
+			<path d="M7.09 148.15 C7.09 143.94 7.09 136.58 7.09 130.76" class="st8"/>
+		</g>
+		<g id="shape13-55" v:mID="13" v:groupContext="shape" v:layerMember="0" transform="translate(88.249,-66.9892)">
+			<title>动态连接线.866</title>
+			<path d="M0 141.06 C-4.9 141.06 -13.58 141.06 -20.23 141.06" class="st7"/>
+		</g>
+		<g id="shape14-60" v:mID="14" v:groupContext="shape" v:layerMember="0" transform="translate(150.611,-66.9892)">
+			<title>动态连接线.867</title>
+			<path d="M0 141.06 C4.22 141.06 11.57 141.06 17.39 141.06" class="st7"/>
+		</g>
+		<g id="shape15-65" v:mID="15" v:groupContext="shape" v:layerMember="0" transform="translate(119.43,-91.0837)">
+			<title>动态连接线.868</title>
+			<path d="M0 148.15 C-0 138.56 -30.4 137.08 -39.79 130 L-39.98 129.69" class="st5"/>
+		</g>
+		<g id="shape16-70" v:mID="16" v:groupContext="shape" v:layerMember="0" transform="translate(108.092,-123.682)">
+			<title>动态连接线.869</title>
+			<path d="M0 141.06 C4.22 141.06 11.57 141.06 17.39 141.06" class="st7"/>
+		</g>
+	</g>
+</svg>

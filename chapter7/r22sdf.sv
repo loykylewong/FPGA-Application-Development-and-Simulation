@@ -128,9 +128,9 @@ module R22Sdf import R22SdfDefines::*; #( STG = 3 )(
 			    .z0(bf2i_z0[s]), .z1(bf2i_z1[s]),
 				.s(ccnt[s * 2 + 1]), .scale(sc) );
 		    DelayChainMem #(.DW(DW), .LEN(4**s * 2)) dcBf2iReal (
-		        clk, en, bf2i_z1[s].re, bf2i_x0[s].re);
+		        clk, rst, en, bf2i_z1[s].re, bf2i_x0[s].re);
 	   	 	DelayChainMem #(.DW(DW), .LEN(4**s * 2)) dcBf2iImag (
-		        clk, en, bf2i_z1[s].im, bf2i_x0[s].im);
+		        clk, rst, en, bf2i_z1[s].im, bf2i_x0[s].im);
 			assign bf2ii_x1[s] = bf2i_z0[s];
 			Bf2II theBf2II (
 				.x0(bf2ii_x0[s]), .x1(bf2ii_x1[s]),
@@ -138,9 +138,9 @@ module R22Sdf import R22SdfDefines::*; #( STG = 3 )(
 				.s(ccnt[s * 2]), .t(ccnt[s * 2 + 1]),
 				.scale(sc), .invexp(inv) );
 		    DelayChainMem #(.DW(DW), .LEN(4**s)) dcBf2iiReal (
-		        clk, en, bf2ii_z1[s].re, bf2ii_x0[s].re);
+		        clk, rst, en, bf2ii_z1[s].re, bf2ii_x0[s].re);
 		    DelayChainMem #(.DW(DW), .LEN(4**s)) dcBf2iiImag (
-		        clk, en, bf2ii_z1[s].im, bf2ii_x0[s].im);		
+		        clk, rst, en, bf2ii_z1[s].im, bf2ii_x0[s].im);		
 		end
 	endgenerate
 	generate

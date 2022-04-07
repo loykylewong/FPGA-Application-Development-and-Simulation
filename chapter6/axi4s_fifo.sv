@@ -92,7 +92,7 @@ module Axi4sFifo (
     wire wr = snk.tready & snk.tvalid;
     wire rd = ~empty & (~src.tvalid | src.tvalid & src.tready);
     ScFifo2 #(33, 3) theFifo(
-        snk.clk, {snk.tdata, snk.tlast}, wr, {src.tdata, src.tlast}, rd,
+        snk.clk, ~snk.reset_n, {snk.tdata, snk.tlast}, wr, {src.tdata, src.tlast}, rd,
         , , , full, empty);
     always_ff@(posedge src.clk) begin
         if(~src.reset_n) src.tvalid <= '0;
@@ -111,7 +111,7 @@ module Axi4sFifo2 ( // use show-ahead fifo, simple but maybe lower fmax
     wire wr = snk.tready & snk.tvalid;
     wire rd = src.tvalid & src.tready;
     ScFifoSA #(33, 3) theFifo(
-        snk.clk, {snk.tdata, snk.tlast}, wr, {src.tdata, src.tlast}, rd,
+        snk.clk, ~snk.reset_n, {snk.tdata, snk.tlast}, wr, {src.tdata, src.tlast}, rd,
         , , , full, empty);
 endmodule
 

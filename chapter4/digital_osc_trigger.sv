@@ -74,7 +74,7 @@ module OscopeTrigSmp(
 	wire trig = en & (d_reg[1] < level && d_reg[0] >= level);
 	logic write;
 	logic [9:0] fifo_dc;
-	ScFifo2 #(8, 10) theFifo(clk, d_reg[1], write & en, dout,
+	ScFifo2 #(8, 10) theFifo(clk, rst, d_reg[1], write & en, dout,
 		fifo_dc > DLEN || read, , , fifo_dc, , 
 	);
 	OscopeTrigSmpFsm #(DLEN) theFsm(

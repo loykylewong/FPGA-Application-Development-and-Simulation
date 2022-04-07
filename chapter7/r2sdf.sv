@@ -115,9 +115,9 @@ module R2Sdf import R2SdfDefines::*; #( STG = 4 )(
                 .z0(bf2_z0[s]), .z1(bf2_z1[s]),
                 .s(s_dly), .scale(scale) );
             DelayChainMem #(.DW(DW), .LEN(2**s)) dcBf2Real (
-                clk, en, bf2_z1[s].re, bf2_x0[s].re);
-                DelayChainMem #(.DW(DW), .LEN(2**s)) dcBf2Imag (
-                clk, en, bf2_z1[s].im, bf2_x0[s].im);    
+                clk, rst, en, bf2_z1[s].re, bf2_x0[s].re);
+            DelayChainMem #(.DW(DW), .LEN(2**s)) dcBf2Imag (
+                clk, rst, en, bf2_z1[s].im, bf2_x0[s].im);    
         end
     endgenerate
     generate
@@ -256,9 +256,9 @@ module R2Sdf import R2SdfDefines::*; #( STG = 4 )(
                 .z0(bf2_z0[s]), .z1(bf2_z1[s]),
                 .s(ccnt[s]), .scale(sc) );
             DelayChainMem #(.DW(DW), .LEN(2**s)) dcBf2Real (
-                clk, en, bf2_z1[s].re, bf2_x0[s].re);
+                clk, rst, en, bf2_z1[s].re, bf2_x0[s].re);
             DelayChainMem #(.DW(DW), .LEN(2**s)) dcBf2Imag (
-                clk, en, bf2_z1[s].im, bf2_x0[s].im);    
+                clk, rst, en, bf2_z1[s].im, bf2_x0[s].im);    
         end
     endgenerate
     generate
