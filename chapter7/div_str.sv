@@ -33,7 +33,7 @@ module str_usdiv_stg #(
         else if(out_ready) out_valid <= 1'b0;
     end
     wire [DW-1:0] exdd = {in_remainder[DW-2:0], in_dividend[DW-1]};
-    wire enough = exdd > in_divisor;
+    wire enough = exdd >= in_divisor;
 
     always_ff @( posedge clk ) begin : proc_output
         if(rst) begin
