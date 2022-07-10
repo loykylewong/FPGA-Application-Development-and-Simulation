@@ -171,7 +171,7 @@ endmodule
 
 module str_fifo #(
     parameter int DW = 8,
-    parameter int AW = 8
+    parameter int AW = 8    // actual fifo depth = 2**AW - 1
 )(
     input  wire           clk      ,
     input  wire           rst      ,

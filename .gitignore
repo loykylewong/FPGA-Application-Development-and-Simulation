@@ -1,5 +1,8 @@
-.DS_Store
-*.bak
-*.bkp
+**/.DS_Store
+**/*.bak
+**/*.bkp
+**/*.wlf
+**/*.vstf
+**/wlft*
 **/work/
-*.code-workspace
+**/*.code-workspace

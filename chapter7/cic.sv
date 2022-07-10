@@ -75,7 +75,7 @@ module CicUpSampler #( parameter integer W = 10, R = 4, M = 1, N = 2 )(
     endgenerate
     localparam INTPW = StgWidth(N);
     logic signed [INTPW-1:0] intp_out;
-    InterpDeci #(INTPW) theInterp(
+    InterpDeci #(INTPW, 0) theInterp(
         clk, rst, eni, eno, combs_data[N][INTPW-1:0], intp_out);
     logic signed [WMAX-1:0] intgs_data[N+1];
     assign intgs_data[0] = intp_out;
@@ -106,7 +106,7 @@ module CicDownSampler #( parameter integer W = 10, R = 4, M = 1, N = 2 )(
 );
     import Fixedpoint::*;
     localparam real GAIN = (real'(R) * M)**(N);
-    localparam ineger DW = W + $ceil($ln(GAIN)/$ln(2));
+    localparam integer DW = W + $ceil($ln(GAIN)/$ln(2));
     logic signed [DW-1:0] intgs_data[N+1];
     assign intgs_data[0] = in;
     generate
@@ -116,7 +116,7 @@ module CicDownSampler #( parameter integer W = 10, R = 4, M = 1, N = 2 )(
         end
     endgenerate
     logic signed [DW-1:0] combs_data[N+1];
-    InterpDeci #(DW) theDeci(
+    InterpDeci #(DW, 0) theDeci(
         clk, rst, eni, eno, intgs_data[N], combs_data[0]);
     generate
         for(genvar k = 0; k < N; k++) begin : Combs

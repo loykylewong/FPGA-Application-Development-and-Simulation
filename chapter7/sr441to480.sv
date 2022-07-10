@@ -25,6 +25,7 @@ module SmpRate441to480 #( parameter W = 16 )(
     input wire signed [W-1:0] in,
     output logic signed [W-1:0] out
 );
+    localparam logic FIR_INTERPDECI_HOLD = 0;
     logic en882, en1764, en3528;
     logic en70560, en3360;
     Counter #(4)  cnt70560(clk, rst, 1'b1, , en70560);
@@ -38,7 +39,7 @@ module SmpRate441to480 #( parameter W = 16 )(
     logic signed [W-1:0] fil882, fil1764, fil3528;
     logic signed [W-1:0] sig70560;
     logic signed [W-1:0] dec3360, fil3360, dec480;
-    InterpDeci #(W) intp1 (
+    InterpDeci #(W, FIR_INTERPDECI_HOLD) intp1 (
         clk, rst, en441, en882, in, int882);
     FIR #(W, 79, '{
         -0.000166, 0,  0.000346, 0, -0.000607, 0,  0.000970, 0,
@@ -52,20 +53,20 @@ module SmpRate441to480 #( parameter W = 16 )(
          0.003940, 0, -0.002910, 0,  0.002094, 0, -0.001457, 0,
          0.000970, 0, -0.000607, 0,  0.000346, 0, -0.000166
         }) fir1(clk, rst, en882, int882, fil882);
-    InterpDeci #(W) intp2 (
-        clk, rst, en882, en1764, fil882 <<< 1, int1764);
+    InterpDeci #(W, FIR_INTERPDECI_HOLD) intp2 (
+        clk, rst, en882, en1764, FIR_INTERPDECI_HOLD ? fil882 : fil882 <<< 1, int1764);
     FIR #(W, 15, '{
         -0.000926, 0,  0.014119, 0, -0.064847, 0,  0.301819, 0.5,
          0.301819, 0, -0.064847, 0,  0.014119, 0, -0.000926
         }) fir2(clk, rst, en1764, int1764, fil1764);
-    InterpDeci #(W) intp3 (
-        clk, rst, en1764, en3528, fil1764 <<< 1, int3528);
+    InterpDeci #(W, FIR_INTERPDECI_HOLD) intp3 (
+        clk, rst, en1764, en3528, FIR_INTERPDECI_HOLD ? fil1764 : fil1764 <<< 1, int3528);
     FIR #(W, 11, '{
          0.001299, 0, -0.038595, 0,  0.287173,  0.500247,
          0.287173, 0, -0.038595, 0,  0.001299
         }) fir3(clk, rst, en3528, int3528, fil3528);
     CicUpSampler #(W, 20, 1, 3) cicUp(
-        clk, rst, en3528, en70560, fil3528 <<< 1, sig70560);
+        clk, rst, en3528, en70560, FIR_INTERPDECI_HOLD ? fil3528 : fil3528 <<< 1, sig70560);
     CicDownSampler #(W, 21, 1, 3) cicDown(
         clk, rst, en70560, en3360, sig70560, dec3360);
     FIR #(W, 154, '{
@@ -101,6 +102,6 @@ module SmpRate441to480 #( parameter W = 16 )(
         -0.000197, -0.000062,  0.000054,  0.000130,  0.000161,
          0.000151,  0.000114,  0.000065,  0.000019
         }) fir4(clk, rst, en3360, dec3360, fil3360);
-    InterpDeci #(W) deci1(clk, rst, en3360, en480, fil3360, dec480);
+    InterpDeci #(W, FIR_INTERPDECI_HOLD) deci1(clk, rst, en3360, en480, fil3360, dec480);
     assign out = dec480;
 endmodule
