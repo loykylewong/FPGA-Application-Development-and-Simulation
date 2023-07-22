@@ -15,6 +15,7 @@ module TestSr441to480;
     logic en441, en480;
     DDS #(24, 16, 18) theDDS(
         clk, rst, en441, 24'sd1_902_179, '0, sig441);
+        // clk, rst, en441, 24'sd0, 24'sh20_0000, sig441);
     SmpRate441to480 #(16) theSrCnvt(
         clk, rst, en441, en480, 16'(int'(sig441*0.9)), sig480);
 endmodule
@@ -25,7 +26,7 @@ module SmpRate441to480 #( parameter W = 16 )(
     input wire signed [W-1:0] in,
     output logic signed [W-1:0] out
 );
-    localparam logic FIR_INTERPDECI_HOLD = 0;
+    localparam logic FIR_INTERPDECI_HOLD = 1;
     logic en882, en1764, en3528;
     logic en70560, en3360;
     Counter #(4)  cnt70560(clk, rst, 1'b1, , en70560);

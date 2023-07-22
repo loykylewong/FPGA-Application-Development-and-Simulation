@@ -30,7 +30,7 @@ module CordicStage #( parameter DW = 10, AW = DW, STG = 0 )(
     // atan:real:[-pi, pi) <=> theta:(Q1.(AW-1)):[-1.0, 1.0) 
     localparam real atan = $atan(2.0**(-STG));
     wire [AW-1 : 0] theta = atan / 3.1415926536 * 2.0**(AW-1);
-    wire signed [DW-1 : 0] x_shifted = (xin >>> STG);                                    
+    wire signed [DW-1 : 0] x_shifted = (xin >>> STG);
     wire signed [DW-1 : 0] y_shifted = (yin >>> STG);
     always_ff@(posedge clk) begin
         if(rst) begin
