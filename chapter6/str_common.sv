@@ -8,7 +8,7 @@
 // unidirectional(forward) reg slice
 // a good starting point for simple processing/calculation unit
 module str_frs #(parameter integer DW = 8)(
-    input  wire           clk   , 
+    input  wire           clk   ,
     input  wire           rst   ,
     input  wire  [DW-1:0] idata ,
     input  wire           ilast ,
@@ -40,7 +40,7 @@ module str_frs #(parameter integer DW = 8)(
 endmodule
 
 // ==== bidir regslice ====
-// bidirectional reg slice 
+// bidirectional reg slice
 // for breaking long combinatinoal logic chain between str stages
 module str_birs #(parameter integer DW = 8)(
     input  wire          clk   ,
@@ -55,7 +55,7 @@ module str_birs #(parameter integer DW = 8)(
     input  wire          oready
 );
     wire ish = ivalid & iready;
-    wire osh = ovalid & oready;    
+    wire osh = ovalid & oready;
     reg [DW:0] buffer[2];
     reg wp, rp;
     reg [1:0] dc;
@@ -182,7 +182,7 @@ module str_fifo #(
     output logic [DW-1:0] out_data ,
     output logic          out_last ,
     output logic          out_valid,
-    input  wire           out_ready 
+    input  wire           out_ready
 );
     logic full, empty;
     always_comb in_ready = ~full;
@@ -190,9 +190,9 @@ module str_fifo #(
     wire rd = ~empty & (~out_valid | out_valid & out_ready);
     ScFifo2 #(.DW(DW+1), .AW(AW))
     theFifo(
-        .clk     (clk                 ), 
+        .clk     (clk                 ),
         .rst     (rst                 ),
-        .din     ({ in_last,  in_data}), 
+        .din     ({ in_last,  in_data}),
         .write   (wr                  ),
         .dout    ({out_last, out_data}),
         .read    (rd                  ),
@@ -229,7 +229,7 @@ module str_replicator #(
     input  wire          oready[DS]
 );
     wire [DS-1:0] cvalid, cready;
-    
+
     str_hscomb #(.US(1), .DS(DS))
     the_hscomb (
         .uv(ivalid), .ur(iready),
@@ -417,7 +417,7 @@ module str_usmul #(
     parameter integer BDW = ADW    ,
     parameter integer ODW = ADW+BDW
 )(
-    input  wire            clk   , 
+    input  wire            clk   ,
     input  wire            rst   ,
     input  wire  [ADW-1:0] a     ,
     input  wire  [BDW-1:0] b     ,
@@ -548,7 +548,7 @@ module str_mi_addsub #(
     output wire signed [DW+(EODW?$clog2(CH):0)-1:0] out_data     ,
     output wire                                     out_last     ,
     output wire                                     out_valid    ,
-    input  wire                                     out_ready 
+    input  wire                                     out_ready
 );
     generate
         if(CH <= 1)

@@ -4,31 +4,32 @@ module Axi4lXXX #(
     // ...
     localparam integer RAW = 1,      // reg (32-bit) number = 2**RAW
 )(
-    input wire clk, rst_n,
+    input wire aclk, aresetn,
     // --- s_axi ---
-    (* mark_debug = "true" *) input   wire [RAW+1:0]  s_axi_awaddr,
-    input   wire [2 : 0]    s_axi_awprot,
-    (* mark_debug = "true" *) input   wire            s_axi_awvalid,
-    (* mark_debug = "true" *) output  logic           s_axi_awready,
-    (* mark_debug = "true" *) input   wire [31 : 0]   s_axi_wdata,
-    input   wire [3 : 0]    s_axi_wstrb,
-    (* mark_debug = "true" *) input   wire            s_axi_wvalid,
-    (* mark_debug = "true" *) output  logic           s_axi_wready,
-    output  logic [1 : 0]   s_axi_bresp,
-    (* mark_debug = "true" *) output  logic           s_axi_bvalid,
-    (* mark_debug = "true" *) input   wire            s_axi_bready,
-    (* mark_debug = "true" *) input   wire [RAW+1:0]  s_axi_araddr,
-    input   wire [2 : 0]    s_axi_arprot,
-    (* mark_debug = "true" *) input   wire            s_axi_arvalid,
-    (* mark_debug = "true" *) output  logic           s_axi_arready,
-    (* mark_debug = "true" *) output  logic [31 : 0]  s_axi_rdata,
-    output  logic [1 : 0]   s_axi_rresp,
-    (* mark_debug = "true" *) output  logic           s_axi_rvalid,
-    (* mark_debug = "true" *) input   wire            s_axi_rready,
+    (* mark_debug = "true" *) input  wire  [RAW+1 : 0] s_axi_awaddr ,
+                              input  wire  [    2 : 0] s_axi_awprot ,
+    (* mark_debug = "true" *) input  wire              s_axi_awvalid,
+    (* mark_debug = "true" *) output logic             s_axi_awready,
+    (* mark_debug = "true" *) input  wire  [   31 : 0] s_axi_wdata  ,
+                              input  wire  [    3 : 0] s_axi_wstrb  ,
+    (* mark_debug = "true" *) input  wire              s_axi_wvalid ,
+    (* mark_debug = "true" *) output logic             s_axi_wready ,
+                              output logic [    1 : 0] s_axi_bresp  ,
+    (* mark_debug = "true" *) output logic             s_axi_bvalid ,
+    (* mark_debug = "true" *) input  wire              s_axi_bready ,
+    (* mark_debug = "true" *) input  wire  [RAW+1 : 0] s_axi_araddr ,
+                              input  wire  [    2 : 0] s_axi_arprot ,
+    (* mark_debug = "true" *) input  wire              s_axi_arvalid,
+    (* mark_debug = "true" *) output logic             s_axi_arready,
+    (* mark_debug = "true" *) output logic [   31 : 0] s_axi_rdata  ,
+                              output logic [    1 : 0] s_axi_rresp  ,
+    (* mark_debug = "true" *) output logic             s_axi_rvalid ,
+    (* mark_debug = "true" *) input  wire              s_axi_rready ,
     // --- interrupt ---
-    // (* mark_debug = "true" *) output logic intr
+    // (* mark_debug = "true" *) output logic             intr
 );
-    wire rst = ~rst_n;
+    wire clk = aclk;
+    wire rst = ~aresetn;
     (* mark_debug = "true" *) logic regs_wr, regs_rd;
     // ==== aw channel ====
     assign s_axi_awready = 1'b1;    // always ready

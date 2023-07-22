@@ -2,9 +2,9 @@
 
 ## 说明
 
-此仓库中的内容为《FPGA应用开发和仿真》（机械工业出版社2018年第1版 ISBN:9787111582786）的源码。
+此仓库中的主要内容为《FPGA应用开发和仿真》（机械工业出版社2018年第1版 ISBN:9787111582786）的源码。在书本出版后，仍陆续进行了一些bug修复、优化和增加了一些其他有关内容。
 
-The content in this repository are the source code and errata for the book *FPGA Application Development and Simulation* (CHS, ISBN:9787111582786).
+The major content in this repository are the source code and errata for the book *FPGA Application Development and Simulation* (CHS, ISBN:9787111582786). After the publication of the book, some bug fixes, code optimizations and other related content have been added one after another.
 
 所有SystemVerilog模块均可综合，除了：
 
@@ -68,7 +68,7 @@ If you need to open a mpf project to reproduce the simulation process, you have 
 这些章节的依赖关系如下图所示。
 
 <img src="foreword.png" alt="chapter_relations" style="zoom:67%;" />
- 
+
 本书侧重Verilog在FPGA中的应用基础，对于特定FPGA芯片、特定开发工具、特定外部连接和具体系统案例，请关注即将出版的此书的另外两篇。
 
 本书特别注重理论与工程实现的结合，以实现为主，以相关理论的结论为指导，读者应着重理解理论与实现的对应关系，注意培养将理论转换为工程实现的能力。
