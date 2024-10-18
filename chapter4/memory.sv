@@ -1,7 +1,7 @@
 `ifndef __MEMORY_SV__
 `define __MEMORY_SV__
 
-`timescale 1ns/100ps
+`timescale 1ns/1ps
 `default_nettype none
 `include "../common.sv"
 

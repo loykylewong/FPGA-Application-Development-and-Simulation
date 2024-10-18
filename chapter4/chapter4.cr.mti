@@ -1,4 +1,28 @@
-Z:/projects/modelsim/FPGA_Book_2017/chapter4/mux.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/mux.sv
+D:/loywong/OneDrive/projects/modelsim/FPGA_Book_2017/chapter4/key_process.sv {1 {vlog -work work -vopt -sv -stats=none D:/loywong/OneDrive/projects/modelsim/fpga_book_2017/chapter4/key_process.sv
+Model Technology ModelSim SE-64 vlog 2019.2 Compiler 2019.04 Apr 17 2019
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestKeyProcess
+-- Importing package SimSrcGen
+-- Compiling module KeyProcess
+
+Top level modules:
+	TestKeyProcess
+
+} {} {}} D:/loywong/OneDrive/projects/modelsim/FPGA_Book_2017/chapter4/pulse_widen.sv {1 {vlog -work work -vopt -sv -stats=none D:/loywong/OneDrive/projects/modelsim/fpga_book_2017/chapter4/pulse_widen.sv
+Model Technology ModelSim SE-64 vlog 2019.2 Compiler 2019.04 Apr 17 2019
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestPulseWiden
+-- Importing package SimSrcGen
+-- Compiling module PulseWiden
+
+Top level modules:
+	TestPulseWiden
+
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/mux.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/mux.sv
 Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling package SimSrcGen
 -- Compiling package CombFunctions
@@ -8,6 +32,76 @@ Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 
 Top level modules:
 	TestMux
+
+} {} {}} D:/loywong/OneDrive/projects/modelsim/FPGA_Book_2017/chapter4/counter.sv {1 {vlog -work work -vopt -sv -stats=none D:/loywong/OneDrive/projects/modelsim/fpga_book_2017/chapter4/counter.sv
+Model Technology ModelSim SE-64 vlog 2019.2 Compiler 2019.04 Apr 17 2019
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestCounter
+-- Importing package SimSrcGen
+-- Compiling module TestCntSecMinHr
+-- Compiling module CntSecMinHr
+-- Compiling module Counter
+-- Compiling module CounterMax
+
+Top level modules:
+	TestCounter
+	TestCntSecMinHr
+	CounterMax
+
+} {} {}} D:/loywong/OneDrive/projects/modelsim/FPGA_Book_2017/chapter4/encoder.sv {1 {vlog -work work -vopt -sv -stats=none D:/loywong/OneDrive/projects/modelsim/fpga_book_2017/chapter4/encoder.sv
+Model Technology ModelSim SE-64 vlog 2019.2 Compiler 2019.04 Apr 17 2019
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestEncoder
+-- Importing package CombFunctions
+-- Compiling module Encoder
+
+Top level modules:
+	TestEncoder
+	Encoder
+
+} {} {}} D:/loywong/OneDrive/projects/modelsim/FPGA_Book_2017/chapter4/memory.sv {1 {vlog -work work -vopt -sv -stats=none D:/loywong/OneDrive/projects/modelsim/fpga_book_2017/chapter4/memory.sv
+Model Technology ModelSim SE-64 vlog 2019.2 Compiler 2019.04 Apr 17 2019
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestMem
+-- Importing package SimSrcGen
+-- Compiling module SpRamRf
+-- Compiling module SpRamRa
+-- Compiling module SpRamWf
+-- Compiling module SdpRamRf
+-- Compiling module SdpRamRa
+-- Compiling module DpRam
+-- Compiling module SdcRam
+-- Compiling module DcRam
+-- Compiling module SpRamRfSine
+
+Top level modules:
+	TestMem
+	SpRamRf
+	SpRamRa
+	SpRamWf
+	SdpRamRf
+	SdpRamRa
+	DpRam
+	SdcRam
+	DcRam
+
+} {} {}} D:/loywong/OneDrive/projects/modelsim/FPGA_Book_2017/chapter4/stop_watch_fsm.sv {1 {vlog -work work -vopt -sv -stats=none D:/loywong/OneDrive/projects/modelsim/fpga_book_2017/chapter4/stop_watch_fsm.sv
+Model Technology ModelSim SE-64 vlog 2019.2 Compiler 2019.04 Apr 17 2019
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestStopWatchFsm
+-- Importing package SimSrcGen
+-- Compiling module StopWatchFsm
+
+Top level modules:
+	TestStopWatchFsm
 
 } {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/quadrature_inc_enc.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/quadrature_inc_enc.sv
 Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
@@ -21,6 +115,50 @@ Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 Top level modules:
 	TestQuadEncIf
 
+} {} {}} D:/loywong/OneDrive/projects/modelsim/FPGA_Book_2017/chapter4/scfifo.sv {1 {vlog -work work -vopt -sv -stats=none D:/loywong/OneDrive/projects/modelsim/fpga_book_2017/chapter4/scfifo.sv
+Model Technology ModelSim SE-64 vlog 2019.2 Compiler 2019.04 Apr 17 2019
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestMem
+-- Importing package SimSrcGen
+-- Compiling module SpRamRf
+-- Compiling module SpRamRa
+-- Compiling module SpRamWf
+-- Compiling module SdpRamRf
+-- Compiling module SdpRamRa
+-- Compiling module DpRam
+-- Compiling module SdcRam
+-- Compiling module DcRam
+-- Compiling module SpRamRfSine
+-- Compiling module TestScFifo
+-- Compiling module ScFifo1
+-- Compiling module ScFifo2
+-- Compiling module ScFifoSA
+
+Top level modules:
+	TestMem
+	SpRamRf
+	SpRamRa
+	SpRamWf
+	DpRam
+	SdcRam
+	DcRam
+	TestScFifo
+	ScFifo1
+	ScFifoSA
+
+} {} {}} D:/loywong/OneDrive/projects/modelsim/FPGA_Book_2017/chapter4/mux.sv {1 {vlog -work work -vopt -sv -stats=none D:/loywong/OneDrive/projects/modelsim/fpga_book_2017/chapter4/mux.sv
+Model Technology ModelSim SE-64 vlog 2019.2 Compiler 2019.04 Apr 17 2019
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestMux
+-- Compiling module Mux
+
+Top level modules:
+	TestMux
+
 } {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/cc_event_handshake.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/cc_event_handshake.sv
 Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling package SimSrcGen
@@ -32,6 +170,51 @@ Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 
 Top level modules:
 	TestCCEvent
+
+} {} {}} D:/loywong/OneDrive/projects/modelsim/fpga_book_2017/chapter4/dcfifo.sv {1 {vlog -work work -vopt -sv -stats=none D:/loywong/OneDrive/projects/modelsim/fpga_book_2017/chapter4/dcfifo.sv
+Model Technology ModelSim SE-64 vlog 2019.2 Compiler 2019.04 Apr 17 2019
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestMem
+-- Importing package SimSrcGen
+-- Compiling module SpRamRf
+-- Compiling module SpRamRa
+-- Compiling module SpRamWf
+-- Compiling module SdpRamRf
+-- Compiling module SdpRamRa
+-- Compiling module DpRam
+-- Compiling module SdcRam
+-- Compiling module DcRam
+-- Compiling module SpRamRfSine
+-- Compiling module TestCCCnt
+-- Compiling module CrossClkCnt
+-- Compiling module TestDcFifo
+-- Compiling module DcFifo
+
+Top level modules:
+	TestMem
+	SpRamRf
+	SpRamRa
+	SpRamWf
+	SdpRamRf
+	SdpRamRa
+	DpRam
+	DcRam
+	TestCCCnt
+	TestDcFifo
+
+} {} {}} D:/loywong/OneDrive/projects/modelsim/FPGA_Book_2017/chapter4/cross_cd_cnt_state.sv {1 {vlog -work work -vopt -sv -stats=none D:/loywong/OneDrive/projects/modelsim/fpga_book_2017/chapter4/cross_cd_cnt_state.sv
+Model Technology ModelSim SE-64 vlog 2019.2 Compiler 2019.04 Apr 17 2019
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestCCCnt
+-- Importing package SimSrcGen
+-- Compiling module CrossClkCnt
+
+Top level modules:
+	TestCCCnt
 
 } {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/delay_chain_mem.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/delay_chain_mem.sv
 Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
@@ -45,6 +228,18 @@ Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 Top level modules:
 	TestDelayChainMem
 
+} {} {}} D:/loywong/OneDrive/projects/modelsim/FPGA_Book_2017/chapter4/shiftreg.sv {1 {vlog -work work -vopt -sv -stats=none D:/loywong/OneDrive/projects/modelsim/fpga_book_2017/chapter4/shiftreg.sv
+Model Technology ModelSim SE-64 vlog 2019.2 Compiler 2019.04 Apr 17 2019
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestShiftReg
+-- Compiling module ShiftReg
+
+Top level modules:
+	TestShiftReg
+	ShiftReg
+
 } {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/accumulator.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/accumulator.sv
 Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling package SimSrcGen
@@ -57,6 +252,30 @@ Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 
 Top level modules:
 	TestAccu
+
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/stop_watch_fsm.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/stop_watch_fsm.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestStopWatchFsm
+-- Importing package SimSrcGen
+-- Compiling module StopWatchFsm
+
+Top level modules:
+	TestStopWatchFsm
+
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/delay_chain.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/delay_chain.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestDelayChain
+-- Importing package SimSrcGen
+-- Compiling module DelayChain
+
+Top level modules:
+	TestDelayChain
 
 } {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/memory.sv {2 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/memory.sv
 Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
@@ -92,29 +311,30 @@ Top level modules:
 	SdcRam
 	DcRam
 
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/delay_chain.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/delay_chain.sv
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/digital_led.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/digital_led.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
+-- Compiling module Bin2Bcd
+-- Compiling module DigitalLedSeg
+
+Top level modules:
+	Bin2Bcd
+	DigitalLedSeg
+
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/edge2en.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/edge2en.sv
 Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling package SimSrcGen
 -- Compiling package CombFunctions
 -- Compiling package Fixedpoint
--- Compiling module TestDelayChain
+-- Compiling module TestEdge2En
 -- Importing package SimSrcGen
--- Compiling module DelayChain
+-- Compiling module Rising2En
+-- Compiling module Falling2En
+-- Compiling module Edge2En
 
 Top level modules:
-	TestDelayChain
-
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/stop_watch_fsm.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/stop_watch_fsm.sv
-Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
--- Compiling package SimSrcGen
--- Compiling package CombFunctions
--- Compiling package Fixedpoint
--- Compiling module TestStopWatchFsm
--- Importing package SimSrcGen
--- Compiling module StopWatchFsm
-
-Top level modules:
-	TestStopWatchFsm
+	TestEdge2En
+	Falling2En
+	Edge2En
 
 } {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/scfifo.sv {2 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/scfifo.sv
 Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
@@ -155,42 +375,30 @@ Top level modules:
 	ScFifo1
 	ScFifoSA
 
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/edge2en.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/edge2en.sv
+} {} {}} D:/loywong/OneDrive/projects/modelsim/FPGA_Book_2017/chapter4/accumulator.sv {1 {vlog -work work -vopt -sv -stats=none D:/loywong/OneDrive/projects/modelsim/fpga_book_2017/chapter4/accumulator.sv
+Model Technology ModelSim SE-64 vlog 2019.2 Compiler 2019.04 Apr 17 2019
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestAccu
+-- Importing package SimSrcGen
+-- Compiling module Accumulator
+-- Compiling module AccuM
+
+Top level modules:
+	TestAccu
+
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/shiftreg.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/shiftreg.sv
 Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling package SimSrcGen
 -- Compiling package CombFunctions
 -- Compiling package Fixedpoint
--- Compiling module TestEdge2En
--- Importing package SimSrcGen
--- Compiling module Rising2En
--- Compiling module Falling2En
--- Compiling module Edge2En
+-- Compiling module TestShiftReg
+-- Compiling module ShiftReg
 
 Top level modules:
-	TestEdge2En
-	Falling2En
-	Edge2En
-
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/digital_led.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/digital_led.sv
-Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
--- Compiling module Bin2Bcd
--- Compiling module DigitalLedSeg
-
-Top level modules:
-	Bin2Bcd
-	DigitalLedSeg
-
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/cross_cd_cnt_state.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/cross_cd_cnt_state.sv
-Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
--- Compiling package SimSrcGen
--- Compiling package CombFunctions
--- Compiling package Fixedpoint
--- Compiling module TestCCCnt
--- Importing package SimSrcGen
--- Compiling module CrossClkCnt
-
-Top level modules:
-	TestCCCnt
+	TestShiftReg
+	ShiftReg
 
 } {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/pwm.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/pwm.sv
 Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
@@ -208,17 +416,29 @@ Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 Top level modules:
 	TestPwm
 
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/shiftreg.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/shiftreg.sv
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/cross_cd_cnt_state.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/cross_cd_cnt_state.sv
 Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling package SimSrcGen
 -- Compiling package CombFunctions
 -- Compiling package Fixedpoint
--- Compiling module TestShiftReg
--- Compiling module ShiftReg
+-- Compiling module TestCCCnt
+-- Importing package SimSrcGen
+-- Compiling module CrossClkCnt
 
 Top level modules:
-	TestShiftReg
-	ShiftReg
+	TestCCCnt
+
+} {} {}} D:/loywong/OneDrive/projects/modelsim/FPGA_Book_2017/chapter4/delay_chain.sv {1 {vlog -work work -vopt -sv -stats=none D:/loywong/OneDrive/projects/modelsim/fpga_book_2017/chapter4/delay_chain.sv
+Model Technology ModelSim SE-64 vlog 2019.2 Compiler 2019.04 Apr 17 2019
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestDelayChain
+-- Importing package SimSrcGen
+-- Compiling module DelayChain
+
+Top level modules:
+	TestDelayChain
 
 } {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/digital_osc_trigger.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/digital_osc_trigger.sv
 Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
@@ -233,6 +453,31 @@ Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 Top level modules:
 	TestOscopeTrigSmp
 
+} {} {}} D:/loywong/OneDrive/projects/modelsim/FPGA_Book_2017/chapter4/edge2en.sv {1 {vlog -work work -vopt -sv -stats=none D:/loywong/OneDrive/projects/modelsim/fpga_book_2017/chapter4/edge2en.sv
+Model Technology ModelSim SE-64 vlog 2019.2 Compiler 2019.04 Apr 17 2019
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestEdge2En
+-- Importing package SimSrcGen
+-- Compiling module Rising2En
+-- Compiling module Falling2En
+-- Compiling module Edge2En
+
+Top level modules:
+	TestEdge2En
+	Falling2En
+	Edge2En
+
+} {} {}} D:/loywong/OneDrive/projects/modelsim/FPGA_Book_2017/chapter4/digital_led.sv {1 {vlog -work work -vopt -sv -stats=none D:/loywong/OneDrive/projects/modelsim/fpga_book_2017/chapter4/digital_led.sv
+Model Technology ModelSim SE-64 vlog 2019.2 Compiler 2019.04 Apr 17 2019
+-- Compiling module Bin2Bcd
+-- Compiling module DigitalLedSeg
+
+Top level modules:
+	Bin2Bcd
+	DigitalLedSeg
+
 } {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/decoder.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/decoder.sv
 Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling package SimSrcGen
@@ -244,18 +489,6 @@ Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 
 Top level modules:
 	TestDecoder
-
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/key_process.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/key_process.sv
-Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
--- Compiling package SimSrcGen
--- Compiling package CombFunctions
--- Compiling package Fixedpoint
--- Compiling module TestKeyProcess
--- Importing package SimSrcGen
--- Compiling module KeyProcess
-
-Top level modules:
-	TestKeyProcess
 
 } {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/pulse_widen.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/pulse_widen.sv
 Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
@@ -269,18 +502,45 @@ Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 Top level modules:
 	TestPulseWiden
 
-} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/encoder.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/encoder.sv
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/key_process.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/key_process.sv
 Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
 -- Compiling package SimSrcGen
 -- Compiling package CombFunctions
 -- Compiling package Fixedpoint
--- Compiling module TestEncoder
--- Importing package CombFunctions
--- Compiling module Encoder
+-- Compiling module TestKeyProcess
+-- Importing package SimSrcGen
+-- Compiling module KeyProcess
 
 Top level modules:
-	TestEncoder
-	Encoder
+	TestKeyProcess
+
+} {} {}} D:/loywong/OneDrive/projects/modelsim/FPGA_Book_2017/chapter4/pwm.sv {1 {vlog -work work -vopt -sv -stats=none D:/loywong/OneDrive/projects/modelsim/fpga_book_2017/chapter4/pwm.sv
+Model Technology ModelSim SE-64 vlog 2019.2 Compiler 2019.04 Apr 17 2019
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestPwm
+-- Importing package SimSrcGen
+-- Compiling module Pwm
+-- Compiling module PwmSigned
+-- Compiling module PwmDiffTime
+-- Compiling module PwmDiffFixedLow
+-- Compiling module RisingDelay
+
+Top level modules:
+	TestPwm
+
+} {} {}} D:/loywong/OneDrive/projects/modelsim/FPGA_Book_2017/chapter4/quadrature_inc_enc.sv {1 {vlog -work work -vopt -sv -stats=none D:/loywong/OneDrive/projects/modelsim/fpga_book_2017/chapter4/quadrature_inc_enc.sv
+Model Technology ModelSim SE-64 vlog 2019.2 Compiler 2019.04 Apr 17 2019
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestQuadEncIf
+-- Importing package SimSrcGen
+-- Compiling module QuadEncIf
+
+Top level modules:
+	TestQuadEncIf
 
 } {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/counter.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/counter.sv
 Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
@@ -298,5 +558,55 @@ Top level modules:
 	TestCounter
 	TestCntSecMinHr
 	CounterMax
+
+} {} {}} Z:/projects/modelsim/FPGA_Book_2017/chapter4/encoder.sv {1 {vlog -work work -vopt -sv -stats=none Z:/projects/modelsim/FPGA_Book_2017/chapter4/encoder.sv
+Model Technology ModelSim SE-64 vlog 10.6e Compiler 2018.06 Jun 23 2018
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestEncoder
+-- Importing package CombFunctions
+-- Compiling module Encoder
+
+Top level modules:
+	TestEncoder
+	Encoder
+
+} {} {}} D:/loywong/OneDrive/projects/modelsim/FPGA_Book_2017/chapter4/cc_event_handshake.sv {1 {vlog -work work -vopt -sv -stats=none D:/loywong/OneDrive/projects/modelsim/fpga_book_2017/chapter4/cc_event_handshake.sv
+Model Technology ModelSim SE-64 vlog 2019.2 Compiler 2019.04 Apr 17 2019
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestCCEvent
+-- Importing package SimSrcGen
+-- Compiling module CrossClkEvent
+
+Top level modules:
+	TestCCEvent
+
+} {} {}} D:/loywong/OneDrive/projects/modelsim/FPGA_Book_2017/chapter4/digital_osc_trigger.sv {1 {vlog -work work -vopt -sv -stats=none D:/loywong/OneDrive/projects/modelsim/fpga_book_2017/chapter4/digital_osc_trigger.sv
+Model Technology ModelSim SE-64 vlog 2019.2 Compiler 2019.04 Apr 17 2019
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestOscopeTrigSmp
+-- Importing package SimSrcGen
+-- Compiling module OscopeTrigSmp
+-- Compiling module OscopeTrigSmpFsm
+
+Top level modules:
+	TestOscopeTrigSmp
+
+} {} {}} D:/loywong/OneDrive/projects/modelsim/FPGA_Book_2017/chapter4/decoder.sv {1 {vlog -work work -vopt -sv -stats=none D:/loywong/OneDrive/projects/modelsim/fpga_book_2017/chapter4/decoder.sv
+Model Technology ModelSim SE-64 vlog 2019.2 Compiler 2019.04 Apr 17 2019
+-- Compiling package SimSrcGen
+-- Compiling package CombFunctions
+-- Compiling package Fixedpoint
+-- Compiling module TestDecoder
+-- Importing package CombFunctions
+-- Compiling module Decoder
+
+Top level modules:
+	TestDecoder
 
 } {} {}}

@@ -169,6 +169,42 @@ module str_pipestg #(
     endgenerate
 endmodule
 
+module str_snk_to_fifo_wr #(
+    parameter int DW = 8
+)(
+    input  wire  [DW-1:0] in_data  ,
+    input  wire           in_valid ,
+    output logic          in_ready ,
+    output logic [DW-1:0] fifo_data,
+    output logic          fifo_wr  ,
+    input  wire           fifo_full
+);
+    always_comb in_ready  = ~fifo_full;
+    always_comb fifo_wr   = in_ready & in_valid;
+    always_comb fifo_data = in_data;
+endmodule
+
+module fifo_rd_to_str_src #(
+    parameter int DW = 8
+)(
+    input  wire           clk       ,
+    input  wire           rst       ,
+    input  wire  [DW-1:0] fifo_q    ,
+    output logic          fifo_rd   ,
+    input  wire           fifo_empty,
+    output logic [DW-1:0] out_data  ,
+    output logic          out_valid ,
+    input  wire           out_ready
+);
+    always_comb fifo_rd  = ~fifo_empty & (~out_valid | out_valid & out_ready);
+    always_comb out_data = fifo_q;
+    always_ff@(posedge clk) begin
+        if(rst)            out_valid <= 1'b0;
+        else if(fifo_rd)   out_valid <= 1'b1;
+        else if(out_ready) out_valid <= 1'b0;
+    end
+endmodule
+
 module str_fifo #(
     parameter int DW = 8,
     parameter int AW = 8    // actual fifo depth = 2**AW - 1
