@@ -1,0 +1,72 @@
+.bloop/
+generated/
+verilog/
+project/*
+target/
+test_run_dir/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+!project/*.sbt
+
+### VSCode Metals ###
+.metals/
+
+### IntelliJ IDEA ###
+.idea/*
+!.idea/.gitignore
+!.idea/codeStyles
+!.idea/inspectionProfiles
+!.idea/runConfigurations
+!.idea/vcs.xml
+!.idea/misc.xml
+!.idea/modules.xml
+!.idea/scala_settings.xml
+!.idea/.name
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/shelf/
+.idea/dataSources/
+.idea/*.iml
+.idea/caches/
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### Mac OS ###
+.DS_Store
+
+### Scala ###
+.bsp/
+
+### Metals ###
+**/metals.log
+**/metals*.db
