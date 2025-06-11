@@ -8,6 +8,8 @@ I have started learning Chisel, code in this book will be gradually rewritten in
 
 # HOW TO USE
 
+**All the following steps are tested on Ubuntu 22.04.**
+
 ## 1. Install Scala Environment
 
 Below are instructions for Ubuntu users, for users of other linux release versions
@@ -76,7 +78,7 @@ After installation, we can delete the downloaded installation file `cs`:
 $ rm cs
 ```
 
-## 1.3. Install Verilator
+### 1.3. Install Verilator
 
 `Verilator` is an open-source simulation backend much faster than chiseltest itself.
 
@@ -87,9 +89,11 @@ $ sudo apt install verilator
 ```
 
 **CAUTION**: If you are using a newly released version of linux, you may need to manually install the latest version of
-Verilator to avoid errors while Verilator compiling HDL to c++, see: https://verilator.org/guide/latest/install.html.
+Verilator to avoid errors while Verilator compiling HDL to c++, see: https://verilator.org/guide/latest/install.html,
+or you can just try running the tests without the Verilator backend, by not using the
+`VerilatorBackendAnnotation` in `test().withAnnotations(...)`.
 
-# 2. Compile, Run and Test
+## 2. Compile, Run and Test
 
 Compile chisel and run the code to **generate verilog code**.
 

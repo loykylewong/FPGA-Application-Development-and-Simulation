@@ -23,11 +23,8 @@ test_run_dir/
 !.idea/modules.xml
 !.idea/scala_settings.xml
 !.idea/.name
-.idea/workspace.xml
-.idea/tasks.xml
 .idea/shelf/
 .idea/dataSources/
-.idea/*.iml
 .idea/caches/
 *.iws
 *.iml

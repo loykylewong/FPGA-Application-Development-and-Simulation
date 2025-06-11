@@ -62,13 +62,13 @@ class test_slices extends Module {
     io.x.sliceTo(io.d0, io.c0, io.b0, io.a0)
     io.x.sliceByteWiseTo(io.d1, io.c1, io.b1, io.a1)
 
-    val sbits = io.x.slice(12, 8, 9, 3)
+    val sbits = io.x.slices(12, 8, 9, 3)
     io.d2 := sbits(0).asSInt
     io.c2 := sbits(1)
     io.b2 := sbits(2).asSInt
     io.a2 := sbits(3)
 
-    val sbytes = io.x.sliceByteWise(12, 8, 9, 3)
+    val sbytes = io.x.slicesByteWise(12, 8, 9, 3)
     io.d3 := sbytes(0).asSInt
     io.c3 := sbytes(1)
     io.b3 := sbytes(2).asSInt

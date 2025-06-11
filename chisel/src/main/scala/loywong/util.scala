@@ -75,12 +75,23 @@ object util {
             })
         }
 
-        def slice(nBits: Int*): Seq[UInt] = {
-            val res = nBits.map(w => Wire(UInt(w.W)))
+        /**
+         * Slice Bits into slices according to widths
+         *
+         * @param widths Widths of each slices
+         * @return Seq of slices
+         */
+        def slices(widths: Int*): Seq[UInt] = {
+            val res = widths.map(w => Wire(UInt(w.W)))
             sliceTo(res: _*)
             res
         }
 
+        /**
+         * Concat multiple Bits and connect them to this Bits
+         *
+         * @param sources The multiple bits to be concatenated
+         */
         def catFrom(sources: Bits*): Unit = {
             x := Cat(sources)
         }
@@ -111,12 +122,23 @@ object util {
             })
         }
 
-        def sliceByteWise(nBits: Int*): Seq[UInt] = {
-            val res = nBits.map(w => Wire(UInt(w.W)))
+        /**
+         * Slice Bits into slices according to "up8" of specified widths
+         *
+         * @param widths Widths of each slices
+         * @return Seq of slices
+         */
+        def slicesByteWise(widths: Int*): Seq[UInt] = {
+            val res = widths.map(w => Wire(UInt(w.W)))
             sliceByteWiseTo(res: _*)
             res
         }
 
+        /**
+         * Extend multiple Bits to "up8" widths, concat, and connect them to this Bits
+         *
+         * @param sources The multiple bits to be concatenated
+         */
         def catByteWiseFrom(sources: Bits*): Unit = {
             if (sources.isEmpty)
                 x := 0.U
@@ -124,6 +146,11 @@ object util {
                 x := Cat(sources.map(s => s.extendToBytes))
         }
 
+        /**
+         * Reinterpret this Bits as a Fixed-Point with specified frac width
+         * @param fw Width of fractional part
+         * @return Fixed-Point Wire
+         */
         def asFixPoint(fw: Int): FixPoint = {
             val res = Wire(FixPoint(x.getWidth.W, fw))
             res.bits := x
@@ -207,6 +234,9 @@ object util {
             x(x.getWidth - 1) === 1.U
         }
 
+        /**
+         * @return Sign bit of this SInt
+         */
         def signBit: Bool = x(x.getWidth - 1).asBool
     }
 
@@ -226,11 +256,13 @@ object util {
     /**
      * Extend each BigInt to integer number of bytes, and then concat.
      *
-     * @param w Seq of width of each BigInt
-     * @param x Seq of BigInt
+     * @param isSigned Seq of signedness of each data
+     * @param w Seq of width of each data
+     * @param x Seq of BigInts, lower w(i) bits of each is the actual data to
+     *          be concat
      * @return Concat result in BigInt
      */
-    def CatByteWise(extSign: Boolean, w: Seq[Int], x: BigInt*): BigInt = {
+    def CatByteWise(isSigned: Seq[Boolean], w: Seq[Int], x: BigInt*): BigInt = {
         require(x.length == w.length)
         if (x.isEmpty)
             BigInt(0)
@@ -240,7 +272,7 @@ object util {
             for (i <- x.length - 1 to 0 by -1) {
                 val data = x(i)
                 val width = w(i)
-                if (extSign)
+                if (isSigned(i))
                     res |= data.asSigned(width).asUnsigned(width.up8) << lsb
                 else
                     res |= data.asUnsigned(width) << lsb
@@ -307,33 +339,70 @@ object util {
             }
         }
 
+        /**
+         * Get bits by specifying MSB and LSB in this BigInt
+         * @param msb Most significant bit pos
+         * @param lsb Least significant bit pos
+         * @return Bits in BigInt (this[msb : lsb])
+         */
         def bitSlice(msb: Int, lsb: Int): BigInt = {
             (x >> lsb) & ((BigInt(2) << (msb - lsb)) - 1)
         }
 
-        def bitSlices(nBits: Int*): Seq[BigInt] = {
+        /**
+         * Slice BigInt into slices according to widths
+         *
+         * @param widths Widths of each slices
+         * @return Seq of slices
+         */
+        def bitSlices(widths: Int*): Seq[BigInt] = {
             var lsb = 0
-            nBits.reverse.map(w => {
+            widths.reverse.map(w => {
                 val res = x.bitSlice(lsb + w - 1, lsb)
                 lsb += w
                 res
             }).reverse
         }
 
-        def bitSlicesByteWise(nBits: Int*): Seq[BigInt] = {
+        /**
+         * Slice BigInt into slices according to "up8" of specified widths
+         *
+         * @param widths Widths of each slices
+         * @return result slices
+         */
+        def bitSlicesByteWise(widths: Int*): Seq[BigInt] = {
             var lsb = 0
-            nBits.reverse.map(w => {
+            widths.reverse.map(w => {
                 val res = x.bitSlice(lsb + w - 1, lsb)
                 lsb += w.up8
                 res
             }).reverse
         }
 
-        def asFixPoint(width: Int, fracWidth: Int): Double = {
+        /**
+         * Get the value if treat the lower width bits as a Fixed-Point with
+         * specified frac width.
+         *
+         * @param width Width of effective bits
+         * @param fracWidth Width of fractional part
+         * @return Value of the Fixed-Point
+         */
+        def valueAsFixPoint(width: Int, fracWidth: Int): Double = {
             x.asSigned(width).toDouble * math.pow(2.0, -fracWidth)
         }
 
-        def asFixPointBigDecimal(width: Int, fracWidth: Int): BigDecimal = {
+        /**
+         * Get the value if treat the lower width bits as a Fixed-Point with
+         * specified frac width.
+         *
+         * @param width Width of effective bits
+         * @param fracWidth Width of fractional part
+         * @return Value of the Fixed-Point
+         * @note This BigDecimal version of `valueAsFixPoint` is more accurate
+         *       than the Double version, when width or fracWidth is larger
+         *       than or near to 64, this version is recommended.
+         */
+        def valueAsFixPointInBigDecimal(width: Int, fracWidth: Int): BigDecimal = {
             BigDecimal(x.asSigned(width)) * BigDecimal(2.0).pow(-fracWidth)
         }
     }
@@ -826,7 +895,7 @@ object util {
         }
 
         /**
-         * @param sint assign a SInt to integer part and clear fraction part.
+         * @param sint assign a SInt to integer part and clear fractional part.
          * @note
          */
         final def :=(sint: SInt): Unit = {
@@ -1141,7 +1210,7 @@ object util {
             x * (h - l) + l
         }
 
-        def mapFromTo(fromL: Double, fromH: Double, toL: Double, toH: Double) = {
+        def mapFromTo(fromL: Double, fromH: Double, toL: Double, toH: Double): Double = {
             (x - fromL) / (fromH - fromL) * (toH - toL) + toL
         }
 
@@ -1242,6 +1311,22 @@ object util {
             }
         }
         (max, mi, math.sqrt(pwr / x.length))
+    }
+
+    def minAndIndices[T: Numeric](x: Seq[T]): (T, Seq[Int]) = {
+        val min = x.min
+        val minIndices = x.zipWithIndex.collect{
+            case (v, i) if v == min => i
+        }
+        (min, minIndices)
+    }
+
+    def maxAndIndices[T: Numeric](x: Seq[T]): (T, Seq[Int]) = {
+        val max = x.max
+        val maxIndices = x.zipWithIndex.collect{
+            case (v, i) if v == max => i
+        }
+        (max, maxIndices)
     }
 
 }

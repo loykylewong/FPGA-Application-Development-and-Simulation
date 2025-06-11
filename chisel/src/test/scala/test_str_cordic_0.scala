@@ -166,7 +166,7 @@ class test extends AnyFlatSpec with ChiselScalatestTester {
                 val zoutRefSeq = Seq.fill(nBeats)(0.0)
                 
                 val txDataSeq = (0 until nBeats).map(i => {
-                    CatByteWise(true, Seq(zWidth, xyWidth, xyWidth),
+                    CatByteWise(Seq.fill(3)(true), Seq(zWidth, xyWidth, xyWidth),
                         zinSeq(i).toFixPoint(zWidth, zFracWidth).toBigInt,
                         yinSeq(i).toFixPoint(xyWidth, xyFracWidth).toBigInt,
                         xinSeq(i).toFixPoint(xyWidth, xyFracWidth).toBigInt,
@@ -182,9 +182,9 @@ class test extends AnyFlatSpec with ChiselScalatestTester {
                 rxThr.join()
 
                 val outSeq = snk.dataSeq.map(d => d.bitSlicesByteWise(zWidth, xyWidth, xyWidth))
-                val xoutSeq = outSeq.map(o => o(2).asFixPoint(xyWidth, xyFracWidth))
-                val youtSeq = outSeq.map(o => o(1).asFixPoint(xyWidth, xyFracWidth))
-                val zoutSeq = outSeq.map(o => o(0).asFixPoint(zWidth, zFracWidth))
+                val xoutSeq = outSeq.map(o => o(2).valueAsFixPoint(xyWidth, xyFracWidth))
+                val youtSeq = outSeq.map(o => o(1).valueAsFixPoint(xyWidth, xyFracWidth))
+                val zoutSeq = outSeq.map(o => o(0).valueAsFixPoint(zWidth, zFracWidth))
 
                 if(verbose) {
                     println("--------------------------------------------------------")
@@ -308,7 +308,7 @@ class test extends AnyFlatSpec with ChiselScalatestTester {
                 })
                 
                 val txDataSeq = (0 until nBeats).map(i => {
-                    CatByteWise(true, Seq(zWidth, xyWidth, xyWidth),
+                    CatByteWise(Seq.fill(3)(true), Seq(zWidth, xyWidth, xyWidth),
                         zinSeq(i).toFixPoint(zWidth, zFracWidth).toBigInt,
                         yinSeq(i).toFixPoint(xyWidth, xyFracWidth).toBigInt,
                         xinSeq(i).toFixPoint(xyWidth, xyFracWidth).toBigInt,
@@ -324,9 +324,9 @@ class test extends AnyFlatSpec with ChiselScalatestTester {
                 rxThr.join()
                 
                 val outSeq = snk.dataSeq.map(d => d.bitSlicesByteWise(zWidth, xyWidth, xyWidth))
-                val xoutSeq = outSeq.map(o => o(2).asFixPoint(xyWidth, xyFracWidth))
-                val youtSeq = outSeq.map(o => o(1).asFixPoint(xyWidth, xyFracWidth))
-                val zoutSeq = outSeq.map(o => o(0).asFixPoint(zWidth, zFracWidth))
+                val xoutSeq = outSeq.map(o => o(2).valueAsFixPoint(xyWidth, xyFracWidth))
+                val youtSeq = outSeq.map(o => o(1).valueAsFixPoint(xyWidth, xyFracWidth))
+                val zoutSeq = outSeq.map(o => o(0).valueAsFixPoint(zWidth, zFracWidth))
 
                 if(verbose) {
                     println("--------------------------------------------------------")

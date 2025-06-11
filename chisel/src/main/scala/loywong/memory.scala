@@ -213,9 +213,9 @@ class SdpRamRfInline(nWords: Long, dataWidth: Int, initFile: Option[String] = No
         val raddr = Input(UInt(log2Up(nWords).W))
         val qout  = Output(UInt(dataWidth.W))
     })
-    setInline("SdpRamRfInline.v",
+    setInline(s"${desiredName}.v",
         s"""
-           |module SdpRamRfInline #(
+           |module ${desiredName} #(
            |    parameter DW = ${dataWidth}, WORDS = ${nWords}
            |)(
            |    input wire                         clock,
@@ -257,9 +257,9 @@ class SdpRamWfInline(nWords: Long, dataWidth: Int, initFile: Option[String] = No
         val raddr = Input(UInt(log2Up(nWords).W))
         val qout  = Output(UInt(dataWidth.W))
     })
-    setInline("SdpRamWfInline.v",
+    setInline(s"${desiredName}.v",
         s"""
-           |module SdpRamWfInline #(
+           |module ${desiredName} #(
            |    parameter DW = ${dataWidth}, WORDS = ${nWords}
            |)(
            |    input wire                         clock,
@@ -281,6 +281,7 @@ class SdpRamWfInline(nWords: Long, dataWidth: Int, initFile: Option[String] = No
            |            qout <= din
            |        else
            |            qout <= ram[raddr]
+           |    end
            |endmodule
            |""".stripMargin
     )
@@ -306,9 +307,9 @@ class SdpRamRaInline(nWords: Long, dataWidth: Int, initFile: Option[String] = No
         val raddr = Input(UInt(log2Up(nWords).W))
         val dout  = Output(UInt(dataWidth.W))
     })
-    setInline("SdpRamRaInline.v",
+    setInline(s"${desiredName}.v",
         s"""
-           |module SdpRamRaInline #(   // asynchronous read
+           |module ${desiredName} #(   // asynchronous read
            |    parameter DW = ${dataWidth}, WORDS = ${nWords}
            |)(
            |    input wire                         clock,
@@ -359,9 +360,9 @@ class DpRamInline(nWords: Long, dataWidth: Int, initFile: Option[String] = None)
         val din_b  = Input(UInt(dataWidth.W))
         val qout_b = Output(UInt(dataWidth.W))
     })
-    setInline("DpRamInline.v",
+    setInline(s"${desiredName}.v",
         s"""
-           |module DpRamInline #(
+           |module ${desiredName} #(
            |    parameter DW = ${dataWidth}, WORDS = ${nWords}
            |)(
            |    input wire                         clock ,
@@ -425,9 +426,9 @@ class DcRamInline(nWords: Long, dataWidth: Int, initFile: Option[String] = None)
         val din_b   = Input(UInt(dataWidth.W))
         val qout_b  = Output(UInt(dataWidth.W))
     })
-    setInline("DcRamInline.v",
+    setInline(s"${desiredName}.v",
         s"""
-           |module DcRamInline #(
+           |module ${desiredName} #(
            |    parameter DW = ${dataWidth}, WORDS = ${nWords}
            |)(
            |    input wire                         clock_a ,
