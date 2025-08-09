@@ -168,9 +168,7 @@ quadrant 1~4.
 
 ## 2.5. class `Cordic`
 
-class `Cordic` implemented iteration steps and scale compensation for $k$.
-
-for circular coordinates, `CordicCircularQuadrantTrans` also implemented.
+class `Cordic` implemented quadrant translation, iteration steps and scale compensation.
 
 ### 2.5.1. Circular
 

@@ -49,7 +49,7 @@ import chisel3.experimental.requireIsChiselType
  */
 class StrActiveStage[+U <: Data, +D <: Data]
 (genUS: U = Bool(), genDS: D = Bool(), initDS: Option[()=>D] = None)
-(worker: U => D = (x: U) => x) extends Module {
+(worker: U => D = (x: U) => x.asTypeOf(genDS)) extends Module {
     requireIsChiselType(genUS)
     requireIsChiselType(genDS)
 
@@ -72,7 +72,7 @@ class StrActiveStage[+U <: Data, +D <: Data]
     ))
     io.ds.valid := ds_valid
 
-    val ds_bits_next = WireDefault(0.U.asTypeOf(genDS))
+    val ds_bits_next: D = WireDefault(0.U.asTypeOf(genDS))
     ds_bits_next := worker(io.us.bits)
 
     val ds_bits = initDS match {
@@ -103,7 +103,7 @@ class StrActiveStage[+U <: Data, +D <: Data]
  */
 class StrPassiveStage[+U <: Data, +D <: Data]
 (genUS: U = Bool(), genDS: D = Bool(), initDS: Option[()=>D] = None)
-(worker: U => D = (x: U) => x) extends Module {
+(worker: U => D = (x: U) => x.asTypeOf(genDS)) extends Module {
     requireIsChiselType(genUS)
     requireIsChiselType(genDS)
 

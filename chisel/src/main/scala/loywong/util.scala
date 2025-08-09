@@ -153,7 +153,7 @@ object util {
          */
         def asFixPoint(fw: Int): FixPoint = {
             val res = Wire(FixPoint(x.getWidth.W, fw))
-            res.bits := x
+            res.bits := x.asSInt
             res
         }
     }
@@ -238,6 +238,95 @@ object util {
          * @return Sign bit of this SInt
          */
         def signBit: Bool = x(x.getWidth - 1).asBool
+
+        private def shiftLeft(n: Int): SInt = {
+            val w: Int = x.getWidth
+            (x(w - 1) ## (x(w - 2, 0) << n).take(w - 1)).asSInt
+        }
+
+        private def shiftRight(n: Int): SInt = {
+            val w: Int = x.getWidth
+            (x(w - 1) ## (x(w - 2, 0) >> n).pad(w - 1)).asSInt
+        }
+
+        private def shiftLeft(n: UInt): SInt = {
+            val w: Int = x.getWidth
+            (x(w - 1) ## (x(w - 2, 0) << n).take(w - 1)).asSInt
+        }
+
+        private def shiftRight(n: UInt): SInt = {
+            val w: Int = x.getWidth
+            (x(w - 1) ## (x(w - 2, 0) >> n).pad(w - 1)).asSInt
+        }
+
+        /**
+         * Same behavior as it in Verilog/SystemVerilog when `n >= 0`,
+         * and extends function when `n < 0` (eqv.: x >>> (-n) ).
+         * @param n bits to be shifted.
+         * @return shift result.
+         * @note CAUTION: may cause value overflow.
+         */
+        final def <<<(n: Int): SInt = {
+            if(n > 0) shiftLeft(n)
+            else if(n < 0) shiftRight(-n)
+            else x
+        }
+
+        /**
+         * Same behavior as it in Verilog/SystemVerilog when `n >= 0`,
+         * and extends function when `n < 0` (eqv.: x <<< (-n) ).
+         * @param n bits to be shifted.
+         * @return shift result.
+         * @note CAUTION: may cause value overflow when `n < 0`.
+         */
+        final def >>>(n: Int): SInt = {
+            if(n > 0) shiftRight(n)
+            else if(n < 0) shiftLeft(-n)
+            else x
+        }
+
+        /**
+         * Same behavior as it in Verilog/SystemVerilog when `n >= 0`,
+         * and extends function when `n < 0` (eqv.: x >>> (-n) ).
+         * @param n bits to be shifted.
+         * @return shift result.
+         * @note CAUTION: may cause value overflow.
+         */
+        final def <<<(n: SInt): SInt = {
+            MuxCase(x, Seq(
+                (n > 0.S) -> shiftLeft(n.asUInt),
+                (n < 0.S) -> shiftRight((-n).asUInt)
+            ))
+        }
+
+        /**
+         * Same behavior as it in Verilog/SystemVerilog when `n >= 0`,
+         * and extends function when `n < 0` (eqv.: x >>> (-n) ).
+         * @param n bits to be shifted.
+         * @return shift result.
+         * @note CAUTION: may cause value overflow when `n < 0`.
+         */
+        final def >>>(n: SInt): SInt = {
+            MuxCase(x, Seq(
+                (n > 0.S) -> shiftRight(n.asUInt),
+                (n < 0.S) -> shiftLeft((-n).asUInt)
+            ))
+        }
+
+        /**
+         * Same behavior as it in Verilog/SystemVerilog.
+         * @param n bits to be shifted.
+         * @return shift result.
+         * @note CAUTION: may cause value overflow.
+         */
+        final def <<<(n: UInt): SInt = shiftLeft(n)
+
+        /**
+         * Same behavior as it in Verilog/SystemVerilog.
+         * @param n bits to be shifted.
+         * @return shift result.
+         */
+        final def >>>(n: UInt): SInt = shiftRight(n)
     }
 
     /**
@@ -860,7 +949,7 @@ object util {
     }
 
     sealed class FixPoint(val bits: SInt, private val fw: Int) extends Bundle {
-        require(0 < fw && fw < 128, s"In FixPoint, fw must be > 0 and < 128, but fw=${fw} got.")
+        require(0 <= fw && fw < 128, s"In FixPoint, fw must be >= 0 and < 128, but fw=${fw} got.")
         require(bits.widthKnown)
         require(!bits.isLit)
 
@@ -907,8 +996,8 @@ object util {
          */
         final def :=(that: FixPoint): Unit = {
             val bits = {
-                if (this.fw > that.fw) that.bits << (this.fw - that.fw)
-                else if (this.fw < that.fw) that.bits >> (that.fw - this.fw)
+                if (this.fw > that.fw) (that.bits << (this.fw - that.fw)).asSInt
+                else if (this.fw < that.fw) (that.bits >> (that.fw - this.fw)).asSInt
                 else that.bits
             }
             this.bits := bits
@@ -968,6 +1057,96 @@ object util {
             val (l, r, _) = matchPoint(that)
             Mux(l > r, true.B, false.B)
         }
+
+        private def shiftLeft(n: Int): FixPoint = {
+            val w: Int = this.bits.getWidth
+            (bits(w - 1) ## (bits(w - 2, 0) << n).take(w - 1)).asFixPoint(fw)
+        }
+
+        private def shiftRight(n: Int): FixPoint = {
+            val w: Int = this.bits.getWidth
+            (bits(w - 1) ## (bits(w - 2, 0) >> n).pad(w - 1)).asFixPoint(fw)
+        }
+
+        private def shiftLeft(n: UInt): FixPoint = {
+            val w: Int = this.bits.getWidth
+            (bits(w - 1) ## (bits(w - 2, 0) << n).take(w - 1)).asFixPoint(fw)
+        }
+
+        private def shiftRight(n: UInt): FixPoint = {
+            val w: Int = this.bits.getWidth
+            (bits(w - 1) ## (bits(w - 2, 0) >> n).pad(w - 1)).asFixPoint(fw)
+        }
+
+        /**
+         * Keep sign bit and shift other bits, eqv. to x * 2**n.
+         * @param n bits to be shifted, n can be negative.
+         * @return shift result.
+         * @note CAUTION: may cause value overflow.
+         */
+        final def <<<(that: Int): FixPoint = {
+            if(that > 0)
+                shiftLeft(that)
+            else if(that < 0)
+                shiftRight(-that)
+            else
+                this
+        }
+
+        /**
+         * Keep sign bit and shift other bits, eqv. to x / 2**n.
+         * @param n bits to be shifted, n can be negative.
+         * @return shift result.
+         * @note CAUTION: may cause value overflow when `n < 0`.
+         */
+        final def >>>(that: Int): FixPoint = {
+            if(that > 0)
+                shiftRight(that)
+            else if(that < 0)
+                shiftLeft(-that)
+            else
+                this
+        }
+
+        /**
+         * Keep sign bit and shift other bits, eqv. to x * 2**n.
+         * @param n bits to be shifted, n can be negative.
+         * @return shift result.
+         * @note CAUTION: may cause value overflow.
+         */
+        final def <<<(that: SInt): FixPoint = {
+            MuxCase(this, Seq(
+                (that > 0.S) -> shiftLeft(that.asUInt),
+                (that < 0.S) -> shiftRight((-that).asUInt)
+            ))
+        }
+
+        /**
+         * Keep sign bit and shift other bits, eqv. to x / 2**n.
+         * @param n bits to be shifted, n can be negative.
+         * @return shift result.
+         * @note CAUTION: may cause value overflow when `n < 0`.
+         */
+        final def >>>(that: SInt): FixPoint = {
+            MuxCase(this, Seq(
+                (that > 0.S) -> shiftRight(that.asUInt),
+                (that < 0.S) -> shiftLeft((-that).asUInt)
+            ))
+        }
+
+        /**
+         * Keep sign bit and shift other bits, eqv. to x * 2**n.
+         * @param n bits to be shifted.
+         * @return shift result.
+         */
+        final def <<<(that: UInt): FixPoint = shiftLeft(that)
+
+        /**
+         * Keep sign bit and shift other bits, eqv. to x / 2**n.
+         * @param n bits to be shifted.
+         * @return shift result.
+         */
+        final def >>>(that: UInt): FixPoint = shiftRight(that)
 
         /**
          * Truncate
