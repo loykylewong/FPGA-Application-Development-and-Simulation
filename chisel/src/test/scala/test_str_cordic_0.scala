@@ -135,8 +135,8 @@ class test extends AnyFlatSpec with ChiselScalatestTester {
                 snk.setThrottle(randomReady, readyInterval)
 
                 val xyMagRand = new UniformRealDistribution(
-                    FixPoint.highest(xyWidth, xyFracWidth) * 0.1,
-                    FixPoint.highest(xyWidth, xyFracWidth) - 16 * xyLsb
+                    FixPoint.highestInDouble(xyWidth, xyFracWidth) * 0.1,
+                    FixPoint.highestInDouble(xyWidth, xyFracWidth) - 16 * xyLsb
                 )
                 val xyAngRand = new UniformRealDistribution(
                     -math.Pi,
@@ -273,8 +273,8 @@ class test extends AnyFlatSpec with ChiselScalatestTester {
                 snk.setThrottle(randomReady, readyInterval)
                 
                 val xyMagRand = new UniformRealDistribution(
-                    FixPoint.highest(xyWidth, xyFracWidth) * 0.1,
-                    FixPoint.highest(xyWidth, xyFracWidth) - 16 * xyLsb
+                    FixPoint.highestInDouble(xyWidth, xyFracWidth) * 0.1,
+                    FixPoint.highestInDouble(xyWidth, xyFracWidth) - 16 * xyLsb
                 )
                 val xyAngRand = new UniformRealDistribution(
                     -math.Pi,

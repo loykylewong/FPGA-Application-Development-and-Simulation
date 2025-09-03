@@ -955,9 +955,21 @@ object util {
 
         def getFracWidth: Int = fw
 
-        def lowest: Double = FixPoint.lowest(bits.getWidth, fw)
+        def lowest: FixPoint = FixPoint.lowest(bits.getWidth, fw)
 
-        def highest: Double = FixPoint.highest(bits.getWidth, fw)
+        def highest: FixPoint = FixPoint.highest(bits.getWidth, fw)
+
+        def isLowest: Bool = this.bits.asUInt === (1.U(1.W) ## 0.U((bits.getWidth - 1).W))
+
+        def isHighest: Bool = this.bits.asUInt === (0.U(1.W) ## Fill(bits.getWidth - 1, 1.U(1.W)))
+
+        def setToLowest: Unit = this.bits := (1.U(1.W) ## 0.U((bits.getWidth - 1).W)).asSInt
+
+        def setToHighest: Unit = this.bits := (0.U(1.W) ## Fill(bits.getWidth - 1, 1.U(1.W))).asSInt
+
+        def lowestInDouble: Double = FixPoint.lowestInDouble(bits.getWidth, fw)
+
+        def highestInDouble: Double = FixPoint.highestInDouble(bits.getWidth, fw)
 
         def lowestInBigDecimal: BigDecimal = FixPoint.lowestInBigDecimal(bits.getWidth, fw)
 
@@ -1254,11 +1266,19 @@ object util {
             res
         }
 
-        def lowest(w: Int, fw: Int): Double = {
+        def lowest(w: Int, fw: Int): FixPoint = {
+            (1.U(1.W) ## 0.U((w - 1).W)).asFixPoint(fw)
+        }
+
+        def highest(w: Int, fw: Int): FixPoint = {
+            (0.U(1.W) ## Fill(w - 1, 1.U(1.W))).asFixPoint(fw)
+        }
+
+        def lowestInDouble(w: Int, fw: Int): Double = {
             -math.pow(2.0, w - 1 - fw)
         }
 
-        def highest(w: Int, fw: Int): Double = {
+        def highestInDouble(w: Int, fw: Int): Double = {
             math.pow(2.0, w - 1 - fw) - math.pow(2.0, -fw)
         }
 
@@ -1271,7 +1291,7 @@ object util {
         }
 
         def inRange(w: Int, fw: Int, value: Double): Boolean = {
-            lowest(w, fw) <= value && value <= highest(w, fw)
+            lowestInDouble(w, fw) <= value && value <= highestInDouble(w, fw)
         }
 
         def inRange(w: Int, fw: Int, value: BigDecimal): Boolean = {
