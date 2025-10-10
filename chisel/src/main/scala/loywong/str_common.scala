@@ -347,6 +347,38 @@ object StrHsComb {
 }
 
 /**
+ * Represent a hardware module for detecting gapping between packages.
+ */
+class StrPkgGapping extends Module {
+    val io = IO(new Bundle {
+        val valid = Input(Bool())
+        val ready = Input(Bool())
+        val last = Input(Bool())
+        val gapping = Output(Bool())
+    })
+    val shake = WireDefault(io.valid && io.ready)
+    val gapped = RegEnable(io.last, true.B, shake)
+    io.gapping := shake && io.last || gapped && (!shake)
+}
+
+object StrPkgGapping {
+    /**
+     * Create an instance of StrPkgGapping, and connect IOs.
+     * @param valid valid signal of stream to be detected.
+     * @param ready ready signal of stream to be detected.
+     * @param last  last signal of stream to be detected.
+     * @return      output gapping signal.
+     */
+    def apply[T <: IrrevocableIO[StrHasLast]](str: T): Bool = {
+        val strPkgGapping = Module(new StrPkgGapping)
+        strPkgGapping.io.valid := str.valid
+        strPkgGapping.io.ready := str.ready
+        strPkgGapping.io.last := str.bits.last
+        strPkgGapping.io.gapping
+    }
+}
+
+/**
  * Represents a hardware stream pipeline module.
  *
  * Use this for matching path latency with others.
@@ -543,9 +575,6 @@ class StrDcFifo[T <: Data](gen: T,
  *
  * @param genUs             generator of up-stream bits of IrrevocableIO
  * @param genDs             generator of down-stream bits of IrrevocableIO
- * @param idAssociation     id association, see `StrIdAssociation`
- * @param destAssociation   dest association, see `StrDestAssociation`
- * @param userAssociation   user association, see `StrUserAssociation`
  * @tparam U                type of up-stream bits of IrrevocableIO
  * @tparam D                type of down-stream bits of IrrevocableIO
  * @note    It's the user's responsibility to make sure that `id` changing,
@@ -555,10 +584,7 @@ class StrDcFifo[T <: Data](gen: T,
  *          `dest` and/or `user` may mess up, `last` may lost.
  */
 class StrDataWidthConverter[U <: StrHasData, D <: StrHasData](
-       genUs: U, genDs: D/*,
-       idAssociation: StrIdAssociation.Value = StrIdAssociation.LowestByte,
-       destAssociation: StrDestAssociation.Value = StrDestAssociation.LowestByte,
-       userAssociation: StrUserAssociation.Value = StrUserAssociation.SpreadInBytes*/) extends Module {
+       genUs: U, genDs: D) extends Module {
 
     requireIsChiselType(genUs)
     requireIsChiselType(genDs)
@@ -830,9 +856,6 @@ class StrDataWidthConverter[U <: StrHasData, D <: StrHasData](
  *
  * @param genUs             generator of up-stream bits of IrrevocableIO
  * @param genDs             generator of down-stream bits of IrrevocableIO
- * @param idAssociation     id association, see `StrIdAssociation`
- * @param destAssociation   dest association, see `StrDestAssociation`
- * @param userAssociation   user association, see `StrUserAssociation`
  * @tparam U                type of up-stream bits of IrrevocableIO
  * @tparam D                type of down-stream bits of IrrevocableIO
  * @note    CAUTION:
@@ -843,10 +866,7 @@ class StrDataWidthConverter[U <: StrHasData, D <: StrHasData](
  *          `dest` and/or `user` may mess up, `last` may lost.
  */
 class StrKeepRemover[U <: StrHasKeep, D <: StrHasData](
-        genUs: U, genDs: D/*,
-        idAssociation: StrIdAssociation.Value = StrIdAssociation.LowestByte,
-        destAssociation: StrDestAssociation.Value = StrDestAssociation.LowestByte,
-        userAssociation: StrUserAssociation.Value = StrUserAssociation.SpreadInBytes*/) extends Module {
+        genUs: U, genDs: D) extends Module {
 
     requireIsChiselType(genUs)
     requireIsChiselType(genDs)

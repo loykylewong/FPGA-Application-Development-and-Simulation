@@ -26,8 +26,9 @@ package loywong
 
 import chisel3._
 import chisel3.util._
-import scala.math
+// import scala.math
 import java.io.{FileWriter, PrintWriter}
+import scala.util.Try
 import scala.util.Using
 
 object MemoryInitFiles {
@@ -42,7 +43,7 @@ object MemoryInitFiles {
      * @param isSigned  True for 2's compliment data, false for binary offset data
      * @return The generated sine wave Seq
      */
-    def SineWava(length: Int, dataWidth: Int, phase: Double = 0.0, fullScale: Double = 1.0, cycles: Double = 1.0, isSigned: Boolean = true) = {
+    def SineWava(length: Int, dataWidth: Int, phase: Double = 0.0, fullScale: Double = 1.0, cycles: Double = 1.0, isSigned: Boolean = true): IndexedSeq[Long] = {
         val ampMax: Double = (1L << (dataWidth - 1)) - 1.0
         val ampDesire: Double = (1L << (dataWidth - 1)) * fullScale
         val amp = math.min(ampMax, ampDesire)
@@ -50,7 +51,7 @@ object MemoryInitFiles {
         val omega = 2.0 * math.Pi * cycles / length
         (0 until length).map { i =>
             bias + math.round(amp * math.sin(omega * i + phase))
-        }.toSeq
+        }
     }
 
     /**
@@ -64,18 +65,18 @@ object MemoryInitFiles {
      * @param isSigned  True for 2's compliment data, false for binary offset data
      * @return The generated cosine wave Seq
      */
-    def CosineWave(length: Int, dataWidth: Int, phase: Double = 0.0, fullScale: Double = 1.0, cycles: Double = 1.0, isSigned: Boolean = true) = {
+    def CosineWave(length: Int, dataWidth: Int, phase: Double = 0.0, fullScale: Double = 1.0, cycles: Double = 1.0, isSigned: Boolean = true): IndexedSeq[Long] = {
         SineWava(length, dataWidth, phase + math.Pi / 2.0, fullScale, cycles, isSigned)
     }
 
     /**
-     * Write memory initialize data file, which can be use by `$readmemh` system call in verilog
+     * Write memory initialize data file, which can be used by `$readmemh` system call in verilog
      *
      * @param fileName Path and name of the data file
      * @param data     Data Seq to be written in the file
      * @tparam T Type of data (element in Seq), must be Int or Long
      */
-    def Write[T: Integral](fileName: String, data: Seq[T]) = {
+    def Write[T: Integral](fileName: String, data: Seq[T]): Try[Unit] = {
         Using(new PrintWriter(new FileWriter(fileName))) { writer =>
             data.foreach { d =>
                 writer.println(f"${Integral[T].toLong(d)}%016x")
@@ -932,7 +933,7 @@ class SpRamWf[T <: Data](nWords: Long, gen: T, initFile: Option[String] = None) 
 
     val io = IO(new RamIO.RW(nWords, gen))
     val spramwf = SyncReadMemWriteFirst(nWords, gen, initFile)(clock)
-    io.dout := spramwf.read((io.addr))
+    io.dout := spramwf.read(io.addr)
     spramwf.write(io.addr, io.din, io.we)
 }
 

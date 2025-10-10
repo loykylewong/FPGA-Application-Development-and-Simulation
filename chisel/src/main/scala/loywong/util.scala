@@ -1,10 +1,9 @@
 package loywong
 
+import scala.math._
 import chisel3._
 import chisel3.util._
 import chiseltest._
-
-import scala.annotation.unused
 
 object util {
     implicit class BitsUtil(private val x: Bits) extends AnyVal {
@@ -200,6 +199,36 @@ object util {
         }
 
         def isNegative: Bool = false.B
+
+        /**
+         * @return maximum value this UInt can represents
+         */
+        def highestInBigInt: BigInt = {
+            val w = x.getWidth
+            val m = BigInt(1) << w
+            m - 1
+        }
+
+        /**
+         * @return minimum value this UInt can represents
+         */
+        def lowestInBigInt: BigInt = {
+            BigInt(0)
+        }
+
+        /**
+         * @return maximum value this UInt can present
+         */
+        def highest: UInt = {
+            this.highestInBigInt.U(x.getWidth.W)
+        }
+
+        /**
+         * @return minimum value this UInt can represents
+         */
+        def lowest: UInt = {
+            this.lowestInBigInt.U(x.getWidth.W)
+        }
     }
 
     implicit class SIntUtil(private val x: SInt) extends AnyVal {
@@ -238,6 +267,38 @@ object util {
          * @return Sign bit of this SInt
          */
         def signBit: Bool = x(x.getWidth - 1).asBool
+
+        /**
+         * @return maximum value this SInt can represents
+         */
+        def highestInBigInt: BigInt = {
+            val w = x.getWidth
+            val m = BigInt(1) << (w - 1)
+            m - 1
+        }
+
+        /**
+         * @return minimum value this SInt can represents
+         */
+        def lowestInBigInt: BigInt = {
+            val w = x.getWidth
+            val m = BigInt(1) << (w - 1)
+            -m
+        }
+
+        /**
+         * @return maximum value this SInt can present
+         */
+        def highest: SInt = {
+            this.highestInBigInt.S(x.getWidth.W)
+        }
+
+        /**
+         * @return minimum value this SInt can represents
+         */
+        def lowest: SInt = {
+            this.lowestInBigInt.S(x.getWidth.W)
+        }
 
         private def shiftLeft(n: Int): SInt = {
             val w: Int = x.getWidth
@@ -948,56 +1009,178 @@ object util {
         }
     }
 
+    /**
+     * Chisel type or hardware of a FixPoint
+     * @param bits Raw bits of FixPoint
+     * @param fw Width of fraction part
+     * @note
+     *  - Chisel type if bits is a chisel type (e.g.: SInt(16.W))
+     *  - Chisel hardware if bits is a chisel hardware (e.g.: 123.S(16.W))
+     */
     sealed class FixPoint(val bits: SInt, private val fw: Int) extends Bundle {
         require(0 <= fw && fw < 128, s"In FixPoint, fw must be >= 0 and < 128, but fw=${fw} got.")
         require(bits.widthKnown)
         require(!bits.isLit)
 
+        /**
+         * @return total width
+         */
+        def getTotalWidth: Int = this.bits.getWidth
+
+        /**
+         * @return width of integer part (including sign bit).
+         */
+        def getIntWidth: Int = this.bits.getWidth - fw
+
+        /**
+         * @return width of fraction part.
+         */
         def getFracWidth: Int = fw
 
+        /**
+         * @return Lowest FixPoint (negative with max abs).
+         */
         def lowest: FixPoint = FixPoint.lowest(bits.getWidth, fw)
 
+        /**
+         * @return Highest FixPoint (positive with max abs).
+         */
         def highest: FixPoint = FixPoint.highest(bits.getWidth, fw)
 
+        /**
+         * @return Epsilon FixPoint (positive with min abs).
+         */
+        def epsilon: FixPoint = FixPoint.epsilon(bits.getWidth, fw)
+
+        /**
+         * @return True if this is the lowest value (negative with max abs).
+         */
         def isLowest: Bool = this.bits.asUInt === (1.U(1.W) ## 0.U((bits.getWidth - 1).W))
 
+        /**
+         * @return True if this is the highest value (positive with max abs).
+         */
         def isHighest: Bool = this.bits.asUInt === (0.U(1.W) ## Fill(bits.getWidth - 1, 1.U(1.W)))
 
+        /**
+         * @return True if this is the epsilon value (positive with min abs).
+         */
+        def isEpsilon: Bool = this.bits.asUInt === (1.U(bits.getWidth.W))
+
+        /**
+         * Set this to the lowest value (negative with max abs).
+         */
         def setToLowest: Unit = this.bits := (1.U(1.W) ## 0.U((bits.getWidth - 1).W)).asSInt
 
+        /**
+         * Set this to the highest value (positive with max abs).
+         */
         def setToHighest: Unit = this.bits := (0.U(1.W) ## Fill(bits.getWidth - 1, 1.U(1.W))).asSInt
 
+        /**
+         * Set this to the epsilon value (positive with min abs).
+         */
+        def setToEpsilon: Unit = this.bits := 1.U(bits.getWidth.W).asSInt
+
+        /**
+         * @param value the value to be represented.
+         */
+        def setTo(value: Double): Unit = {
+            require(inRangeAfterRound(value), s"In FixPoint.setTo, ${value} can not fit in fix point binary with width=${bits.getWidth} and fw=${fw}.")
+            // this.bits := (value * math.pow(2.0, fw)).round.asSInt
+            this.bits := FixPoint.round(value * math.pow(2.0, fw)).asSInt
+        }
+
+        /**
+         * @param value the value to be represented.
+         */
+        def setTo(value: BigDecimal): Unit = {
+            require(inRangeAfterRound(value))
+            this.bits := FixPoint.round(value * BigDecimal(2.0).pow(fw)).asSInt
+        }
+
+        /**
+         * @return Lowest value (negative with max abs) in Double.
+         */
         def lowestInDouble: Double = FixPoint.lowestInDouble(bits.getWidth, fw)
 
+        /**
+         * @return Highest value (positive with max abs) in Double.
+         */
         def highestInDouble: Double = FixPoint.highestInDouble(bits.getWidth, fw)
 
+        /**
+         * @return Epsilon value (positive with min abs) in Double.
+         */
+        def epsilonInDouble: Double = FixPoint.epsilonInDouble(fw)
+
+        /**
+         * @return Lowest value (negative with max abs) in BigDecimal.
+         */
         def lowestInBigDecimal: BigDecimal = FixPoint.lowestInBigDecimal(bits.getWidth, fw)
 
+        /**
+         * @return Highest value (positive with max abs) in BigDecimal.
+         */
         def highestInBigDecimal: BigDecimal = FixPoint.highestInBigDecimal(bits.getWidth, fw)
 
+        /**
+         * @return Epsilon value (positive with min abs) in BigDecimal.
+         */
+        def epsilonInBigDecimal: BigDecimal = FixPoint.epsilonInBigDecimal(fw)
+
+        /**
+         * Test whether the value can be fit into this FixPoint.
+         * @param value The value to be tested.
+         * @return True if the value can be fit into this FixPoint.
+         */
         def inRange(value: Double): Boolean = FixPoint.inRange(bits.getWidth, fw, value)
 
+        /**
+         *  Test whether the value can be fit into this FixPoint after rounded to nearest quantitative step.
+         * @param value The value to be tested.
+         * @return True if the rounded value can be fit into this FixPoint.
+         * @note The round mode is specified in FixPoint.roundMode.
+         */
+        def inRangeAfterRound(value: Double): Boolean = FixPoint.inRangeAfterRound(bits.getWidth, fw, value)
+
+        /**
+         * Test whether the value can be fit into this FixPoint.
+         * @param value The value to be test.
+         * @return True if the value can be fit into this FixPoint.
+         */
         def inRange(value: BigDecimal): Boolean = FixPoint.inRange(bits.getWidth, fw, value)
 
         /**
+         *  Test whether the value can be fit into this FixPoint after rounded to nearest quantitative step.
+         * @param value The value to be tested.
+         * @return True if the rounded value can be fit into this FixPoint.
+         * @note The round mode is specified in FixPoint.roundMode.
+         */
+        def inRangeAfterRound(value: BigDecimal): Boolean = FixPoint.inRangeAfterRound(bits.getWidth, fw, value)
+
+        /**
          * @param value assign a double constant/parameter
+         * @note due to the characteristics of Fixpoint, value will be quantified (loss precision)
          */
         final def :=(value: Double): Unit = {
-            require(inRange(value), s"In FixPoint, ${value} can not fit in fix point binary with width=${bits.getWidth} and fw=${fw}.")
-            this.bits := (value * math.pow(2.0, fw)).round.asSInt
+            require(inRangeAfterRound(value), s"In FixPoint, ${value} can not fit in fix point binary with width=${bits.getWidth} and fw=${fw}.")
+            // this.bits := (value * math.pow(2.0, fw)).round.asSInt
+            this.bits := FixPoint.round(value * math.pow(2.0, fw)).asSInt
         }
 
         /**
          * @param value assign a BigDecimal constant/parameter
+         * @note due to the characteristics of Fixpoint, value will be quantified (loss precision)
          */
         final def :=(value: BigDecimal): Unit = {
-            require(inRange(value), s"In FixPoint, ${value} can not fit in fix point binary with width=${bits.getWidth} and fw=${fw}.")
-            this.bits := (value * BigDecimal(2.0).pow(fw)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt.asSInt
+            require(inRangeAfterRound(value), s"In FixPoint, ${value} can not fit in fix point binary with width=${bits.getWidth} and fw=${fw}.")
+            // this.bits := (value * BigDecimal(2.0).pow(fw)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt.asSInt
+            this.bits := FixPoint.round(value * BigDecimal(2.0).pow(fw)).asSInt
         }
 
         /**
          * @param sint assign a SInt to integer part and clear fractional part.
-         * @note
          */
         final def :=(sint: SInt): Unit = {
             this.bits := (sint << fw)
@@ -1005,6 +1188,11 @@ object util {
 
         /**
          * @param that assign another FixPoint
+         * @note
+         *  - if fw of destination is larger, zeros will be fill in lsb.
+         *  - if fw of destination is smaller, tail bits in source will be discarded (loss precision).
+         *  - if iw of destination is larger, sign bit will be fill in msb.
+         *  - if iw of destination is smaller, msb will be discarded (overflow).
          */
         final def :=(that: FixPoint): Unit = {
             val bits = {
@@ -1022,49 +1210,85 @@ object util {
             (lBits, rBits, fw)
         }
 
+        /**
+         * @return Sum of 2 FixPoint
+         * @note
+         *  - IW of result = max{opd1.IW, opd2.IW} + 1
+         *  - FW of result = max{opd1.FW, opd2.FW}
+         */
         final def +(that: FixPoint): FixPoint = {
             val (l, r, fw) = matchPoint(that)
-            val bits: SInt = l + r
+            val bits: SInt = l +& r
             new FixPoint(bits, fw)
         }
 
+        /**
+         * @return Subs of 2 FixPoint
+         * @note
+         *  - IW of result = max{opd1.IW, opd2.IW} + 1
+         *  - FW of result = max{opd1.FW, opd2.FW}
+         */
         final def -(that: FixPoint): FixPoint = {
             val (l, r, fw) = matchPoint(that)
-            val bits: SInt = l - r
+            val bits: SInt = l -& r
             new FixPoint(bits, fw)
         }
 
+        /**
+         * @return Productor of 2 FixPoint
+         * @note
+         *  - IW of result = opd1.IW + opd2.IW
+         *  - FW of result = opd1.FW + opd2.FW
+         */
         final def *(that: FixPoint): FixPoint = {
             val fw = this.fw + that.fw
             val bits: SInt = this.bits * that.bits
             new FixPoint(bits, fw)
         }
 
+        /**
+         * @return True if 2 opd equals exactly
+         */
         final def ===(that: FixPoint): Bool = {
             val (l, r, _) = matchPoint(that)
             Mux(l === r, true.B, false.B)
         }
 
+        /**
+         * @return True if 2 opd NOT exactly equals
+         */
         final def =/=(that: FixPoint): Bool = {
             val (l, r, _) = matchPoint(that)
             Mux(l =/= r, true.B, false.B)
         }
 
+        /**
+         * @return True if left opd is less than right opd
+         */
         final def <(that: FixPoint): Bool = {
             val (l, r, _) = matchPoint(that)
             Mux(l < r, true.B, false.B)
         }
 
+        /**
+         * @return True if left opd is less than or equal to right opd
+         */
         final def <=(that: FixPoint): Bool = {
             val (l, r, _) = matchPoint(that)
             Mux(l <= r, true.B, false.B)
         }
 
+        /**
+         * @return True if left opd is larger than or equal to right opd
+         */
         final def >=(that: FixPoint): Bool = {
             val (l, r, _) = matchPoint(that)
             Mux(l >= r, true.B, false.B)
         }
 
+        /**
+         * @return True if left opd is larger than to right opd
+         */
         final def >(that: FixPoint): Bool = {
             val (l, r, _) = matchPoint(that)
             Mux(l > r, true.B, false.B)
@@ -1173,10 +1397,14 @@ object util {
         }
 
         /**
-         * Truncate by rounding
+         * Truncate by rounding (half ceiling, rounding to +inf)
          *
          * @param newFracWidth Width of fraction part of result
          * @return Truncated result
+         * @note
+         *  - this "round" is actually half ceiling (round half to +inf).
+         *  - due to implementation complexity, this is the most economy
+         *    rounding type, and other rounding types are not implemented.
          */
         def round(newFracWidth: Int = 0): FixPoint = {
             require(newFracWidth < fw)
@@ -1195,6 +1423,14 @@ object util {
         def asSInt: SInt = this.bits
 
         /**
+         * @param fw new fraction part width
+         * @return Reinterpret as a FixPoint with new fraction part width
+         */
+        def asFixPoint(fw: Int): FixPoint = {
+            new FixPoint(bits, fw)
+        }
+
+        /**
          * @return Raw bits of this FixPoint
          */
         def getBits: SInt = this.bits
@@ -1206,8 +1442,25 @@ object util {
 
         /**
          * @return Convert to SInt by round fraction part
+         * @note
+         *  - this "round" is actually half ceiling (round half to +inf).
+         *  - due to implementation complexity, this is the most economy
+         *    rounding type, and other rounding types are not implemented.
          */
         def roundToSInt: SInt = this.round(0).bits
+        
+        /**
+         * @param fw new fraction part width
+         * @return   Convert to new FixPoint with specified fraction part width
+         */
+        def toFixPoint(fw: Int): FixPoint = {
+            val bits = {
+                if(fw > this.fw) this.bits << (fw - this.fw)
+                else if(fw < this.fw) this.bits >> (this.fw - fw)
+                else this.bits
+            }
+            new FixPoint(bits.asSInt, fw)
+        }
 
         /**
          * @return Peek value as Double
@@ -1227,6 +1480,44 @@ object util {
     }
 
     object FixPoint {
+
+        /**
+         * RoundMode.Up: round half away from 0.
+         * RoundMode.Down: round half near to 0.
+         * RoundMode.Even: round half to even number.
+         * RoundMode.Ceil: round half to +inf.
+         * RoundMode.Floor: round half to -inf.
+         */
+        object RoundMode extends Enumeration {
+            val Up, Down, Even, Ceil, Floor = Value
+        }
+
+        /**
+         * Change this to specified rounding behavior for quantifying Double or
+         * BigDecimal value to FixPoint.
+         */
+        val roundMode = RoundMode.Even
+
+        def round(x: Double): Long = {
+            roundMode match {
+                case RoundMode.Up => x.halfUp
+                case RoundMode.Down => x.halfDown
+                case RoundMode.Even => x.halfEven
+                case RoundMode.Ceil => x.halfCeil
+                case RoundMode.Floor => x.halfFloor
+            }
+        }
+
+        def round(x: BigDecimal): BigInt = {
+            roundMode match {
+                case RoundMode.Up => x.halfUp
+                case RoundMode.Down => x.halfDown
+                case RoundMode.Even => x.halfEven
+                case RoundMode.Ceil => x.halfCeil
+                case RoundMode.Floor => x.halfFloor
+            }
+        }
+
         /**
          * Create a Chisel type of FixPoint
          *
@@ -1266,87 +1557,403 @@ object util {
             res
         }
 
+        /**
+         * Create a Chisel type of FixPoint by specified possible lowest value
+         * instead of width.
+         *
+         * @param fw Width of fraction part.
+         * @param possibleLowest Possible lowest value may be presented by the
+         *                       returned FixPoint.
+         * @return Chisel type of FixPoint.
+         */
+        def byLowest(fw: Int, possibleLowest: Double): FixPoint = {
+            require(fw >= 0)
+            require(possibleLowest <= -1.0)
+            // val m = (-possibleLowest * math.pow(2.0, fw)).round
+            val m = FixPoint.round(-possibleLowest * math.pow(2.0, fw))
+            val width = log2Up(m) + 1
+            new FixPoint(SInt(width.W), fw)
+        }
+
+        /**
+         * Create a Chisel type of FixPoint by specified possible highest value
+         * instead of width.
+         *
+         * @param fw Width of fraction part.
+         * @param possibleHighest Possible highest value may be presented by the
+         *                       returned FixPoint.
+         * @return Chisel type of FixPoint.
+         */
+        def byHighest(fw: Int, possibleHighest: Double): FixPoint = {
+            require(fw >= 0)
+            require(possibleHighest >= 0.0)
+            // val m = 1 + (possibleHighest * math.pow(2.0, fw)).round
+            val m = 1 + FixPoint.round(possibleHighest * math.pow(2.0, fw))
+            val width = log2Up(m) + 1
+            new FixPoint(SInt(width.W), fw)
+        }
+
+        /**
+         * Create a Chisel type of FixPoint by specified value range instead
+         * of width.
+         *
+         * @param fw Width of fraction part.
+         * @param lowest Possible lowest value may be presented by the returned
+         *               FixPoint.
+         * @param highest Possible highest value may be presented by the
+         *                returned Fixpoint.
+         * @return Chisel type of FixPoint.
+         */
+        def byRange(fw: Int, lowest: Double, highest: Double): FixPoint = {
+            require(fw >= 0)
+            require(lowest <= -1.0 && highest >= 0.0)
+            val epsilon = math.pow(0.5, fw)
+            val upLimit =
+                if(-lowest > highest + epsilon)
+                    -lowest
+                else
+                    highest + epsilon
+            // val m = (upLimit * math.pow(2.0, fw)).round
+            val m = FixPoint.round(upLimit * math.pow(2.0, fw))
+            val width = log2Up(m) + 1
+            new FixPoint(SInt(width.W), fw)
+        }
+
+        /**
+         * Create a Chisel type of FixPoint by specified possible lowest value
+         * instead of width.
+         *
+         * @param possibleLowest Possible lowest value may be presented by the
+         *                       returned FixPoint.
+         * @param fw Width of fraction part.
+         * @return Chisel type of FixPoint.
+         */
+        def byLowest(fw: Int, possibleLowest: BigDecimal): FixPoint = {
+            require(fw >= 0)
+            require(possibleLowest <= -1.0)
+            // val m = (-possibleLowest * BigDecimal(2.0).pow(fw)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
+            val m = FixPoint.round(-possibleLowest * BigDecimal(2.0).pow(fw))
+            val width = log2Up(m) + 1
+            new FixPoint(SInt(width.W), fw)
+        }
+
+        /**
+         * Create a Chisel type of FixPoint by specified possible highest value
+         * instead of width.
+         *
+         * @param possibleHighest Possible highest value may be presented by the
+         *                       returned FixPoint.
+         * @param fw Width of fraction part.
+         * @return Chisel type of FixPoint.
+         */
+        def byHighest(fw: Int, possibleHighest: BigDecimal): FixPoint = {
+            require(fw >= 0)
+            require(possibleHighest >= 0.0)
+            // val m = 1 + (possibleHighest * BigDecimal(2.0).pow(fw)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
+            val m = 1 + FixPoint.round(possibleHighest * BigDecimal(2.0).pow(fw))
+            val width = log2Up(m) + 1
+            new FixPoint(SInt(width.W), fw)
+        }
+
+        /**
+         * Create a Chisel type of FixPoint by specified value range instead
+         * of width.
+         *
+         * @param fw Width of fraction part.
+         * @param lowest Possible lowest value may be presented by the returned
+         *               FixPoint.
+         * @param highest Possible highest value may be presented by the
+         *                returned Fixpoint.
+         * @return Chisel type of FixPoint.
+         */
+        def byRange(fw: Int, lowest: BigDecimal, highest: BigDecimal): FixPoint = {
+            require(fw >= 0)
+            require(lowest <= -1.0 && highest >= 0.0)
+            val epsilon = BigDecimal(0.5).pow(fw)
+            val upLimit =
+                if(-lowest > highest + epsilon)
+                    -lowest
+                else
+                    highest + epsilon
+            // val m = (upLimit * BigDecimal(2.0).pow(fw)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
+            val m = FixPoint.round(upLimit * BigDecimal(2.0).pow(fw))
+            val width = log2Up(m) + 1
+            new FixPoint(SInt(width.W), fw)
+        }
+
+        /**
+         * @param w Total width
+         * @param fw Fraction part width
+         * @return Lowest (negative with max abs) FixPoint.
+         */
         def lowest(w: Int, fw: Int): FixPoint = {
             (1.U(1.W) ## 0.U((w - 1).W)).asFixPoint(fw)
         }
 
+        /**
+         * @param w Total width
+         * @param fw Fraction part width
+         * @return Highest (positive with max abs) FixPoint.
+         */
         def highest(w: Int, fw: Int): FixPoint = {
             (0.U(1.W) ## Fill(w - 1, 1.U(1.W))).asFixPoint(fw)
         }
 
+        /**
+         * @param w Total width
+         * @param fw Fraction part width
+         * @return Epsilon (positive with min abs) FixPoint.
+         */
+        def epsilon(w: Int, fw: Int): FixPoint = {
+            (1.S(w.W)).asFixPoint(fw)
+        }
+
+        /**
+         * @param w Total width
+         * @param fw Fraction part width
+         * @return Lowest (negative with max abs) FixPoint value in Double.
+         */
         def lowestInDouble(w: Int, fw: Int): Double = {
             -math.pow(2.0, w - 1 - fw)
         }
 
+        /**
+         * @param w Total width
+         * @param fw Fraction part width
+         * @return Highest (positive with max abs) FixPoint value in Double.
+         */
         def highestInDouble(w: Int, fw: Int): Double = {
             math.pow(2.0, w - 1 - fw) - math.pow(2.0, -fw)
         }
 
+        /**
+         * @param fw Fraction part width
+         * @return psilon (positive with min abs) FixPoint value in Double.
+         */
+        def epsilonInDouble(fw: Int): Double = {
+            math.pow(2.0, -fw)
+        }
+
+        /**
+         * @param w Total width
+         * @param fw Fraction part width
+         * @return Lowest (negative with max abs) FixPoint value in BigDecimal.
+         */
         def lowestInBigDecimal(w: Int, fw: Int): BigDecimal = {
             -BigDecimal(2.0).pow(w - 1 - fw)
         }
 
+        /**
+         * @param w Total width
+         * @param fw Fraction part width
+         * @return Highest (positive with max abs) FixPoint value in BigDecimal.
+         */
         def highestInBigDecimal(w: Int, fw: Int): BigDecimal = {
             BigDecimal(2.0).pow(w - 1 - fw) - BigDecimal(2.0).pow(-fw)
         }
 
+        /**
+         * @param fw Fraction part width
+         * @return psilon (positive with min abs) FixPoint value in BigDecimal.
+         */
+        def epsilonInBigDecimal(fw: Int): BigDecimal = {
+            BigDecimal(2.0).pow(-fw)
+        }
+
+        /**
+         * @param w Total width
+         * @param fw Fraction part width
+         * @param value value to be tested
+         * @return True if value can be fit into FixPoint
+         */
         def inRange(w: Int, fw: Int, value: Double): Boolean = {
             lowestInDouble(w, fw) <= value && value <= highestInDouble(w, fw)
         }
 
+        /**
+         * @param w Total width
+         * @param fw Fraction part width
+         * @param value value to be tested
+         * @return True if value can be fit into FixPoint after round to nearest quantitative steps.
+         * @note The round mode is specified in FixPoint.roundMode.
+         */
+        def inRangeAfterRound(w: Int, fw: Int, value: Double): Boolean = {
+            val rounded = FixPoint.round(value * math.pow(2.0, fw)) * math.pow(2.0, -fw)
+            lowestInDouble(w, fw) <= rounded && rounded <= highestInDouble(w, fw)
+        }
+
+        /**
+         * @param w Total width
+         * @param fw Fraction part width
+         * @param value value to be tested
+         * @return True if value can be fit into FixPoint
+         */
         def inRange(w: Int, fw: Int, value: BigDecimal): Boolean = {
             val low = lowestInBigDecimal(w, fw)
             val high = highestInBigDecimal(w, fw)
             low <= value && value <= high
         }
+
+        /**
+         * @param w Total width
+         * @param fw Fraction part width
+         * @param value value to be tested
+         * @return True if value can be fit into FixPoint after round to nearest quantitative steps
+         * @note The round mode is specified in FixPoint.roundMode.
+         */
+        def inRangeAfterRound(w: Int, fw: Int, value: BigDecimal): Boolean = {
+            // val rounded = (value * BigDecimal(2.0).pow(fw)).setScale(0, BigDecimal.RoundingMode.HALF_UP) * BigDecimal(2.0).pow(-fw)
+            val rounded = BigDecimal(FixPoint.round(value * BigDecimal(2.0).pow(fw))) * BigDecimal(2.0).pow(-fw)
+            lowestInBigDecimal(w, fw) <= rounded && rounded <= highestInBigDecimal(w, fw)
+        }
     }
 
     implicit class FromDoubleToFixPoint(private val x: Double) extends AnyVal {
+        /**
+         * Convert this double to FixPoint.
+         * @param width total width
+         * @param fw fraction part width
+         * @return the FixPoint hardware represent the value of double.
+         * @note
+         *  - Rntime requirement violation will occur if value can not be fitted in specified widths.
+         *  - Value will be quantified due to limited fraction part width (loss precision).
+         *  - The round mode is specified in FixPoint.roundMode.
+         */
         def toFixPoint(width: Width, fw: Int): FixPoint = {
             val res = Wire(FixPoint(width, fw))
             res := x
             res
         }
 
+        /**
+         * Convert this double to FixPoint.
+         * @param width total width
+         * @param fw fraction part width
+         * @return the FixPoint hardware represent the value of double.
+         * @note
+         *  - Runtime requirement violation will occur if value can not be fitted in specified widths.
+         *  - Value will be quantified due to limited fraction part width (loss precision).
+         *  - The round mode is specified in FixPoint.roundMode.
+         */
         def F(width: Width, fw: Int): FixPoint = {
             val res = Wire(FixPoint(width, fw))
             res := x
             res
         }
 
+        /**
+         * Get raw bit (as Long) of the FixPoint presenting this double.
+         * @param width total width
+         * @param fw fraction part width
+         * @return Raw bit of the FixPoint represent the value of double.
+         */
         def toFixPoint(width: Int, fw: Int): Long = {
             require(width <= 64 && fw < 64)
             require(FixPoint.inRange(width, fw, x))
-            (x * math.pow(2.0, fw)).round
+            // (x * math.pow(2.0, fw)).round
+            FixPoint.round(x * math.pow(2.0, fw))
         }
     }
 
     implicit class FromBigDecimalToFixPoint(private val x: BigDecimal) extends AnyVal {
+        /**
+         * Convert this BigDecimal to FixPoint.
+         * @param width total width
+         * @param fw fraction part width
+         * @return the FixPoint hardware represent the value of BigDecimal.
+         * @note
+         *  - Runtime requirement violation will occur if value can not be fitted in specified widths.
+         *  - Value will be quantified due to limited fraction part width (loss precision).
+         *  - The round mode is specified in FixPoint.roundMode.
+         */
         def toFixPoint(width: Width, fw: Int): FixPoint = {
             val res = Wire(FixPoint(width, fw))
             res := x
             res
         }
 
+        /**
+         * Convert this BigDecimal to FixPoint.
+         * @param width total width
+         * @param fw fraction part width
+         * @return the FixPoint hardware represent the value of BigDecimal.
+         * @note
+         *  - Runtime requirement violation will occur if value can not be fitted in specified widths.
+         *  - Value will be quantified due to limited fraction part width (loss precision).
+         *  - The round mode is specified in FixPoint.roundMode.
+         */
         def F(width: Width, fw: Int): FixPoint = {
             val res = Wire(FixPoint(width, fw))
             res := x
             res
         }
 
+        /**
+         * Get raw bit (as BigInt) of the FixPoint presenting this BigDecimal.
+         * @param width total width
+         * @param fw fraction part width
+         * @return Raw bit of the FixPoint represent the value of BigDecimal.
+         */
         def toFixPoint(width: Int, fw: Int): BigInt = {
             require(width <= 128 && fw < 128)
             require(FixPoint.inRange(width, fw, x))
-            (x * BigDecimal(2.0).pow(fw)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
+            // (x * BigDecimal(2.0).pow(fw)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
+            FixPoint.round(x * BigDecimal(2.0).pow(fw))
         }
     }
 
     implicit class DoubleUtils(private val x: Double) extends AnyVal {
+
+        /**
+         * Round half to +inf, alias of Double.round.
+         * @return Round by half ceiling of this Double.
+         */
+        def halfCeil: Long = x.round
+
+        /**
+         * Round half to -inf
+         * @return Round by half floor of this Double.
+         */
+        def halfFloor: Long = -(-x).round
+
+        /**
+         * Round half away from 0.
+         * @return Round by half up of this Double.
+         */
+        def halfUp: Long = {
+            if(x >= 0) x.round
+            else -(-x).round
+        }
+
+        /**
+         * Round half near to 0.
+         * @return Round by half down of this Double.
+         */
+        def halfDown: Long = {
+            if(x >= 0) -(-x).round
+            else x.round
+        }
+
+        /**
+         * Round half to even number.
+         * @return Round by half even of this Double.
+         */
+        def halfEven: Long = {
+            if(x.toLong % 2L == 0L)
+                x.halfDown
+            else
+                x.halfUp
+        }
+
         // template<typename T = float>
         //         constexpr T PhaseCycle (T x)
         // {
         //     return std::floor((x + (T)M_PI) / (2 * (T)M_PI));
         // }
+
+        /**
+         * @return domain index of cycling [-pi, pi) domains.
+         */
         def phaseCycle: Double = {
             math.floor((x + math.Pi) / (2.0 * math.Pi))
         }
@@ -1356,6 +1963,10 @@ object util {
         // {
         //     return x - 2 * (T)M_PI * PhaseCycle(x);
         // }
+
+        /**
+         * @return wrap phase into [-pi, pi) domains.
+         */
         def phaseWrap: Double = {
             x - 2.0 * math.Pi * phaseCycle
         }
@@ -1365,10 +1976,19 @@ object util {
         // {
         //     return x + 2 * (T)M_PI * PhaseCycle(a - x);
         // }
+
+        /**
+         * @param a reference phase.
+         * @return unwrap phase to near the reference phase.
+         */
         def phaseUnwrap(a: Double = 0.0): Double = {
             x + 2.0 * math.Pi * (a - x).phaseCycle
         }
 
+        /**
+         * @param y another phase.
+         * @return phase diff in [-pi, pi) of two phases.
+         */
         def phaseDiff(y: Double): Double = {
             (x - y).phaseUnwrap()
         }
@@ -1379,12 +1999,41 @@ object util {
         //     return x > h ? h :
         //             x < l ? l : x;
         // }
+
+        /**
+         * @param l low boundary
+         * @param h high boundary
+         * @return clamp this double into [l, h]
+         * @note
+         *  - same as clip(l, h)
+         */
         def clamp(l: Double, h: Double): Double = {
             if (x > h) h
             else if (x < l) l
             else x
         }
 
+        /**
+         * @param l low boundary
+         * @param h high boundary
+         * @return clip this double into [l, h]
+         * @note
+         *  - same as clamp(l, h)
+         */
+        def clip(l: Double, h: Double): Double = {
+            if (x > h) h
+            else if (x < l) l
+            else x
+        }
+
+        /**
+         * @param l negative corrosion amount
+         * @param h positive corrosion amount
+         * @return corroded this double by specified amount
+         * @note
+         *  - if x > h, return x - h
+         *  - if x < l, return x - l
+         */
         def corrod(l: Double, h: Double): Double = {
             if (x > h) x - h
             else if (x < l) x - l
@@ -1396,6 +2045,12 @@ object util {
         // {
         // return (x - l) / (h - l);
         // }
+
+        /**
+         * @param l low boundary of range
+         * @param h high boundary of range
+         * @return map linearly this double in specified range into [0, 1]
+         */
         def mapRange2Unit(l: Double, h: Double): Double = {
             (x - l) / (h - l)
         }
@@ -1405,10 +2060,23 @@ object util {
         // {
         // return x * (h - l) + l;
         // }
+
+        /**
+         * @param l low boundary of range
+         * @param h high boundary of range
+         * @return map linearly this double in [0, 1] into [l, h]
+         */
         def mapUnit2Range(l: Double, h: Double): Double = {
             x * (h - l) + l
         }
 
+        /**
+         * @param fromL low boundary of source range
+         * @param fromH high boundary of source range
+         * @param toL low boundary of destination range
+         * @param toH high boundary of destination range
+         * @return map linearly this double in [fromL, formH] into [toL, toH]
+         */
         def mapFromTo(fromL: Double, fromH: Double, toL: Double, toH: Double): Double = {
             (x - fromL) / (fromH - fromL) * (toH - toL) + toL
         }
@@ -1419,6 +2087,12 @@ object util {
         // T d = h - l;
         // return x - std::floor((x - l) / d) * d;
         // }
+
+        /**
+         * @param l low boundary of domain
+         * @param h high boundary of domain
+         * @return domain index of cycling [l, h) domains.
+         */
         def wrap(l: Double, h: Double): Double = {
             val d = h - l
             x - math.floor((x - l) / d) * d
@@ -1431,6 +2105,13 @@ object util {
         // return x - a >  d ? x - (h - l) :
         //         x - a < -d ? x + (h - l) : x;
         // }
+
+        /**
+         * @param l low boundary of domain
+         * @param h high boundary of domain
+         * @param a reference value
+         * @return unwrap this double to near the reference value.
+         */
         def unwrap(l: Double, h: Double, a: Double = 0.0): Double = {
             val d = (h - l) * 0.5
             if (x - a > d)
@@ -1439,6 +2120,30 @@ object util {
                 x + (h - l)
             else
                 x
+        }
+    }
+
+    implicit class BigDecimalUtils(private val x: BigDecimal) extends AnyVal {
+        def halfUp: BigInt = {
+            x.setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
+        }
+        def halfDown: BigInt = {
+            x.setScale(0, BigDecimal.RoundingMode.HALF_DOWN).toBigInt
+        }
+        def halfEven: BigInt = {
+            x.setScale(0, BigDecimal.RoundingMode.HALF_EVEN).toBigInt
+        }
+        def halfCeil: BigInt = {
+            if(x >= BigDecimal(0.0))
+                x.setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
+            else
+                x.setScale(0, BigDecimal.RoundingMode.HALF_DOWN).toBigInt
+        }
+        def halfFloor: BigInt = {
+            if(x >= BigDecimal(0.0))
+                x.setScale(0, BigDecimal.RoundingMode.HALF_DOWN).toBigInt
+            else
+                x.setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
         }
     }
 
@@ -1476,18 +2181,18 @@ object util {
     }
 
     def asinh(x: Double): Double = {
-        import scala.math._
+        // import scala.math._
         log(x + sqrt(x * x + 1))
     }
 
     def acosh(x: Double): Double = {
-        import scala.math._
+        // import scala.math._
         if (x < 1) Double.NaN
         else log(x + sqrt(x * x - 1))
     }
 
     def atanh(x: Double): Double = {
-        import scala.math._
+        // import scala.math._
         if (x.abs >= 1) Double.NaN
         else 0.5 * log((1 + x) / (1 - x))
     }
@@ -1526,6 +2231,32 @@ object util {
             case (v, i) if v == max => i
         }
         (max, maxIndices)
+    }
+
+    def ReadCsvData(fileName: String, encoding: String = "UTF-8"): Array[Array[Double]] = {
+        import java.nio.file.{Files, Paths}
+        import scala.io.Source
+        import scala.collection.mutable.ArrayBuffer
+
+        val exist: Boolean = Files.exists(Paths.get(fileName))
+        if(exist) {
+            val colBuffer = ArrayBuffer[Array[Double]]()
+            val source = Source.fromFile(fileName, encoding)
+            val lines = source.getLines()
+            lines.foreach(l => {
+                val elems = l.split(',')
+                val row = elems.map(e => {
+                    try { e.toDouble }
+                    catch { case _: Throwable => Double.NaN }
+                })
+                colBuffer += row
+            })
+            source.close()
+            colBuffer.toArray
+        }
+        else {
+            Array.empty[Array[Double]]
+        }
     }
 
 }

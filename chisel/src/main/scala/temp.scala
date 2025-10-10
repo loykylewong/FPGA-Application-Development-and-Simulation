@@ -98,6 +98,15 @@ class test_fp extends Module {
         val c1 = Output(FixPoint(16.W, 8))
         val c2 = Output(FixPoint(16.W, 8))
         val mag = Output(FixPoint(12.W, 11))
+        val ff00 = Output(FixPoint(16.W, 3))
+        val ff01 = Output(FixPoint(16.W, 3))
+        val ff02 = Output(FixPoint(16.W, 3))
+        val ff03 = Output(FixPoint(16.W, 3))
+        val ff04 = Output(FixPoint(16.W, 3))
+        val ff05 = Output(FixPoint(16.W, 3))
+        val ff06 = Output(FixPoint(16.W, 3))
+        val ff07 = Output(FixPoint(16.W, 3))
+        val ff08 = Output(FixPoint(16.W, 3))
     })
 
     // println(s"Q2.8 min: ${io.a.lowest}, max: ${io.a.highest}")
@@ -126,6 +135,46 @@ class test_fp extends Module {
     val sqq = RegInit(-0.5.F(8.W, 7))
 
     val mag = Reg(FixPoint(12.W, 11))
+
+    val fp00 = Wire(FixPoint.byLowest(3, -3.3))
+    fp00 := -3.3
+    val fp01 = Wire(FixPoint.byHighest(3, 3.3))
+    fp01 := 3.3
+    val fp02 = Wire(FixPoint.byLowest(3, -2.0))
+    fp02 := -2.0
+    val fp03 = Wire(FixPoint.byHighest(3, 1.875))
+    fp03 := 1.875
+    val fp04 = Wire(FixPoint.byLowest(3, -2.0624))
+    fp04 := -2.0624
+    val fp05 = Wire(FixPoint.byLowest(3, -2.0625))
+    fp05 := -2.0625
+    val fp06 = Wire(FixPoint.byHighest(3, 1.9374))
+    fp06 := 1.9374
+    val fp07 = Wire(FixPoint.byHighest(3, 1.9375))
+    fp07 := 1.9375
+    val fp08 = Wire(FixPoint.byRange(3, -2.0624, 1.9374))
+    fp08 := 0.1
+
+    val halfs = (-4 until 4).map(_.toDouble + 0.5)
+    val halfUps = halfs.map(_.halfUp)
+    val halfDowns = halfs.map(_.halfDown)
+    val halfEvens = halfs.map(_.halfEven)
+    val halfCeils = halfs.map(_.halfCeil)
+    val halfFloors = halfs.map(_.halfFloor)
+
+    val bdHalfs = (-4 until 4).map(BigDecimal(_) + 0.5)
+    val bdHalfCeils = bdHalfs.map(_.halfCeil)
+    val bdHalfFloors = bdHalfs.map(_.halfFloor)
+
+    io.ff00 := fp00
+    io.ff01 := fp01
+    io.ff02 := fp02
+    io.ff03 := fp03
+    io.ff04 := fp04
+    io.ff05 := fp05
+    io.ff06 := fp06
+    io.ff07 := fp07
+    io.ff08 := fp08
 
     sqi := (io.i * io.i).truncate(11)
     sqq := (io.q * io.q).truncate(7)
