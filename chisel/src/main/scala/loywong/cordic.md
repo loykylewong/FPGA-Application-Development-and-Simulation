@@ -190,8 +190,7 @@ $$
 \begin{cases}
 x_n & \approx \sqrt{x_0^2 + y_0^2} \\
 y_n & \approx 0 \\
-z_n & \approx \mathrm{wrap}_{[-\pi, \pi)} (z_n') \\
-& \text{in which:}\ z_n' = z_0 + \frac{1}{\pi} \mathrm{atan2} \left(y_0, x_0\right)
+z_n & \approx \mathrm{wrap}_{[-1, 1)} \left(z_0 + \frac{1}{\pi} \mathrm{atan2} \left(y_0, x_0\right)\right)
 \end{cases}
 $$
 
