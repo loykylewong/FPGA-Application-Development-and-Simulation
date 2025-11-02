@@ -97,6 +97,12 @@ class test_fp extends Module {
         val c0 = Output(FixPoint(16.W, 15))
         val c1 = Output(FixPoint(16.W, 8))
         val c2 = Output(FixPoint(16.W, 8))
+        val c1zero = Output(FixPoint(16.W, 8))
+        val c1negative = Output(FixPoint(17.W, 8))
+        val c1int = Output(SInt(8.W))
+        val c1frac = Output(FixPoint(9.W, 8))
+        val c1floor = Output(FixPoint(8.W, 0))
+        val c1ceil = Output(FixPoint(9.W, 0))
         val mag = Output(FixPoint(12.W, 11))
         val ff00 = Output(FixPoint(16.W, 3))
         val ff01 = Output(FixPoint(16.W, 3))
@@ -124,9 +130,15 @@ class test_fp extends Module {
     io.cb := io.b
     io.cc := io.c
     io.c0 := 0.75
-    io.c1 := 12.3
+    io.c1 := -12.3
     io.c2 := 12.3.F(16.W, 8)
     // io.c1 := 128.0  // error
+    io.c1zero := io.c1.zero
+    io.c1negative := io.c1.negative
+    io.c1int := io.c1.toSInt
+    io.c1frac := io.c1.getPureFraction
+    io.c1floor := io.c1.floor()
+    io.c1ceil := io.c1.ceil()
 
     // val zzz = RegInit(new FixPoint(SInt(8.W), 7))
 

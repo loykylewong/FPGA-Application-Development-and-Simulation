@@ -1191,8 +1191,8 @@ package examples {
         val io = FlatIO(new Bundle {
             val us0 = Flipped(Irrevocable(new usbits))
             val us1 = Flipped(Irrevocable(new usbits))
-            val ds0 = Irrevocable(new usbits)
-            val ds1 = Irrevocable(new usbits)
+            val ds0 = Irrevocable(new dsbits)
+            val ds1 = Irrevocable(new dsbits)
         })
 
         io.us0 <> io.ds0
@@ -1224,8 +1224,8 @@ package examples {
         val io = FlatIO(new Bundle {
             val us0 = Flipped(Irrevocable(new usbits))
             val us1 = Flipped(Irrevocable(new usbits))
-            val ds0 = Irrevocable(new usbits)
-            val ds1 = Irrevocable(new usbits)
+            val ds0 = Irrevocable(new dsbits)
+            val ds1 = Irrevocable(new dsbits)
         })
 
         io.us0 <> io.ds0
@@ -1304,6 +1304,9 @@ package examples {
             val id: UInt = UInt(idWidth.W)
             val dest: UInt = UInt(destWidth.W)
             val user: UInt = UInt((userUnitWidth * dsBytes).W)
+            override val idAssociation = idAsso
+            override val destAssociation = destAsso
+            override val userAssociation = userAsso
         }
         val io = IO(new Bundle {
             val us = Flipped(Irrevocable(new UsBits))

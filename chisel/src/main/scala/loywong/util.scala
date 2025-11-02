@@ -307,7 +307,7 @@ object util {
 
         private def shiftRight(n: Int): SInt = {
             val w: Int = x.getWidth
-            (x(w - 1) ## (x(w - 2, 0) >> n).pad(w - 1)).asSInt
+            (x >> n).asSInt.extend(w)
         }
 
         private def shiftLeft(n: UInt): SInt = {
@@ -317,7 +317,7 @@ object util {
 
         private def shiftRight(n: UInt): SInt = {
             val w: Int = x.getWidth
-            (x(w - 1) ## (x(w - 2, 0) >> n).pad(w - 1)).asSInt
+            (x >> n).asSInt.extend(w)
         }
 
         /**
@@ -1012,7 +1012,7 @@ object util {
     /**
      * Chisel type or hardware of a FixPoint
      * @param bits Raw bits of FixPoint
-     * @param fw Width of fraction part
+     * @param fw Width of fractional part
      * @note
      *  - Chisel type if bits is a chisel type (e.g.: SInt(16.W))
      *  - Chisel hardware if bits is a chisel hardware (e.g.: 123.S(16.W))
@@ -1033,9 +1033,20 @@ object util {
         def getIntWidth: Int = this.bits.getWidth - fw
 
         /**
-         * @return width of fraction part.
+         * @return width of fractional part.
          */
         def getFracWidth: Int = fw
+
+        /**
+         * @return Zero.
+         */
+        def zero: FixPoint = FixPoint.zero(bits.getWidth, fw)
+
+        /**
+         * @return Negative (0.0 - this).
+         * @note width of result will be original width + 1.
+         */
+        def negative: FixPoint = FixPoint(0.S -& bits, fw)
 
         /**
          * @return Lowest FixPoint (negative with max abs).
@@ -1301,7 +1312,7 @@ object util {
 
         private def shiftRight(n: Int): FixPoint = {
             val w: Int = this.bits.getWidth
-            (bits(w - 1) ## (bits(w - 2, 0) >> n).pad(w - 1)).asFixPoint(fw)
+            (bits >> n).asSInt.extend(w).asFixPoint(fw)
         }
 
         private def shiftLeft(n: UInt): FixPoint = {
@@ -1311,7 +1322,7 @@ object util {
 
         private def shiftRight(n: UInt): FixPoint = {
             val w: Int = this.bits.getWidth
-            (bits(w - 1) ## (bits(w - 2, 0) >> n).pad(w - 1)).asFixPoint(fw)
+            (bits >> n).asSInt.extend(w).asFixPoint(fw)
         }
 
         /**
@@ -1320,11 +1331,11 @@ object util {
          * @return shift result.
          * @note CAUTION: may cause value overflow.
          */
-        final def <<<(that: Int): FixPoint = {
-            if(that > 0)
-                shiftLeft(that)
-            else if(that < 0)
-                shiftRight(-that)
+        final def <<<(n: Int): FixPoint = {
+            if(n > 0)
+                shiftLeft(n)
+            else if(n < 0)
+                shiftRight(-n)
             else
                 this
         }
@@ -1335,11 +1346,11 @@ object util {
          * @return shift result.
          * @note CAUTION: may cause value overflow when `n < 0`.
          */
-        final def >>>(that: Int): FixPoint = {
-            if(that > 0)
-                shiftRight(that)
-            else if(that < 0)
-                shiftLeft(-that)
+        final def >>>(n: Int): FixPoint = {
+            if(n > 0)
+                shiftRight(n)
+            else if(n < 0)
+                shiftLeft(-n)
             else
                 this
         }
@@ -1350,10 +1361,10 @@ object util {
          * @return shift result.
          * @note CAUTION: may cause value overflow.
          */
-        final def <<<(that: SInt): FixPoint = {
+        final def <<<(n: SInt): FixPoint = {
             MuxCase(this, Seq(
-                (that > 0.S) -> shiftLeft(that.asUInt),
-                (that < 0.S) -> shiftRight((-that).asUInt)
+                (n > 0.S) -> shiftLeft(n.asUInt),
+                (n < 0.S) -> shiftRight((-n).asUInt)
             ))
         }
 
@@ -1363,10 +1374,10 @@ object util {
          * @return shift result.
          * @note CAUTION: may cause value overflow when `n < 0`.
          */
-        final def >>>(that: SInt): FixPoint = {
+        final def >>>(n: SInt): FixPoint = {
             MuxCase(this, Seq(
-                (that > 0.S) -> shiftRight(that.asUInt),
-                (that < 0.S) -> shiftLeft((-that).asUInt)
+                (n > 0.S) -> shiftRight(n.asUInt),
+                (n < 0.S) -> shiftLeft((-n).asUInt)
             ))
         }
 
@@ -1375,31 +1386,63 @@ object util {
          * @param n bits to be shifted.
          * @return shift result.
          */
-        final def <<<(that: UInt): FixPoint = shiftLeft(that)
+        final def <<<(n: UInt): FixPoint = shiftLeft(n)
 
         /**
          * Keep sign bit and shift other bits, eqv. to x / 2**n.
          * @param n bits to be shifted.
          * @return shift result.
          */
-        final def >>>(that: UInt): FixPoint = shiftRight(that)
+        final def >>>(n: UInt): FixPoint = shiftRight(n)
 
         /**
          * Truncate
          *
-         * @param newFracWidth Width of fraction part of result
+         * @param newFracWidth Width of fractional part of result
          * @return Truncated result
+         * @note same as Floor()
          */
         def truncate(newFracWidth: Int = 0): FixPoint = {
-            require(newFracWidth < fw)
+            require(0 <= newFracWidth && newFracWidth < fw)
             val shift = fw - newFracWidth
             new FixPoint((this.bits >> shift).asSInt, newFracWidth)
         }
 
         /**
+         * Floor
+         *
+         * @param newFracWidth Width of fractional part of result
+         * @return Floor result
+         * @note
+         *      - Fraction width of result = newFracWidth
+         *      - Integer width of result = original integer width
+         */
+        def floor(newFracWidth: Int = 0): FixPoint = {
+            require(0 <= newFracWidth && newFracWidth < fw)
+            val shift = fw - newFracWidth
+            new FixPoint((this.bits >> shift).asSInt, newFracWidth)
+        }
+
+        /**
+         * Ceil
+         *
+         * @param newFracWidth Width of fractional part of result
+         * @return Ceil result
+         * @note
+         *      - Fraction width of result = newFracWidth
+         *      - Integer width of result = original integer width + 1
+         */
+        def ceil(newFracWidth: Int = 0): FixPoint = {
+            require(0 <= newFracWidth && newFracWidth < fw)
+            val shift = fw - newFracWidth
+            val bits = 0.S -& this.bits
+            new FixPoint(-(bits >>> shift).asSInt, newFracWidth)
+        }
+
+        /**
          * Truncate by rounding (half ceiling, rounding to +inf)
          *
-         * @param newFracWidth Width of fraction part of result
+         * @param newFracWidth Width of fractional part of result
          * @return Truncated result
          * @note
          *  - this "round" is actually half ceiling (round half to +inf).
@@ -1418,13 +1461,30 @@ object util {
         }
 
         /**
+         * @return Raw bits of fractional part
+         */
+        def getFractionBits: UInt = {
+            this.bits(this.getFracWidth - 1, 0).asUInt
+        }
+
+        /**
+         * @return FixPoint represents only pure fractional part (clear integer part).
+         * @note
+         *     - fractional width = original fractional width
+         *     - integer width = 1
+         */
+        def getPureFraction: FixPoint = {
+            (0.U(1.W) ## this.getFractionBits).asFixPoint(this.getFracWidth)
+        }
+
+        /**
          * @return Raw bits of this FixPoint
          */
         def asSInt: SInt = this.bits
 
         /**
-         * @param fw new fraction part width
-         * @return Reinterpret as a FixPoint with new fraction part width
+         * @param fw new fractional part width
+         * @return Reinterpret as a FixPoint with new fractional part width
          */
         def asFixPoint(fw: Int): FixPoint = {
             new FixPoint(bits, fw)
@@ -1436,22 +1496,33 @@ object util {
         def getBits: SInt = this.bits
 
         /**
-         * @return Convert to SInt by truncate fraction part
+         * @return Convert to SInt by truncate fractional part
+         * @note Same as floorToSInt
          */
-        def toSInt: SInt = this.truncate(0).bits
+        def toSInt: SInt = this.truncate().bits
 
         /**
-         * @return Convert to SInt by round fraction part
+         * @return Maximum SInt not larger than this FixPoint
+         */
+        def floorToSInt: SInt = this.floor().bits
+
+        /**
+         * @return Minimum SInt not smaller than this FixPoint
+         */
+        def ceilToSInt: SInt = this.ceil().bits
+
+        /**
+         * @return Nearest SInt to this FixPoint
          * @note
          *  - this "round" is actually half ceiling (round half to +inf).
          *  - due to implementation complexity, this is the most economy
-         *    rounding type, and other rounding types are not implemented.
+         *    rounding type, and other rounding types are not implemented yet.
          */
-        def roundToSInt: SInt = this.round(0).bits
+        def roundToSInt: SInt = this.round().bits
         
         /**
-         * @param fw new fraction part width
-         * @return   Convert to new FixPoint with specified fraction part width
+         * @param fw new fractional part width
+         * @return   Convert to new FixPoint with specified fractional part width
          */
         def toFixPoint(fw: Int): FixPoint = {
             val bits = {
@@ -1496,7 +1567,7 @@ object util {
          * Change this to specified rounding behavior for quantifying Double or
          * BigDecimal value to FixPoint.
          */
-        val roundMode = RoundMode.Even
+        val roundMode: RoundMode.Value = RoundMode.Even
 
         def round(x: Double): Long = {
             roundMode match {
@@ -1561,7 +1632,7 @@ object util {
          * Create a Chisel type of FixPoint by specified possible lowest value
          * instead of width.
          *
-         * @param fw Width of fraction part.
+         * @param fw Width of fractional part.
          * @param possibleLowest Possible lowest value may be presented by the
          *                       returned FixPoint.
          * @return Chisel type of FixPoint.
@@ -1579,7 +1650,7 @@ object util {
          * Create a Chisel type of FixPoint by specified possible highest value
          * instead of width.
          *
-         * @param fw Width of fraction part.
+         * @param fw Width of fractional part.
          * @param possibleHighest Possible highest value may be presented by the
          *                       returned FixPoint.
          * @return Chisel type of FixPoint.
@@ -1597,7 +1668,7 @@ object util {
          * Create a Chisel type of FixPoint by specified value range instead
          * of width.
          *
-         * @param fw Width of fraction part.
+         * @param fw Width of fractional part.
          * @param lowest Possible lowest value may be presented by the returned
          *               FixPoint.
          * @param highest Possible highest value may be presented by the
@@ -1625,7 +1696,7 @@ object util {
          *
          * @param possibleLowest Possible lowest value may be presented by the
          *                       returned FixPoint.
-         * @param fw Width of fraction part.
+         * @param fw Width of fractional part.
          * @return Chisel type of FixPoint.
          */
         def byLowest(fw: Int, possibleLowest: BigDecimal): FixPoint = {
@@ -1643,7 +1714,7 @@ object util {
          *
          * @param possibleHighest Possible highest value may be presented by the
          *                       returned FixPoint.
-         * @param fw Width of fraction part.
+         * @param fw Width of fractional part.
          * @return Chisel type of FixPoint.
          */
         def byHighest(fw: Int, possibleHighest: BigDecimal): FixPoint = {
@@ -1659,7 +1730,7 @@ object util {
          * Create a Chisel type of FixPoint by specified value range instead
          * of width.
          *
-         * @param fw Width of fraction part.
+         * @param fw Width of fractional part.
          * @param lowest Possible lowest value may be presented by the returned
          *               FixPoint.
          * @param highest Possible highest value may be presented by the
@@ -1681,62 +1752,73 @@ object util {
             new FixPoint(SInt(width.W), fw)
         }
 
+        def zero(w: Int, fw: Int): FixPoint = {
+            require(w >= 1 && fw >= 0)
+            0.S(w.W).asFixPoint(fw)
+        }
+
         /**
          * @param w Total width
-         * @param fw Fraction part width
+         * @param fw Fractional part width
          * @return Lowest (negative with max abs) FixPoint.
          */
         def lowest(w: Int, fw: Int): FixPoint = {
+            require(w >= 1 && fw >= 0)
             (1.U(1.W) ## 0.U((w - 1).W)).asFixPoint(fw)
         }
 
         /**
          * @param w Total width
-         * @param fw Fraction part width
+         * @param fw Fractional part width
          * @return Highest (positive with max abs) FixPoint.
          */
         def highest(w: Int, fw: Int): FixPoint = {
+            require(w >= 1 && fw >= 0)
             (0.U(1.W) ## Fill(w - 1, 1.U(1.W))).asFixPoint(fw)
         }
 
         /**
          * @param w Total width
-         * @param fw Fraction part width
+         * @param fw Fractional part width
          * @return Epsilon (positive with min abs) FixPoint.
          */
         def epsilon(w: Int, fw: Int): FixPoint = {
+            require(w >= 1 && fw >= 0)
             (1.S(w.W)).asFixPoint(fw)
         }
 
         /**
          * @param w Total width
-         * @param fw Fraction part width
+         * @param fw Fractional part width
          * @return Lowest (negative with max abs) FixPoint value in Double.
          */
         def lowestInDouble(w: Int, fw: Int): Double = {
+            require(w >= 1 && fw >= 0)
             -math.pow(2.0, w - 1 - fw)
         }
 
         /**
          * @param w Total width
-         * @param fw Fraction part width
+         * @param fw Fractional part width
          * @return Highest (positive with max abs) FixPoint value in Double.
          */
         def highestInDouble(w: Int, fw: Int): Double = {
+            require(w >= 1 && fw >= 0)
             math.pow(2.0, w - 1 - fw) - math.pow(2.0, -fw)
         }
 
         /**
-         * @param fw Fraction part width
+         * @param fw Fractional part width
          * @return psilon (positive with min abs) FixPoint value in Double.
          */
         def epsilonInDouble(fw: Int): Double = {
+            require(fw >= 0)
             math.pow(2.0, -fw)
         }
 
         /**
          * @param w Total width
-         * @param fw Fraction part width
+         * @param fw Fractional part width
          * @return Lowest (negative with max abs) FixPoint value in BigDecimal.
          */
         def lowestInBigDecimal(w: Int, fw: Int): BigDecimal = {
@@ -1745,7 +1827,7 @@ object util {
 
         /**
          * @param w Total width
-         * @param fw Fraction part width
+         * @param fw Fractional part width
          * @return Highest (positive with max abs) FixPoint value in BigDecimal.
          */
         def highestInBigDecimal(w: Int, fw: Int): BigDecimal = {
@@ -1753,7 +1835,7 @@ object util {
         }
 
         /**
-         * @param fw Fraction part width
+         * @param fw Fractional part width
          * @return psilon (positive with min abs) FixPoint value in BigDecimal.
          */
         def epsilonInBigDecimal(fw: Int): BigDecimal = {
@@ -1762,7 +1844,7 @@ object util {
 
         /**
          * @param w Total width
-         * @param fw Fraction part width
+         * @param fw Fractional part width
          * @param value value to be tested
          * @return True if value can be fit into FixPoint
          */
@@ -1772,7 +1854,7 @@ object util {
 
         /**
          * @param w Total width
-         * @param fw Fraction part width
+         * @param fw Fractional part width
          * @param value value to be tested
          * @return True if value can be fit into FixPoint after round to nearest quantitative steps.
          * @note The round mode is specified in FixPoint.roundMode.
@@ -1784,7 +1866,7 @@ object util {
 
         /**
          * @param w Total width
-         * @param fw Fraction part width
+         * @param fw Fractional part width
          * @param value value to be tested
          * @return True if value can be fit into FixPoint
          */
@@ -1796,7 +1878,7 @@ object util {
 
         /**
          * @param w Total width
-         * @param fw Fraction part width
+         * @param fw Fractional part width
          * @param value value to be tested
          * @return True if value can be fit into FixPoint after round to nearest quantitative steps
          * @note The round mode is specified in FixPoint.roundMode.
@@ -1812,11 +1894,11 @@ object util {
         /**
          * Convert this double to FixPoint.
          * @param width total width
-         * @param fw fraction part width
+         * @param fw fractional part width
          * @return the FixPoint hardware represent the value of double.
          * @note
          *  - Rntime requirement violation will occur if value can not be fitted in specified widths.
-         *  - Value will be quantified due to limited fraction part width (loss precision).
+         *  - Value will be quantified due to limited fractional part width (loss precision).
          *  - The round mode is specified in FixPoint.roundMode.
          */
         def toFixPoint(width: Width, fw: Int): FixPoint = {
@@ -1828,11 +1910,11 @@ object util {
         /**
          * Convert this double to FixPoint.
          * @param width total width
-         * @param fw fraction part width
+         * @param fw fractional part width
          * @return the FixPoint hardware represent the value of double.
          * @note
          *  - Runtime requirement violation will occur if value can not be fitted in specified widths.
-         *  - Value will be quantified due to limited fraction part width (loss precision).
+         *  - Value will be quantified due to limited fractional part width (loss precision).
          *  - The round mode is specified in FixPoint.roundMode.
          */
         def F(width: Width, fw: Int): FixPoint = {
@@ -1844,7 +1926,7 @@ object util {
         /**
          * Get raw bit (as Long) of the FixPoint presenting this double.
          * @param width total width
-         * @param fw fraction part width
+         * @param fw fractional part width
          * @return Raw bit of the FixPoint represent the value of double.
          */
         def toFixPoint(width: Int, fw: Int): Long = {
@@ -1859,11 +1941,11 @@ object util {
         /**
          * Convert this BigDecimal to FixPoint.
          * @param width total width
-         * @param fw fraction part width
+         * @param fw fractional part width
          * @return the FixPoint hardware represent the value of BigDecimal.
          * @note
          *  - Runtime requirement violation will occur if value can not be fitted in specified widths.
-         *  - Value will be quantified due to limited fraction part width (loss precision).
+         *  - Value will be quantified due to limited fractional part width (loss precision).
          *  - The round mode is specified in FixPoint.roundMode.
          */
         def toFixPoint(width: Width, fw: Int): FixPoint = {
@@ -1875,11 +1957,11 @@ object util {
         /**
          * Convert this BigDecimal to FixPoint.
          * @param width total width
-         * @param fw fraction part width
+         * @param fw fractional part width
          * @return the FixPoint hardware represent the value of BigDecimal.
          * @note
          *  - Runtime requirement violation will occur if value can not be fitted in specified widths.
-         *  - Value will be quantified due to limited fraction part width (loss precision).
+         *  - Value will be quantified due to limited fractional part width (loss precision).
          *  - The round mode is specified in FixPoint.roundMode.
          */
         def F(width: Width, fw: Int): FixPoint = {
@@ -1891,7 +1973,7 @@ object util {
         /**
          * Get raw bit (as BigInt) of the FixPoint presenting this BigDecimal.
          * @param width total width
-         * @param fw fraction part width
+         * @param fw fractional part width
          * @return Raw bit of the FixPoint represent the value of BigDecimal.
          */
         def toFixPoint(width: Int, fw: Int): BigInt = {

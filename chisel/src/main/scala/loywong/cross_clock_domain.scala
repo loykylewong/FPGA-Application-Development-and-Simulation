@@ -464,7 +464,7 @@ class CcdCounter(fromClock: Clock, toClock: Clock,
      *
      * @return The counter value
      */
-    def cnt_from() = {
+    def cnt_from(): UInt = {
         ccd_cnt.io.cnt_from
     }
 
@@ -473,7 +473,7 @@ class CcdCounter(fromClock: Clock, toClock: Clock,
      *
      * @return The counter value
      */
-    def cnt_to() = {
+    def cnt_to(): UInt = {
         ccd_cnt.io.cnt_to
     }
 }
@@ -616,7 +616,7 @@ package examples {
         io.out0 := ams.input(io.in0)
         io.out1 := AntiMetastable._2ff(io.in1)(
             Some(() => {
-                ~0.U.asTypeOf(io.in1)
+                (~0.U).asTypeOf(io.in1)
             })
         )
     }
