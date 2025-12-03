@@ -74,12 +74,18 @@ object MemoryInitFiles {
      *
      * @param fileName Path and name of the data file
      * @param data     Data Seq to be written in the file
+     * @param bitWidth Data with of ram elements to be init
      * @tparam T Type of data (element in Seq), must be Int or Long
      */
-    def Write[T: Integral](fileName: String, data: Seq[T]): Try[Unit] = {
+    def Write[T: Integral](fileName: String, data: Seq[T], bitWidth: Int): Try[Unit] = {
+        require(1 <= bitWidth && bitWidth <= 64)
+        val hexWidth = (bitWidth - 1) / 4 + 1
+        val hexFormat = s"%0${hexWidth}X"
         Using(new PrintWriter(new FileWriter(fileName))) { writer =>
-            data.foreach { d =>
-                writer.println(f"${Integral[T].toLong(d)}%016x")
+            data.foreach { d => {
+                val str = hexFormat.format(Integral[T].toLong(d)).takeRight(hexWidth)
+                writer.println(str)
+            }
             }
         }
     }
@@ -227,7 +233,7 @@ class SdpRamRfInline(nWords: Long, dataWidth: Int, initFile: Option[String] = No
            |    output reg [DW - 1            : 0] qout
            |);
            |    reg [DW - 1 : 0] ram[0 : WORDS - 1];
-           |    ${if (initFile.isDefined) s"$$readmemh(\"${initFile.get}\", ram)" else ""}
+           |    ${if (initFile.isDefined) s"initial $$readmemh(\"${initFile.get}\", ram);" else ""}
            |    always@(posedge clock) begin
            |        if(we) ram[waddr] <= din;
            |        qout <= ram[raddr];
@@ -271,7 +277,7 @@ class SdpRamWfInline(nWords: Long, dataWidth: Int, initFile: Option[String] = No
            |    output reg [DW - 1            : 0] qout
            |);
            |    reg [DW - 1 : 0] ram[0 : WORDS - 1];
-           |    ${if (initFile.isDefined) s"$$readmemh(\"${initFile.get}\", ram)" else ""}
+           |    ${if (initFile.isDefined) s"initial $$readmemh(\"${initFile.get}\", ram);" else ""}
            |    always@(posedge clock) begin
            |        if(we) begin
            |            ram[waddr] <= din;
@@ -321,7 +327,7 @@ class SdpRamRaInline(nWords: Long, dataWidth: Int, initFile: Option[String] = No
            |    output reg [DW - 1            : 0] dout
            |);
            |    reg [DW - 1 : 0] ram[0 : WORDS - 1];
-           |    ${if (initFile.isDefined) s"$$readmemh(\"${initFile.get}\", ram)" else ""}
+           |    ${if (initFile.isDefined) s"initial $$readmemh(\"${initFile.get}\", ram);" else ""}
            |    always@(posedge clock) begin
            |        if(we) ram[waddr] <= din;
            |    end
@@ -377,7 +383,7 @@ class DpRamInline(nWords: Long, dataWidth: Int, initFile: Option[String] = None)
            |    output reg [DW - 1            : 0] qout_b
            |);
            |    reg [DW - 1 : 0] ram[0 : WORDS - 1];
-           |    ${if (initFile.isDefined) s"$$readmemh(\"${initFile.get}\", ram)" else ""}
+           |    ${if (initFile.isDefined) s"initial $$readmemh(\"${initFile.get}\", ram);" else ""}
            |    always@(posedge clock) begin
            |        if(wr_a) begin
            |            ram[addr_a] <= din_a;
@@ -444,7 +450,7 @@ class DcRamInline(nWords: Long, dataWidth: Int, initFile: Option[String] = None)
            |    output reg [DW - 1            : 0] qout_b
            |);
            |    reg [DW - 1 : 0] ram[0 : WORDS - 1];
-           |    ${if (initFile.isDefined) s"$$readmemh(\"${initFile.get}\", ram)" else ""}
+           |    ${if (initFile.isDefined) s"initial $$readmemh(\"${initFile.get}\", ram);" else ""}
            |    always@(posedge clock_a) begin
            |        if(wr_a) begin
            |            ram[addr_a] <= din_a;
@@ -1169,7 +1175,7 @@ package examples {
 
         val fn: String = s"${desiredName}_meminit_sine${nWords}x${width}bit.dat"
         val fnWithPath: String = s"${ProjectInfo.BuildInfo.targetVerilogDir}/${fn}"
-        MemoryInitFiles.Write(fnWithPath, MemoryInitFiles.SineWava(nWords, width))
+        MemoryInitFiles.Write(fnWithPath, MemoryInitFiles.SineWava(nWords, width), width)
         chisel3.util.experimental.loadMemoryFromFileInline(ram.mem, fn)
     }
 
@@ -1195,9 +1201,9 @@ package examples {
         val width = 8
         val dType = UInt(width.W)
 
-        val fn = s"${desiredName}_meminit_sine${nWords}x${width}bit.dat"
+        val fn = s"${desiredName}_meminit_unsigned_cosine${nWords}x${width}bit.dat"
         val fnWithPath = s"${ProjectInfo.BuildInfo.targetVerilogDir}/${fn}"
-        MemoryInitFiles.Write(fnWithPath, MemoryInitFiles.CosineWave(nWords, width, isSigned = false))
+        MemoryInitFiles.Write(fnWithPath, MemoryInitFiles.CosineWave(nWords, width, isSigned = false), width)
 
         val io = IO(new RamIO.RW(nWords, dType))
         val ram = Module(new SpRamRf(nWords, dType, Some(fn)))
