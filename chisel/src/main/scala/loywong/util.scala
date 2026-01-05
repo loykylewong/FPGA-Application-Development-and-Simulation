@@ -1010,17 +1010,21 @@ object util {
     }
 
     /**
-     * Chisel type or hardware of a FixPoint
-     * @param bits Raw bits of FixPoint
-     * @param fw Width of fractional part
-     * @note
-     *  - Chisel type if bits is a chisel type (e.g.: SInt(16.W))
-     *  - Chisel hardware if bits is a chisel hardware (e.g.: 123.S(16.W))
+     * Chisel type of FixPoint
+     * @param width Total width of FixPoint
+     * @param fw Width of fractional part (decimal point)
      */
-    sealed class FixPoint(val bits: SInt, private val fw: Int) extends Bundle {
+    sealed class FixPoint(override val width: Width, private val fw: Int) extends Bundle {
         require(0 <= fw && fw < 128, s"In FixPoint, fw must be >= 0 and < 128, but fw=${fw} got.")
-        require(bits.widthKnown)
-        require(!bits.isLit)
+        require(width.known)
+
+        val bits: SInt = SInt(width)
+
+        // ---- should not override these functions for Bundle ----
+        // override def cloneType: this.type = new FixPoint(width, fw).asInstanceOf[this.type]
+        // override def _asUIntImpl(first: Boolean)(implicit sourceInfo: chisel3.experimental.SourceInfo): UInt = bits.asUInt
+        // override def connectFromBits(that: Bits)(implicit sourceInfo: chisel3.experimental.SourceInfo): Unit = this.bits := that
+        // override def toPrintable: Printable = Printable.pack("%X", bits)
 
         /**
          * @return total width
@@ -1038,28 +1042,28 @@ object util {
         def getFracWidth: Int = fw
 
         /**
-         * @return Zero.
+         * @return Hardware represents Zero.
          */
         def zero: FixPoint = FixPoint.zero(bits.getWidth, fw)
 
         /**
-         * @return Negative (0.0 - this).
+         * @return Hardware represents Negative of this (0.0 - this).
          * @note width of result will be original width + 1.
          */
         def negative: FixPoint = FixPoint(0.S -& bits, fw)
 
         /**
-         * @return Lowest FixPoint (negative with max abs).
+         * @return Hardware represents Lowest FixPoint (negative with max abs).
          */
         def lowest: FixPoint = FixPoint.lowest(bits.getWidth, fw)
 
         /**
-         * @return Highest FixPoint (positive with max abs).
+         * @return Hardware represents Highest FixPoint (positive with max abs).
          */
         def highest: FixPoint = FixPoint.highest(bits.getWidth, fw)
 
         /**
-         * @return Epsilon FixPoint (positive with min abs).
+         * @return Hardware represents Epsilon FixPoint (positive with min abs).
          */
         def epsilon: FixPoint = FixPoint.epsilon(bits.getWidth, fw)
 
@@ -1094,7 +1098,8 @@ object util {
         def setToEpsilon: Unit = this.bits := 1.U(bits.getWidth.W).asSInt
 
         /**
-         * @param value the value to be represented.
+         * Set this to new value.
+         * @param value the new value to be represented.
          */
         def setTo(value: Double): Unit = {
             require(inRangeAfterRound(value), s"In FixPoint.setTo, ${value} can not fit in fix point binary with width=${bits.getWidth} and fw=${fw}.")
@@ -1103,7 +1108,8 @@ object util {
         }
 
         /**
-         * @param value the value to be represented.
+         * Set this to new value.
+         * @param value the new value to be represented.
          */
         def setTo(value: BigDecimal): Unit = {
             require(inRangeAfterRound(value))
@@ -1141,24 +1147,24 @@ object util {
         def epsilonInBigDecimal: BigDecimal = FixPoint.epsilonInBigDecimal(fw)
 
         /**
-         * Test whether the value can be fit into this FixPoint.
+         * Test whether the value can be fit into this FixPoint format.
          * @param value The value to be tested.
-         * @return True if the value can be fit into this FixPoint.
+         * @return True if the value can be fit into this FixPoint format.
          */
         def inRange(value: Double): Boolean = FixPoint.inRange(bits.getWidth, fw, value)
 
         /**
          *  Test whether the value can be fit into this FixPoint after rounded to nearest quantitative step.
          * @param value The value to be tested.
-         * @return True if the rounded value can be fit into this FixPoint.
+         * @return True if the rounded value can be fit into this FixPoint format.
          * @note The round mode is specified in FixPoint.roundMode.
          */
         def inRangeAfterRound(value: Double): Boolean = FixPoint.inRangeAfterRound(bits.getWidth, fw, value)
 
         /**
-         * Test whether the value can be fit into this FixPoint.
-         * @param value The value to be test.
-         * @return True if the value can be fit into this FixPoint.
+         * Test whether the value can be fit into this FixPoint format.
+         * @param value The value to be tested.
+         * @return True if the value can be fit into this FixPoint format.
          */
         def inRange(value: BigDecimal): Boolean = FixPoint.inRange(bits.getWidth, fw, value)
 
@@ -1230,7 +1236,7 @@ object util {
         final def +(that: FixPoint): FixPoint = {
             val (l, r, fw) = matchPoint(that)
             val bits: SInt = l +& r
-            new FixPoint(bits, fw)
+            bits.asFixPoint(fw)
         }
 
         /**
@@ -1242,7 +1248,7 @@ object util {
         final def -(that: FixPoint): FixPoint = {
             val (l, r, fw) = matchPoint(that)
             val bits: SInt = l -& r
-            new FixPoint(bits, fw)
+            bits.asFixPoint(fw)
         }
 
         /**
@@ -1254,7 +1260,7 @@ object util {
         final def *(that: FixPoint): FixPoint = {
             val fw = this.fw + that.fw
             val bits: SInt = this.bits * that.bits
-            new FixPoint(bits, fw)
+            bits.asFixPoint(fw)
         }
 
         /**
@@ -1405,7 +1411,7 @@ object util {
         def truncate(newFracWidth: Int = 0): FixPoint = {
             require(0 <= newFracWidth && newFracWidth < fw)
             val shift = fw - newFracWidth
-            new FixPoint((this.bits >> shift).asSInt, newFracWidth)
+            (this.bits >> shift).asFixPoint(newFracWidth)
         }
 
         /**
@@ -1420,7 +1426,7 @@ object util {
         def floor(newFracWidth: Int = 0): FixPoint = {
             require(0 <= newFracWidth && newFracWidth < fw)
             val shift = fw - newFracWidth
-            new FixPoint((this.bits >> shift).asSInt, newFracWidth)
+            (this.bits >> shift).asFixPoint(newFracWidth)
         }
 
         /**
@@ -1436,7 +1442,7 @@ object util {
             require(0 <= newFracWidth && newFracWidth < fw)
             val shift = fw - newFracWidth
             val bits = 0.S -& this.bits
-            new FixPoint(-(bits >>> shift).asSInt, newFracWidth)
+            (-(bits >>> shift)).asFixPoint(newFracWidth)
         }
 
         /**
@@ -1457,7 +1463,7 @@ object util {
                 1.S + (this.bits >> shift).asSInt,
                 (this.bits >> shift).asSInt
             )
-            new FixPoint(bits, newFracWidth)
+            bits.asFixPoint(newFracWidth)
         }
 
         /**
@@ -1481,13 +1487,13 @@ object util {
          * @return Raw bits of this FixPoint
          */
         def asSInt: SInt = this.bits
-
+        
         /**
          * @param fw new fractional part width
          * @return Reinterpret as a FixPoint with new fractional part width
          */
         def asFixPoint(fw: Int): FixPoint = {
-            new FixPoint(bits, fw)
+            this.bits.asFixPoint(fw)
         }
 
         /**
@@ -1530,9 +1536,9 @@ object util {
                 else if(fw < this.fw) this.bits >> (this.fw - fw)
                 else this.bits
             }
-            new FixPoint(bits.asSInt, fw)
+            bits.asFixPoint(fw)
         }
-
+        
         /**
          * @return Peek value as Double
          */
@@ -1597,7 +1603,7 @@ object util {
          * @return a Chisel type
          */
         def apply(width: Width, fw: Int): FixPoint = {
-            new FixPoint(SInt(width), fw)
+            new FixPoint(width, fw)
         }
 
         /**
@@ -1609,9 +1615,10 @@ object util {
          * @return a hardware of FixPoint
          */
         def apply(bits: SInt, fw: Int): FixPoint = {
-            val res = Wire(FixPoint(bits.getWidth.W, fw))
-            res.bits := bits
-            res
+//            val res = Wire(FixPoint(bits.getWidth.W, fw))
+//            res.bits := bits
+//            res
+            bits.asFixPoint(fw)
         }
 
         /**
@@ -1623,9 +1630,13 @@ object util {
          * @return the FixPoint hardware created
          */
         def apply(width: Width, fw: Int, value: Double): FixPoint = {
-            val res = Wire(FixPoint(width, fw))
-            res := value
-            res
+//            val res = Wire(FixPoint(width, fw))
+//            res := value
+//            res
+            require(width.known)
+            val bits = SInt(width)
+            require(inRangeAfterRound(bits.getWidth, fw, value), s"In FixPoint, ${value} can not fit in fix point binary with width=${bits.getWidth} and fw=${fw}.")
+            FixPoint.round(value * math.pow(2.0, fw)).asSInt(width).asFixPoint(fw)
         }
 
         /**
@@ -1643,7 +1654,7 @@ object util {
             // val m = (-possibleLowest * math.pow(2.0, fw)).round
             val m = FixPoint.round(-possibleLowest * math.pow(2.0, fw))
             val width = log2Up(m) + 1
-            new FixPoint(SInt(width.W), fw)
+            new FixPoint(width.W, fw)
         }
 
         /**
@@ -1661,7 +1672,7 @@ object util {
             // val m = 1 + (possibleHighest * math.pow(2.0, fw)).round
             val m = 1 + FixPoint.round(possibleHighest * math.pow(2.0, fw))
             val width = log2Up(m) + 1
-            new FixPoint(SInt(width.W), fw)
+            new FixPoint(width.W, fw)
         }
 
         /**
@@ -1687,7 +1698,7 @@ object util {
             // val m = (upLimit * math.pow(2.0, fw)).round
             val m = FixPoint.round(upLimit * math.pow(2.0, fw))
             val width = log2Up(m) + 1
-            new FixPoint(SInt(width.W), fw)
+            new FixPoint(width.W, fw)
         }
 
         /**
@@ -1705,7 +1716,7 @@ object util {
             // val m = (-possibleLowest * BigDecimal(2.0).pow(fw)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
             val m = FixPoint.round(-possibleLowest * BigDecimal(2.0).pow(fw))
             val width = log2Up(m) + 1
-            new FixPoint(SInt(width.W), fw)
+            new FixPoint(width.W, fw)
         }
 
         /**
@@ -1723,7 +1734,7 @@ object util {
             // val m = 1 + (possibleHighest * BigDecimal(2.0).pow(fw)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
             val m = 1 + FixPoint.round(possibleHighest * BigDecimal(2.0).pow(fw))
             val width = log2Up(m) + 1
-            new FixPoint(SInt(width.W), fw)
+            new FixPoint(width.W, fw)
         }
 
         /**
@@ -1749,7 +1760,7 @@ object util {
             // val m = (upLimit * BigDecimal(2.0).pow(fw)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
             val m = FixPoint.round(upLimit * BigDecimal(2.0).pow(fw))
             val width = log2Up(m) + 1
-            new FixPoint(SInt(width.W), fw)
+            new FixPoint(width.W, fw)
         }
 
         def zero(w: Int, fw: Int): FixPoint = {
@@ -1897,14 +1908,19 @@ object util {
          * @param fw fractional part width
          * @return the FixPoint hardware represent the value of double.
          * @note
-         *  - Rntime requirement violation will occur if value can not be fitted in specified widths.
+         *  - Runtime requirement violation will occur if value can not be fitted in specified widths.
          *  - Value will be quantified due to limited fractional part width (loss precision).
          *  - The round mode is specified in FixPoint.roundMode.
          */
         def toFixPoint(width: Width, fw: Int): FixPoint = {
-            val res = Wire(FixPoint(width, fw))
-            res := x
-            res
+//            val res = Wire(FixPoint(width, fw))
+//            res := x
+//            res
+            require(width.known)
+            val bits = SInt(width)
+            require(FixPoint.inRangeAfterRound(bits.getWidth, fw, x), s"${x} can not fit in fix point binary with width=${bits.getWidth} and fw=${fw}.")
+            FixPoint.round(x * math.pow(2.0, fw)).asSInt(width).asFixPoint(fw)
+            // new FixPoint(bits, fw)
         }
 
         /**
@@ -1918,9 +1934,13 @@ object util {
          *  - The round mode is specified in FixPoint.roundMode.
          */
         def F(width: Width, fw: Int): FixPoint = {
-            val res = Wire(FixPoint(width, fw))
-            res := x
-            res
+//            val res = Wire(FixPoint(width, fw))
+//            res := x
+//            res
+            require(width.known)
+            val bits = SInt(width)
+            require(FixPoint.inRangeAfterRound(bits.getWidth, fw, x), s"${x} can not fit in fix point binary with width=${bits.getWidth} and fw=${fw}.")
+            FixPoint.round(x * math.pow(2.0, fw)).asSInt(width).asFixPoint(fw)
         }
 
         /**
@@ -1949,9 +1969,13 @@ object util {
          *  - The round mode is specified in FixPoint.roundMode.
          */
         def toFixPoint(width: Width, fw: Int): FixPoint = {
-            val res = Wire(FixPoint(width, fw))
-            res := x
-            res
+//            val res = Wire(FixPoint(width, fw))
+//            res := x
+//            res
+            require(width.known)
+            val bits = SInt(width)
+            require(FixPoint.inRangeAfterRound(bits.getWidth, fw, x), s"${x} can not fit in fix point binary with width=${bits.getWidth} and fw=${fw}.")
+            FixPoint.round(x * BigDecimal(2.0).pow(fw)).asSInt(width).asFixPoint(fw)
         }
 
         /**
@@ -1965,9 +1989,13 @@ object util {
          *  - The round mode is specified in FixPoint.roundMode.
          */
         def F(width: Width, fw: Int): FixPoint = {
-            val res = Wire(FixPoint(width, fw))
-            res := x
-            res
+//            val res = Wire(FixPoint(width, fw))
+//            res := x
+//            res
+            require(width.known)
+            val bits = SInt(width)
+            require(FixPoint.inRangeAfterRound(bits.getWidth, fw, x), s"${x} can not fit in fix point binary with width=${bits.getWidth} and fw=${fw}.")
+            FixPoint.round(x * BigDecimal(2.0).pow(fw)).asSInt(width).asFixPoint(fw)
         }
 
         /**
