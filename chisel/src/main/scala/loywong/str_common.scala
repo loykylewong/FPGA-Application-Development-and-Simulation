@@ -32,18 +32,32 @@ import loywong.util._
 
 /**
  * In down-stream port of StrDateWidthConverter, StrKeepRemover and some other
- * modules, use `id` associated with which byte as output in a beat?
+ * modules, `id` associated with which byte will be output in a beat?
  *  - LowestByte: Use the `id` input with the lowest output byte
  *  - HighestByte: Use the `id` input with the highest output byte
+ *
+ * Note:
+ *  - Normally, it's the user's responsibility to ensure that each byte in an
+ *  output beat is associated with the same `id`. in other words, the number
+ *  of consecutive bytes with the same `id` must be a multiple of the
+ *  downstream data width in bytes. In this condition, there is no different
+ *  between `LowestByte` and `HighestByte`.
  */
 object StrIdAssociation extends Enumeration {
     val LowestByte, HighestByte = Value
 }
 /**
  * In down-stream port of StrDateWidthConverter, StrKeepRemover and some other
- * modules, use `dest` associated with which byte as output in a beat?
+ * modules, `dest` associated with which byte will be output in a beat?
  *  - LowestByte: Use the `dest` input with the lowest output byte
  *  - HighestByte: Use the `dest` input with the highest output byte
+ *
+ * Note:
+ *  - Normally, it's the user's responsibility to ensure that each byte in an
+ *  output beat is associated with the same `dest`. in other words, the number
+ *  of consecutive bytes with the same `dest` must be a multiple of the
+ *  downstream data width in bytes. In this condition, there is no different
+ *  between `LowestByte` and `HighestByte`.
  */
 object StrDestAssociation extends Enumeration {
     val LowestByte, HighestByte = Value
@@ -51,12 +65,25 @@ object StrDestAssociation extends Enumeration {
 
 /**
  * In down-stream port of StrDateWidthConverter, StrKeepRemover and some other
- * modules, use `user` associated with which byte as output in a beat?
+ * modules, `user` associated with which byte will be output in a beat?
  *  - LowestByte: Use the `user` input with the lowest output byte
  *  - HighestByte: Use the `user` input with the highest output byte
  *  - SpreadInByte: Split `user` equally and associate each `user` bit slices
  *                  to each data bytes, require width of `user` in bits is
  *                  multiple of data width in bytes
+ *
+ * Note:
+ *  - Normally, user should use `SpreadInByte`. In some certain specific
+ *  applications (such as in video streams, where a 1-bit user signal is often
+ *  used to indicate frame start), the number of user bits is not necessarily
+ *  a multiple of the data width in bytes. It is the user's responsibility to
+ *  extend the number of user bits to clearly indicate the meaning of each data
+ *  byte.
+ *  - If use `LowestByte` or `HighestByte`, normally user should make sure
+ *  that each byte in an output beat is associated with the same `user`.
+ *  in other words, the number of consecutive bytes with the same `user` must
+ *  be a multiple of the downstream data width in bytes, in this condition,
+ *  there is no different between `LowestByte` and `HighestByte`.
  */
 object StrUserAssociation extends Enumeration {
     val LowestByte, HighestByte, SpreadInBytes = Value
@@ -927,7 +954,8 @@ class StrKeepRemover[U <: StrHasKeep, D <: StrHasData](
     val usBytes = genUs.dataWidth / 8
     val dsBytes = genDs.dataWidth / 8
 
-    val bufSize = 2 * math.max(usBytes, dsBytes)
+    // val bufSize = 2 * math.max(usBytes, dsBytes)
+    val bufSize = 2 * (usBytes + dsBytes)
     val nUserUnitBits = genUs.userBitsPerDataByte
     val ptrWidth = log2Up(bufSize)
     val cntWidth = log2Up(bufSize + 1)

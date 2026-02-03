@@ -113,9 +113,20 @@ class test_fp extends Module {
         val ff06 = Output(FixPoint(16.W, 3))
         val ff07 = Output(FixPoint(16.W, 3))
         val ff08 = Output(FixPoint(16.W, 3))
+        val aMux = Output(FixPoint(10.W, 8))
+        val aSubDly = Output(FixPoint(10.W, 8))
+        val aSub = Output(FixPoint(10.W, 8))
     })
 
     // println(s"Q2.8 min: ${io.a.lowest}, max: ${io.a.highest}")
+
+    io.aMux := Mux(io.a > 0.5.F(10.W, 8), io.a - 0.5.F(10.W, 8), io.a + 0.5.F(10.W, 8))
+
+    val aSubDly = RegNext(io.a - 0.1.F(10.W, 8))
+    io.aSubDly := aSubDly
+
+    val aSub = WireDefault(io.a - 0.1.F(10.W, 8))
+    io.aSub := aSub
 
     io.add0 := io.a + io.b
     io.sub0 := io.a - io.b
@@ -143,6 +154,7 @@ class test_fp extends Module {
     // val zzz = RegInit(new FixPoint(SInt(8.W), 7))
 
     val xxx = RegInit(FixPoint(0.S(8.W), 7))
+    val yyy = RegInit(0.S(8.W).asFixPoint(7))
     val sqi = RegInit(FixPoint(12.W, 11, 0.5))
     val sqq = RegInit(-0.5.F(8.W, 7))
 

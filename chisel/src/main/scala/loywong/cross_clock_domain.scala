@@ -458,7 +458,7 @@ class CcdCounter(fromClock: Clock, toClock: Clock,
     ccd_cnt.io.fromReset := fromReset
     ccd_cnt.io.toReset := toReset
     ccd_cnt.io.inc_from := incCond
-
+    
     /**
      * Get the counter value in `fromClock` domain
      *

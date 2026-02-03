@@ -53,7 +53,7 @@ object MemoryInitFiles {
             bias + math.round(amp * math.sin(omega * i + phase))
         }
     }
-
+    
     /**
      * Generate a cosine wave Seq
      *
@@ -68,7 +68,7 @@ object MemoryInitFiles {
     def CosineWave(length: Int, dataWidth: Int, phase: Double = 0.0, fullScale: Double = 1.0, cycles: Double = 1.0, isSigned: Boolean = true): IndexedSeq[Long] = {
         SineWava(length, dataWidth, phase + math.Pi / 2.0, fullScale, cycles, isSigned)
     }
-
+    
     /**
      * Write memory initialize data file, which can be used by `$readmemh` system call in verilog
      *
