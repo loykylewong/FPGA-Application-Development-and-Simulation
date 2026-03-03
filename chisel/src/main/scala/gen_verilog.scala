@@ -26,6 +26,7 @@ import chisel3.RawModule
 import circt.stage.{ChiselStage, FirtoolOption}
 import chisel3.stage.ChiselGeneratorAnnotation
 
+import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Paths}
 import scala.util.matching.Regex
 import loywong._
@@ -42,6 +43,8 @@ object gen_verilog extends App {
         () => new decoder_example(),
         () => new shift_reg_example,
         () => new delay_chain_example,
+        () => new delay_chain_mem2_example,
+        () => new delay_chain_varlen_example,
         () => new counter_example(),
         () => new counter_oneshot_example(),
         () => new counter_max_example(),
@@ -61,6 +64,8 @@ object gen_verilog extends App {
         () => new dpram_example,
         () => new sdcram_example,
         () => new dcram_example,
+        () => new spramrf_bymem_example,
+        () => new sdpramrf_bymem_example,
         () => new scfifo2_example,
         () => new anti_metastable_example,
         () => new edge2en_example,
@@ -71,6 +76,7 @@ object gen_verilog extends App {
         () => new str_birs_example,
         () => new hscomb1_example,
         () => new hscomb2_example,
+        () => new str_fifo_example,
         () => new str_dwc_example,
         () => new str_keep_remover_example,
         () => new str_dcfifo_example,
@@ -164,6 +170,24 @@ object gen_verilog extends App {
         "Axi4LiteToLocalMemoryMapWrapper_64x32"
     ).map(targetDir + "/" + _)
     RenamePorts2AmbaConventions(false, filesToBeRenamed: _*)
+
+    val filesToCleanResourcesListAnno = List(
+        "spramrf_example",
+        "spramrf_with_init_example",
+        "spramwf_example",
+        "spramra_example",
+        "sdpramrf_example",
+        "sdpramwf_example",
+        "sdpramra_example",
+        "dpram_example",
+        "dcram_example",
+        "delay_chain_varlen_example",
+        "scfifo2_example",
+        "dcfifo_example",
+        "str_fifo_example",
+        "str_dcfifo_example"
+    ).map(targetDir + "/" + _)
+    CleanResourcesListAnnotations(filesToCleanResourcesListAnno: _*)
     
     println("Done.")
     println("================================")
@@ -186,7 +210,7 @@ object RenamePorts2AmbaConventions {
         val axi4Replace: String = "$1_$5$7"
         files.foreach {
             file => {
-                val ext: String =
+                val ext: String = {
                     if (Files.exists(Paths.get(file + ".v"))) {
                         ".v"
                     }
@@ -196,6 +220,7 @@ object RenamePorts2AmbaConventions {
                     else {
                         ""
                     }
+                }
                 if (ext.isEmpty) {
                     println(s"\u001b[33m[warning]\u001b[0m in Rename2AmbaConventions: file \"${file}.v\" or \"${file}.sv\" not found.")
                 }
@@ -209,6 +234,48 @@ object RenamePorts2AmbaConventions {
                         Files.delete(Paths.get(file + ext))
                         println(s"\u001b[32m[info]\u001b[0m File \"${file}${ext}\" deleted.")
                     }
+                }
+            }
+        }
+    }
+}
+
+object CleanResourcesListAnnotations {
+    /**
+     * Clean resources list annotating lines.
+     * When using inline verilog and genSplitFiles==false, you may need this.
+     * @param files files contains inline verilog code and resource list anno.
+     */
+    def apply(files: String*): Unit = {
+        files.foreach {
+            file => {
+                val ext: String = {
+                    if(Files.exists(Paths.get(file + ".v"))) {
+                        ".v"
+                    }
+                    else if(Files.exists(Paths.get(file + ".sv"))) {
+                        ".sv"
+                    }
+                    else {
+                        ""
+                    }
+                }
+                if(ext.isEmpty) {
+                    println(s"\u001b[33m[warning]\u001b[0m in CleanResourcesListAnnotations: file \"${file}.v\" or \"${file}.sv\" not found.")
+                }
+                else {
+                    import scala.io.Source
+                    val lines = Source.fromFile(file + ext).getLines().toList
+                    val filteredLines = lines.filterNot { line => {
+                        val trimmed = line.trim
+                        trimmed.endsWith(".v") && !trimmed.contains(" ")
+                    }}.filterNot(_.contains("----- 8< -----"))
+                    val bw = Files.newBufferedWriter(Paths.get(file + ext), StandardCharsets.UTF_8)
+                    filteredLines.foreach{ line => {
+                        bw.write(line)
+                        bw.newLine()
+                    } }
+                    bw.close()
                 }
             }
         }

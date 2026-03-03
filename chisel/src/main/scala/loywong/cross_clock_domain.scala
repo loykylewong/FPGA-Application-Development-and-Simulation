@@ -519,6 +519,8 @@ class DcFifo[T <: Data](gen: T, addrWidth: Int,
 
     override def desiredName: String = super.desiredName + s"_${(1<<addrWidth)}_x_${gen.typeName}"
 
+    val useInlineVerilogMemory: Boolean = true
+
     val io = IO(new Bundle {
         val wrClock = Input(Clock())
         val rdClock = Input(Clock())
@@ -531,7 +533,7 @@ class DcFifo[T <: Data](gen: T, addrWidth: Int,
         val rcnt = if(rdHasDataCnt) Some(FifoIO.CntProvider(addrWidth, rdHasWrRdCnt))
                    else None
     })
-    val m: BigInt = 1 << addrWidth
+    val m: Long = 1 << addrWidth
     val capacity: BigInt = m - 1
 
     val ccd_wr_cnt = CcdCounter(io.wrClock, io.rdClock,
@@ -539,9 +541,16 @@ class DcFifo[T <: Data](gen: T, addrWidth: Int,
     val ccd_rd_cnt = CcdCounter(io.rdClock, io.wrClock,
                                 io.rdReset, io.wrReset)(addrWidth, io.r.read)
 
-    val sdc_ram = SyncReadMem(m, gen)
-    when(io.w.write) { sdc_ram.write(ccd_wr_cnt.cnt_from(), io.w.data, io.wrClock) }
-    val qout_b = sdc_ram.read(ccd_rd_cnt.cnt_from(), io.rdClock)
+    val qout_b = if(useInlineVerilogMemory) {
+        val sdc_ram = DualClockSyncReadMem(m, gen)
+        sdc_ram.access_a(io.wrClock, ccd_wr_cnt.cnt_from(), io.w.data, io.w.write)
+        sdc_ram.access_b(io.rdClock, ccd_rd_cnt.cnt_from(), 0.U.asTypeOf(gen), false.B)
+    }
+    else {
+        val sdc_ram = SyncReadMem(m, gen)
+        when(io.w.write) { sdc_ram.write(ccd_wr_cnt.cnt_from(), io.w.data, io.wrClock) }
+        sdc_ram.read(ccd_rd_cnt.cnt_from(), io.rdClock)
+    }
 
     withClockAndReset(io.rdClock, io.rdReset) {
         val rd_dly = RegNext(io.r.read, false.B)

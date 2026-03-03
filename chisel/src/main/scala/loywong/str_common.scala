@@ -512,23 +512,44 @@ class StrFifo[T <: Data]
 
     override def desiredName = s"${super.desiredName}_${gen.typeName}"
 
+    val useInlineVerilogMemory: Boolean = true
+
     val io = IO(new Bundle {
         val us = Flipped(Irrevocable(gen))
         val ds = Irrevocable(gen)
         val flush = if(hasFlush) Some(Input(Bool())) else None
     })
 
-    // use chisel3.util.Queue!
-    val fifo = Queue.irrevocable(
-          enq            = io.us
-        , entries        = nDepth
-        , pipe           = true
-        , flow           = false
-        , useSyncReadMem = true
-        , flush          = io.flush
-    )
-
-    io.ds <> fifo
+    if(useInlineVerilogMemory) {
+        val newReset = if(hasFlush) {
+            WireDefault(reset.asBool || io.flush.get)
+        }
+        else {
+            WireDefault(reset.asBool)
+        }
+        val aw = log2Up(nDepth)
+        withReset(newReset) {
+            val scfifo2 = Module(new ScFifo2(gen, aw))
+            val writer = Module(new StrSinkToFifoWriter(gen))
+            val reader = Module(new StrSourceFromFifoReader(gen))
+            io.us <> writer.io.us
+            writer.io.writer <> scfifo2.io.w
+            scfifo2.io.r <> reader.io.reader
+            reader.io.ds <> io.ds
+        }
+    }
+    else {
+        // use chisel3.util.Queue!
+        val fifo = Queue.irrevocable(
+            enq = io.us
+            , entries = nDepth
+            , pipe = true
+            , flow = false
+            , useSyncReadMem = true
+            , flush = io.flush
+        )
+        io.ds <> fifo
+    }
 }
 
 /**
@@ -1267,6 +1288,23 @@ package examples {
 
         io.ds0.bits.data <> -io.us0.bits.data
         io.ds1.bits.data <> -io.us1.bits.data
+    }
+
+    class str_fifo_example extends Module {
+        class pl extends StrHasData with StrHasLast {
+            val last = Bool()
+            lazy val data = UInt(8.W)
+        }
+        val aw = 4
+        val io = FlatIO(new Bundle {
+            val us = Flipped(Irrevocable(new pl))
+            val ds = Irrevocable(new pl)
+            val flush = Input(Bool())
+        })
+        val str_fifo = Module(new StrFifo(new pl, 1 << 4, true))
+        str_fifo.io.flush.get := io.flush
+        io.us <> str_fifo.io.us
+        str_fifo.io.ds <> io.ds
     }
 
     class str_dcfifo_example extends RawModule {

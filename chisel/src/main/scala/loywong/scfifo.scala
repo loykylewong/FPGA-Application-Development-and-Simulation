@@ -145,6 +145,8 @@ class ScFifo2[T <: Data](gen: T, addrWidth: Int,
     require(!(!hasDataCnt && hasWrRdCnt), "In ScFifo2, when hasDataCnt == false, hasWrRdCnt is not allowed to be true!")
     override def desiredName = s"${super.desiredName}_${gen.typeName}"
 
+    val useInlineVerilogMemory: Boolean = true
+
     val io = IO(new Bundle {
         val w = FifoIO.Writee(gen)
         val r = FifoIO.Readee(gen)
@@ -167,9 +169,17 @@ class ScFifo2[T <: Data](gen: T, addrWidth: Int,
 
     val rd_dly = RegNext(io.r.read, false.B)
 
-    val the_ram = SyncReadMem(m, gen)
-    when(io.w.write) { the_ram.write(wr_cnt, io.w.data) }
-    val qout_b = the_ram.read(rd_cnt)
+    val qout_b =
+    if(useInlineVerilogMemory) {
+        val the_ram = SyncReadMemReadFirst(m, gen)(clock)
+        the_ram.write(wr_cnt, io.w.data, io.w.write)
+        the_ram.read(rd_cnt)
+    }
+    else {
+        val the_ram = SyncReadMem(m, gen)
+        when(io.w.write) { the_ram.write(wr_cnt, io.w.data) }
+        the_ram.read(rd_cnt)
+    }
 
     val qout_b_reg = RegEnable(qout_b, 0.U.asTypeOf(gen), rd_dly)
     io.r.data := Mux(rd_dly, qout_b, qout_b_reg)

@@ -220,17 +220,18 @@ class SdpRamRfInline(nWords: Long, dataWidth: Int, initFile: Option[String] = No
         val raddr = Input(UInt(log2Up(nWords).W))
         val qout  = Output(UInt(dataWidth.W))
     })
+    val aw = io.waddr.getWidth
     setInline(s"${desiredName}.v",
         s"""
            |module ${desiredName} #(
-           |    parameter DW = ${dataWidth}, WORDS = ${nWords}
+           |    parameter DW = ${dataWidth}, WORDS = ${nWords}, AW = ${aw}
            |)(
-           |    input wire                         clock,
-           |    input wire [$$clog2(WORDS) - 1 : 0] waddr,
-           |    input wire                         we   ,
-           |    input wire [DW - 1            : 0] din  ,
-           |    input wire [$$clog2(WORDS) - 1 : 0] raddr,
-           |    output reg [DW - 1            : 0] qout
+           |    input wire              clock,
+           |    input wire [AW - 1 : 0] waddr,
+           |    input wire              we   ,
+           |    input wire [DW - 1 : 0] din  ,
+           |    input wire [AW - 1 : 0] raddr,
+           |    output reg [DW - 1 : 0] qout
            |);
            |    reg [DW - 1 : 0] ram[0 : WORDS - 1];
            |    ${if (initFile.isDefined) s"initial $$readmemh(\"${initFile.get}\", ram);" else ""}
@@ -264,17 +265,18 @@ class SdpRamWfInline(nWords: Long, dataWidth: Int, initFile: Option[String] = No
         val raddr = Input(UInt(log2Up(nWords).W))
         val qout  = Output(UInt(dataWidth.W))
     })
+    val aw = io.waddr.getWidth
     setInline(s"${desiredName}.v",
         s"""
            |module ${desiredName} #(
-           |    parameter DW = ${dataWidth}, WORDS = ${nWords}
+           |    parameter DW = ${dataWidth}, WORDS = ${nWords}, AW = ${aw}
            |)(
-           |    input wire                         clock,
-           |    input wire [$$clog2(WORDS) - 1 : 0] waddr,
-           |    input wire                         we   ,
-           |    input wire [DW - 1            : 0] din  ,
-           |    input wire [$$clog2(WORDS) - 1 : 0] raddr,
-           |    output reg [DW - 1            : 0] qout
+           |    input wire              clock,
+           |    input wire [AW - 1 : 0] waddr,
+           |    input wire              we   ,
+           |    input wire [DW - 1 : 0] din  ,
+           |    input wire [AW - 1 : 0] raddr,
+           |    output reg [DW - 1 : 0] qout
            |);
            |    reg [DW - 1 : 0] ram[0 : WORDS - 1];
            |    ${if (initFile.isDefined) s"initial $$readmemh(\"${initFile.get}\", ram);" else ""}
@@ -314,17 +316,18 @@ class SdpRamRaInline(nWords: Long, dataWidth: Int, initFile: Option[String] = No
         val raddr = Input(UInt(log2Up(nWords).W))
         val dout  = Output(UInt(dataWidth.W))
     })
+    val aw = io.waddr.getWidth
     setInline(s"${desiredName}.v",
         s"""
            |module ${desiredName} #(   // asynchronous read
-           |    parameter DW = ${dataWidth}, WORDS = ${nWords}
+           |    parameter DW = ${dataWidth}, WORDS = ${nWords}, AW = ${aw}
            |)(
-           |    input wire                         clock,
-           |    input wire [$$clog2(WORDS) - 1 : 0] waddr,
-           |    input wire                         we   ,
-           |    input wire [DW - 1            : 0] din  ,
-           |    input wire [$$clog2(WORDS) - 1 : 0] raddr,
-           |    output reg [DW - 1            : 0] dout
+           |    input wire              clock,
+           |    input wire [AW - 1 : 0] waddr,
+           |    input wire              we   ,
+           |    input wire [DW - 1 : 0] din  ,
+           |    input wire [AW - 1 : 0] raddr,
+           |    output reg [DW - 1 : 0] dout
            |);
            |    reg [DW - 1 : 0] ram[0 : WORDS - 1];
            |    ${if (initFile.isDefined) s"initial $$readmemh(\"${initFile.get}\", ram);" else ""}
@@ -367,20 +370,21 @@ class DpRamInline(nWords: Long, dataWidth: Int, initFile: Option[String] = None)
         val din_b  = Input(UInt(dataWidth.W))
         val qout_b = Output(UInt(dataWidth.W))
     })
+    val aw = io.addr_a.getWidth
     setInline(s"${desiredName}.v",
         s"""
            |module ${desiredName} #(
-           |    parameter DW = ${dataWidth}, WORDS = ${nWords}
+           |    parameter DW = ${dataWidth}, WORDS = ${nWords}, AW = ${aw}
            |)(
-           |    input wire                         clock ,
-           |    input wire [$$clog2(WORDS) - 1 : 0] addr_a,
-           |    input wire                         wr_a  ,
-           |    input wire [DW - 1            : 0] din_a ,
-           |    output reg [DW - 1            : 0] qout_a,
-           |    input wire [$$clog2(WORDS) - 1 : 0] addr_b,
-           |    input wire                         wr_b  ,
-           |    input wire [DW - 1            : 0] din_b ,
-           |    output reg [DW - 1            : 0] qout_b
+           |    input wire              clock ,
+           |    input wire [AW - 1 : 0] addr_a,
+           |    input wire              wr_a  ,
+           |    input wire [DW - 1 : 0] din_a ,
+           |    output reg [DW - 1 : 0] qout_a,
+           |    input wire [AW - 1 : 0] addr_b,
+           |    input wire              wr_b  ,
+           |    input wire [DW - 1 : 0] din_b ,
+           |    output reg [DW - 1 : 0] qout_b
            |);
            |    reg [DW - 1 : 0] ram[0 : WORDS - 1];
            |    ${if (initFile.isDefined) s"initial $$readmemh(\"${initFile.get}\", ram);" else ""}
@@ -404,7 +408,7 @@ class DpRamInline(nWords: Long, dataWidth: Int, initFile: Option[String] = None)
 }
 
 /**
- * Represent a hardware True Dual Clock Synchronous Read RAM module.
+ * Represent a hardware Dual Clock Synchronous Read RAM module.
  * @param nWords    Number of Words (elements) in RAM
  * @param dataWidth Data Width
  * @param initFile  Hex data file for initializing RAM by internally using
@@ -433,21 +437,22 @@ class DcRamInline(nWords: Long, dataWidth: Int, initFile: Option[String] = None)
         val din_b   = Input(UInt(dataWidth.W))
         val qout_b  = Output(UInt(dataWidth.W))
     })
+    val aw = io.addr_a.getWidth
     setInline(s"${desiredName}.v",
         s"""
            |module ${desiredName} #(
-           |    parameter DW = ${dataWidth}, WORDS = ${nWords}
+           |    parameter DW = ${dataWidth}, WORDS = ${nWords}, AW = ${aw}
            |)(
-           |    input wire                         clock_a ,
-           |    input wire [$$clog2(WORDS) - 1 : 0] addr_a  ,
-           |    input wire                         wr_a    ,
-           |    input wire [DW - 1            : 0] din_a   ,
-           |    output reg [DW - 1            : 0] qout_a  ,
-           |    input wire                         clock_b ,
-           |    input wire [$$clog2(WORDS) - 1 : 0] addr_b  ,
-           |    input wire                         wr_b    ,
-           |    input wire [DW - 1            : 0] din_b   ,
-           |    output reg [DW - 1            : 0] qout_b
+           |    input wire              clock_a ,
+           |    input wire [AW - 1 : 0] addr_a  ,
+           |    input wire              wr_a    ,
+           |    input wire [DW - 1 : 0] din_a   ,
+           |    output reg [DW - 1 : 0] qout_a  ,
+           |    input wire              clock_b ,
+           |    input wire [AW - 1 : 0] addr_b  ,
+           |    input wire              wr_b    ,
+           |    input wire [DW - 1 : 0] din_b   ,
+           |    output reg [DW - 1 : 0] qout_b
            |);
            |    reg [DW - 1 : 0] ram[0 : WORDS - 1];
            |    ${if (initFile.isDefined) s"initial $$readmemh(\"${initFile.get}\", ram);" else ""}
@@ -471,7 +476,7 @@ class DcRamInline(nWords: Long, dataWidth: Int, initFile: Option[String] = None)
 }
 
 /**
- * A Read First version of SyncReadMem.
+ * A Read First version of SyncReadMem by using SdpRamRfInline.
  *
  * @param nWords    Number of words in RAM
  * @param gen       Generator of data
@@ -520,7 +525,8 @@ class SyncReadMemReadFirst[T <: Data](nWords: Long, gen: T, initFile: Option[Str
 
 object SyncReadMemReadFirst {
     /**
-     * Create a Synchronous Read Memory (Read-First) instance.
+     * Create a Synchronous Read Memory (Read-First) instance, by using
+     * underlying inline VerilogHDL.
      * @param nWords    Number of words in RAM
      * @param gen       Generator of data
      * @param clock     [implicit] Clock of the SyncReadMemReadFirst instance
@@ -542,7 +548,56 @@ object SyncReadMemReadFirst {
 }
 
 /**
- * A Write First version of SyncReadMem.
+ * A Read First version of SyncReadMem by using chisel3.Mem.
+ *
+ * @param nWords    Number of words in RAM
+ * @param gen       Generator of data
+ * @tparam T        Type of data
+ * @note You may prefer to use the homonymous factory object
+ * @example {{{
+ *              val ram_rf = new SyncReadMemRfByMem
+ *                               (256, UInt(32.W))
+ *              // Or use the factory method
+ *              // val ram_rf = SyncReadMemRfByMem
+ *              //              (256, UInt(32.W))
+ *              io.rdata := ram_rf.read(io.raddr)
+ *              ram_rf.write(io.waddr, io.wdata, io.wen)
+ * }}}
+ */
+class SyncReadMemRfByMem[T <: Data](nWord: Long, gen: T) {
+    val ram = chisel3.Mem(nWord, gen)
+    def read(addr: UInt): T = {
+        RegNext(ram.read(addr))
+    }
+    def write(addr: UInt, data: T, en: Bool): Unit = {
+        when(en) {
+            ram.write(addr, data)
+        }
+    }
+}
+
+object SyncReadMemRfByMem {
+    /**
+     * Create a Synchronous Read Memory (Read-First) instance, by using
+     * chisel3.Mem.
+     * @param nWords    Number of words in RAM
+     * @param gen       Generator of data
+     * @tparam T        Type of data
+     * @return          The instance created.
+     * @example {{{
+     *              val ram_rf = SyncReadMemRfByMem
+     *                           (256, UInt(32.W))
+     *              io.rdata := ram_rf.read(io.raddr)
+     *              ram_rf.write(io.waddr, io.wdata, io.wen)
+     * }}}
+     */
+    def apply[T <: Data](nWords: Long, gen: T): SyncReadMemRfByMem[T] = {
+        new SyncReadMemRfByMem[T](nWords, gen)
+    }
+}
+
+/**
+ * A Write First version of SyncReadMem by using SdpRamWfInline.
  * @param nWords    Number of words in RAM
  * @param gen       Generator of data
  * @param clock     [implicit] Clock of the RAM
@@ -590,7 +645,8 @@ class SyncReadMemWriteFirst[T <: Data](nWords: Long, gen: T, initFile: Option[St
 
 object SyncReadMemWriteFirst {
     /**
-     * Create a Synchronous Read Memory (Write-First) instance.
+     * Create a Synchronous Read Memory (Write-First) instance by using
+     * underlying inline VerilogHDL.
      * @param nWords    Number of words in RAM
      * @param gen       Generator of data
      * @param clock     [implicit] Clock of the SyncReadMemWriteFirst instance
@@ -612,7 +668,7 @@ object SyncReadMemWriteFirst {
 }
 
 /**
- * An Asynchronous Read Memory.
+ * An Asynchronous Read Memory by using SdpRamRaInline.
  * @param nWords    Number of words in RAM
  * @param gen       Generator of data
  * @param clock     [implicit] Clock of the RAM
@@ -660,7 +716,8 @@ class AsyncReadMem[T <: Data](nWords: Long, gen: T, initFile: Option[String] = N
 
 object AsyncReadMem {
     /**
-     * Create an Asynchronous Read Memory instance.
+     * Create an Asynchronous Read Memory instance by using
+     * underlying inline VerilogHDL.
      * @param nWords    Number of words in RAM
      * @param gen       Generator of data
      * @param clock     [implicit] Clock of the AsyncReadMem instance
@@ -682,7 +739,7 @@ object AsyncReadMem {
 }
 
 /**
- * A True Dual Port Synchronous Read Mem.
+ * A True Dual Port Synchronous Read Mem by using DpRamInline.
  * @param nWords    Number of words in RAM
  * @param gen       Generator of data
  * @param clock     [implicit] Clock of the RAM
@@ -747,7 +804,8 @@ class DualPortSyncReadMem[T <: Data](nWords: Long, gen: T, initFile: Option[Stri
 
 object DualPortSyncReadMem {
     /**
-     * Create a True Dual Port Synchronous Read Memory instance.
+     * Create a True Dual Port Synchronous Read Memory instance by using
+     * underlying inline VerilogHDL.
      * @param nWords    Number of words in RAM
      * @param gen       Generator of data
      * @param clock     [implicit] Clock of the DualPortSyncReadMem instance
@@ -781,7 +839,7 @@ object DualPortSyncReadMem {
 }
 
 /**
- * A True Dual Clock Synchronous Read Mem
+ * A True Dual Clock Synchronous Read Mem by using DcRamInline.
  * @param nWords    Number of words in RAM
  * @param gen       Generator of data
  * @param initFile  Hex data file for initializing RAM by internally using
@@ -844,7 +902,8 @@ class DualClockSyncReadMem[T <: Data](nWords: Long, gen: T, initFile: Option[Str
 
 object DualClockSyncReadMem {
     /**
-     * Create a True Dual Clock Synchronous Read Memory instance.
+     * Create a True Dual Clock Synchronous Read Memory instance by using
+     * underlying inline VerilogHDL.
      * @param nWords    Number of words in RAM
      * @param gen       Generator of data
      * @param initFile  Hex data file for initializing RAM by internally using
@@ -917,6 +976,25 @@ class SpRamRf[T <: Data](nWords: Long, gen: T, initFile: Option[String] = None) 
 
     val io = IO(new RamIO.RW(nWords, gen))
     val spramrf = SyncReadMemReadFirst(nWords, gen, initFile)(clock)
+    io.dout := spramrf.read(io.addr)
+    spramrf.write(io.addr, io.din, io.we)
+}
+
+/**
+ * Represent a hardware module of Single Port RAM by using underlying
+ * chisel3.Mem, with the behavior of reading when writing is Read First.
+ * @param nWords    Number of Words (elements) in RAM
+ * @param gen       Generator of Data
+ * @tparam T        Type of Data
+ * @note Normally, you should use SyncReadMemRfByMem directly in your
+ *       module, instead of using this.
+ */
+class SpRamRfByMem[T <: Data](nWords: Long, gen: T) extends Module {
+    require(nWords > 0)
+    override def desiredName: String = s"${super.desiredName}_${nWords}_x_${gen.typeName}"
+
+    val io = IO(new RamIO.RW(nWords, gen))
+    val spramrf = SyncReadMemRfByMem(nWords, gen)
     io.dout := spramrf.read(io.addr)
     spramrf.write(io.addr, io.din, io.we)
 }
@@ -1012,6 +1090,29 @@ class SdpRamRf[T <: Data](nWords: Long, gen: T, initFile: Option[String] = None)
         val r = new RamIO.R(nWords, gen)
     })
     val sdpramrf = SyncReadMemReadFirst(nWords, gen, initFile)(clock)
+    io.r.dout := sdpramrf.read(io.r.addr)
+    sdpramrf.write(io.w.addr, io.w.din, io.w.en)
+}
+
+/**
+ * Represent a hardware module of Simple Dual Port Synchronous Read RAM by
+ * using underlying chisel3.Mem,
+ * with the behavior of reading when writing is Read First.
+ * @param nWords    Number of Words (elements) in RAM
+ * @param gen       Generator of Data
+ * @tparam T        Type of Data
+ * @note Normally, you should use SyncReadMemRfByMem directly in your module,
+ *       instead of using this.
+ */
+class SdpRamRfByMem[T <: Data](nWords: Long, gen: T) extends Module {
+    require(nWords > 0)
+    override def desiredName = s"${super.desiredName}_${nWords}_x_${gen.typeName}"
+
+    val io = IO(new Bundle {
+        val w = new RamIO.W(nWords, gen)
+        val r = new RamIO.R(nWords, gen)
+    })
+    val sdpramrf = SyncReadMemRfByMem(nWords, gen)
     io.r.dout := sdpramrf.read(io.r.addr)
     sdpramrf.write(io.w.addr, io.w.din, io.w.en)
 }
@@ -1336,6 +1437,25 @@ package examples {
             val b = new RamIO.CRW(nWords, dType)
         })
         val ram = Module(new DcRam(nWords, dType))
+        io <> ram.io
+    }
+
+    class spramrf_bymem_example extends Module {
+        val nWords = 256
+        val dType = UInt(8.W)
+        val io = IO(new RamIO.RW(nWords, dType))
+        val ram = Module(new SpRamRfByMem(nWords, dType))
+        io <> ram.io
+    }
+
+    class sdpramrf_bymem_example extends Module {
+        val nWords = 256
+        val dType = UInt(8.W)
+        val io = IO(new Bundle {
+            val r = new RamIO.R(nWords, dType)
+            val w = new RamIO.W(nWords, dType)
+        })
+        val ram = Module(new SdpRamRfByMem(nWords, dType))
         io <> ram.io
     }
 }
