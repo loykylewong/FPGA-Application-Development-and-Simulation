@@ -287,9 +287,9 @@ class SdpRamWfInline(nWords: Long, dataWidth: Int, initFile: Option[String] = No
            |    end
            |    always@(posedge clock) begin
            |        if(we && raddr == waddr)
-           |            qout <= din
+           |            qout <= din;
            |        else
-           |            qout <= ram[raddr]
+           |            qout <= ram[raddr];
            |    end
            |endmodule
            |""".stripMargin
